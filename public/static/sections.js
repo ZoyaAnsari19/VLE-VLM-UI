@@ -1,0 +1,469 @@
+// ============================================================
+// SECTION RENDERERS — return HTML strings for each section
+// ============================================================
+import { ICON } from './icons.js';
+import { DIVISIONS, STATS, ROLES, SALARY_TABLE, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data.js';
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+export function renderNav(t) {
+  return `
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <span class="leaf">${ICON.leaf}</span> Kisan Mitra
+      </a>
+      <div class="nav-links">
+        <a href="#roles">${t.nav_roles}</a>
+        <a href="#exams">${t.nav_exams}</a>
+        <a href="#process">${t.nav_process}</a>
+        <a href="#schemes">${t.nav_schemes}</a>
+        <a href="#faq">${t.nav_faq}</a>
+      </div>
+      <div class="nav-actions">
+        <div class="lang-toggle" id="langToggle">
+          <button data-lang="hi">हिंदी</button>
+          <button data-lang="en">EN</button>
+        </div>
+        <a href="#apply" class="btn btn-primary nav-apply-btn" style="min-height:44px;padding:11px 20px;font-size:15px">${t.nav_apply}</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu">${ICON.menu}</button>
+      </div>
+    </div>
+  </nav>
+  <div class="drawer" id="drawer">
+    <div class="drawer-head">
+      <a href="#top" class="brand"><span class="leaf">${ICON.leaf}</span> Kisan Mitra</a>
+      <button class="hamburger" id="drawerClose" aria-label="Close">${ICON.x}</button>
+    </div>
+    <div class="drawer-links">
+      <a href="#roles">${t.nav_roles}</a>
+      <a href="#exams">${t.nav_exams}</a>
+      <a href="#process">${t.nav_process}</a>
+      <a href="#schemes">${t.nav_schemes}</a>
+      <a href="#faq">${t.nav_faq}</a>
+      <div class="lang-toggle" id="langToggleDrawer" style="margin:14px 12px">
+        <button data-lang="hi">हिंदी</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a href="#apply" class="btn btn-primary" style="margin:8px 12px">${t.nav_apply}</a>
+    </div>
+  </div>`;
+}
+
+export function renderHero(t) {
+  const stats = STATS.map(s => `
+    <div class="stat">
+      <div class="num" ${s.display ? '' : `data-count="${s.value}"`}>${s.display || '0'}</div>
+      <div class="lbl">${esc(s.label_hi)}</div>
+    </div>`).join('');
+  return `
+  <header class="hero" id="top">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">${t.hero_eyebrow}</span>
+          <h1 class="h1">${esc(t.hero_h1)}</h1>
+          <p class="hero-sub">${esc(t.hero_sub)}</p>
+          <div class="hero-ctas">
+            <a href="#apply" class="btn btn-primary">${t.hero_cta1} ${ICON.arrowRight}</a>
+            <a href="#exams" class="btn btn-outline">${t.hero_cta2}</a>
+          </div>
+          <div class="hero-tagline devanagari-head">${t.hero_tagline}</div>
+        </div>
+        <div class="hero-img reveal">
+          <img src="/static/img/hero.jpg" alt="Young Kisan Mitra officer in uniform standing in a green field at golden hour" loading="eager" width="640" height="800">
+        </div>
+      </div>
+      <div class="stats">${stats}</div>
+    </div>
+  </header>`;
+}
+
+export function renderWhy(t) {
+  const cards = [
+    { ico: ICON.badge, t: t.why_1_t, d: t.why_1_d },
+    { ico: ICON.ev, t: t.why_2_t, d: t.why_2_d },
+    { ico: ICON.rupee, t: t.why_3_t, d: t.why_3_d },
+  ].map(c => `
+    <div class="card why-card reveal">
+      <div class="ico">${c.ico}</div>
+      <h3 class="h3">${esc(c.t)}</h3>
+      <p>${esc(c.d)}</p>
+    </div>`).join('');
+  return `
+  <section class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.leaf} Why Join</span>
+        <h2 class="h2">${esc(t.why_title)}</h2>
+        <p>${esc(t.why_sub)}</p>
+      </div>
+      <div class="why-grid">${cards}</div>
+    </div>
+  </section>`;
+}
+
+export function renderRoles(t, lang) {
+  const cards = ROLES.map((r, i) => {
+    const duties = (lang === 'hi' ? r.duties_hi : r.duties_en).map(d => `<li>${esc(d)}</li>`).join('');
+    return `
+    <article class="card role-card reveal">
+      <div class="role-top">
+        <img class="role-img" src="${r.img}" alt="${r.code} officer" loading="lazy" width="96" height="96"
+             onerror="this.style.display='none'">
+        <div style="flex:1">
+          <span class="role-badge" style="background:${r.accent}">${r.code}</span>
+          <h3 class="h3">${esc(lang === 'hi' ? r.title_hi : r.title_en)}</h3>
+        </div>
+      </div>
+      <p class="role-who">${esc(lang === 'hi' ? r.who_hi : r.who_en)}</p>
+      <div class="role-meta">
+        <div><span class="k">${t.role_reports}</span><span class="v">${esc(lang === 'hi' ? r.reports_hi : r.reports_en)}</span></div>
+        <div><span class="k">${t.role_coverage}</span><span class="v">${esc(lang === 'hi' ? r.coverage_hi : r.coverage_en)}</span></div>
+        <div><span class="k">${t.role_exam}</span><span class="v">${esc(lang === 'hi' ? r.exam_hi : r.exam_en)}</span></div>
+        <div><span class="k">${t.role_uniform}</span><span class="v" style="font-weight:600;font-size:13px">${esc(lang === 'hi' ? r.uniform_hi : r.uniform_en)}</span></div>
+      </div>
+      <div class="role-salary">
+        <div><span class="k">${t.role_training}</span><span class="v">${r.train}</span></div>
+        <div><span class="k">${t.role_full}</span><span class="v">${r.full}</span></div>
+      </div>
+      <div class="role-expand" id="roleExp${i}">
+        <strong style="display:block;margin:6px 0 10px;color:var(--green-forest)">${t.role_duties}</strong>
+        <ul class="role-duties">${duties}</ul>
+      </div>
+      <div class="role-foot">
+        <span class="role-posts">${t.role_posts}: <b>${r.count}</b></span>
+        <button class="role-toggle" data-role-toggle="${i}">${t.role_details} ${ICON.chev}</button>
+      </div>
+    </article>`;
+  }).join('');
+  return `
+  <section id="roles">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.briefcase} 4 Officer Roles</span>
+        <h2 class="h2">${esc(t.roles_title)}</h2>
+        <p>${esc(t.roles_sub)}</p>
+      </div>
+      <div class="roles-grid">${cards}</div>
+    </div>
+  </section>`;
+}
+
+export function renderHierarchy(t) {
+  return `
+  <section class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.briefcase} Hierarchy</span>
+        <h2 class="h2">${esc(t.hier_title)}</h2>
+        <p>${esc(t.hier_sub)}</p>
+      </div>
+      <div class="hier reveal">
+        <div class="hier-node hq">${esc(t.hier_hq)}</div>
+        <div class="hier-arrow"></div>
+        <div class="hier-node">DLO ×12<span class="sub">Division Level Officer</span></div>
+        <div class="hier-arrow"></div>
+        <div class="hier-node">TLO ×40<span class="sub">Tehsil Leader Officer</span></div>
+        <div class="hier-arrow"></div>
+        <div class="hier-row">
+          <div class="hier-node">VLM ×200<span class="sub">Village Level Manager</span></div>
+          <div class="hier-node">VLE ×200<span class="sub">Village Level Executive</span></div>
+        </div>
+        <div class="hier-arrow"></div>
+        <div class="hier-node" style="background:var(--green-soft)">${esc(t.hier_villages)}</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderSalary(t) {
+  const rows = SALARY_TABLE.map(r => `
+    <tr><td><b>${r.role}</b></td><td>${r.reports}</td><td>${r.train}</td><td><b style="color:var(--green-forest)">${r.full}</b></td><td>${r.count}</td></tr>`).join('');
+  const bonuses = t.benefits_list.map(b => `<li>${esc(b)}</li>`).join('');
+  return `
+  <section id="salary">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.rupee} Salary & Career</span>
+        <h2 class="h2">${esc(t.salary_title)}</h2>
+        <p>${esc(t.salary_sub)}</p>
+      </div>
+      <div class="tbl-wrap reveal">
+        <table class="tbl">
+          <thead><tr><th>${t.salary_th_role}</th><th>${t.salary_th_reports}</th><th>${t.salary_th_train}</th><th>${t.salary_th_full}</th><th>${t.salary_th_count}</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+      <div class="salary-grid">
+        <div class="card reveal">
+          <h3 class="h3" style="color:var(--green-forest);margin-top:0">${t.benefits_title}</h3>
+          <ul class="bonus-list">${bonuses}</ul>
+        </div>
+        <div class="card reveal">
+          <h3 class="h3" style="color:var(--green-forest);margin-top:0">${t.ladder_title}</h3>
+          <div class="ladder">
+            <span>VLE</span><span class="arrow">→</span>
+            <span>Senior VLE</span><span class="arrow">→</span>
+            <span>TLO</span><span class="arrow">→</span>
+            <span>DLO</span>
+          </div>
+          <p style="color:var(--ink-soft);margin-top:16px">${esc(t.ladder_note)}</p>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderExams(t, lang) {
+  const cards = EXAMS.map(e => {
+    const sections = e.sections.map(s => `<li>${esc(s)}</li>`).join('');
+    const samples = e.samples.map((q, qi) => {
+      if (q.descriptive) {
+        return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><span class="desc-tag">${t.exam_descriptive}</span></div>`;
+      }
+      const opts = q.opts.map((o, oi) => `<li class="${oi === q.correct ? 'correct' : ''}">${esc(o)}</li>`).join('');
+      return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><ul>${opts}</ul></div>`;
+    }).join('');
+    return `
+    <article class="card exam-card reveal">
+      <div class="exam-head">
+        <div><span class="eyebrow">${esc(lang === 'hi' ? e.for_hi : e.for_en)}</span></div>
+        <span class="exam-fee">₹${e.fee}</span>
+      </div>
+      <h3 class="h3">${esc(lang === 'hi' ? e.name_hi : e.name_en)}</h3>
+      <p class="exam-for">${t.exam_for}: ${esc(lang === 'hi' ? e.for_hi : e.for_en)}</p>
+      <div class="exam-rows">
+        <div class="exam-row"><span class="k">${t.exam_duration}</span><span class="v">${esc(lang === 'hi' ? e.duration_hi : e.duration_en)}</span></div>
+        <div class="exam-row"><span class="k">${t.exam_questions}</span><span class="v">${esc(lang === 'hi' ? e.questions_hi : e.questions_en)}</span></div>
+        <div class="exam-row"><span class="k">${t.exam_sections}</span><span class="v"><ul class="exam-sections">${sections}</ul></span></div>
+        <div class="exam-row"><span class="k">${t.exam_negative}</span><span class="v">${esc(lang === 'hi' ? e.negative_hi : e.negative_en)}</span></div>
+        <div class="exam-row"><span class="k">${t.exam_qualifying}</span><span class="v">${e.qualifying}</span></div>
+      </div>
+      <div class="samples">
+        <button class="btn btn-ghost sample-toggle" data-sample-toggle="${e.id}">${t.exam_samples} ${ICON.chev}</button>
+        <div class="samples-body" id="samples-${e.id}">${samples}</div>
+      </div>
+    </article>`;
+  }).join('');
+  return `
+  <section id="exams" class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.cap} Exams</span>
+        <h2 class="h2">${esc(t.exams_title)}</h2>
+        <p>${esc(t.exams_sub)}</p>
+      </div>
+      <div class="exams-grid">${cards}</div>
+      <div class="card reveal" style="margin-top:22px">
+        <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.reschedule_title}</h3>
+        <p style="margin:8px 0 0">• ${esc(t.reschedule_1)}</p>
+        <p style="margin:6px 0 0">• ${esc(t.reschedule_2)}</p>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderSecurity(t, lang) {
+  const items = SECURITY.map(s => `
+    <div class="sec-item reveal">
+      <div class="ico">${ICON[s.icon] || ICON.shield}</div>
+      <h4>${esc(lang === 'hi' ? s.title_hi : s.title_en)}</h4>
+      <p>${esc(lang === 'hi' ? s.desc_hi : s.desc_en)}</p>
+    </div>`).join('');
+  return `
+  <section id="process" class="bg-green">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.lock} Security</span>
+        <h2 class="h2" style="color:#fff">${esc(t.sec_title)}</h2>
+        <p>${esc(t.sec_sub)}</p>
+      </div>
+      <div class="sec-grid">${items}</div>
+    </div>
+  </section>`;
+}
+
+export function renderRoadmap(t, lang) {
+  const steps = ROADMAP.map(s => `
+    <div class="step reveal">
+      <div class="step-num">${s.n}</div>
+      <div class="step-body">
+        <h4>${esc(lang === 'hi' ? s.title_hi : s.title_en)}</h4>
+        <p>${esc(lang === 'hi' ? s.desc_hi : s.desc_en)}</p>
+      </div>
+    </div>`).join('');
+  return `
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.pin} Roadmap</span>
+        <h2 class="h2">${esc(t.roadmap_title)}</h2>
+        <p>${esc(t.roadmap_sub)}</p>
+      </div>
+      <div class="steps">${steps}</div>
+    </div>
+  </section>`;
+}
+
+export function renderFarmers(t, lang) {
+  const govt = ['PM-KISAN', 'PMFBY', 'KCC', 'PM-KUSUM', 'Soil Health Card', 'MGNREGA', 'PMAY-G', 'e-NAM', 'ODOP'].map(s => `<span class="chip">${s}</span>`).join('');
+  const member = MEMBER_BENEFITS.map(m => `<span class="chip">${esc(lang === 'hi' ? m.hi : m.en)}</span>`).join('');
+  return `
+  <section class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.seedling} For Farmers</span>
+        <h2 class="h2">${esc(t.farmers_title)}</h2>
+      </div>
+      <div class="farmers-grid">
+        <div class="card farmer-col reveal">
+          <h3 class="h3">${esc(t.farmers_govt)}</h3>
+          <div class="chip-list">${govt}</div>
+        </div>
+        <div class="card farmer-col reveal">
+          <h3 class="h3">${esc(t.farmers_member)}</h3>
+          <div class="chip-list">${member}</div>
+        </div>
+      </div>
+      <p class="farmer-line reveal">${esc(t.farmers_line)}</p>
+    </div>
+  </section>`;
+}
+
+export function renderSchemes(t, lang) {
+  const cards = SCHEMES.map(s => `
+    <article class="card scheme-card reveal">
+      <div class="ico">${ICON[s.icon] || ICON.seedling}</div>
+      <h4>${esc(s.name)}</h4>
+      ${s.sub ? `<div class="ssub">${esc(s.sub)}</div>` : ''}
+      <div class="sline"><span class="lbl">${t.scheme_benefit}</span>${esc(lang === 'hi' ? s.benefit_hi : s.benefit_en)}</div>
+      <div class="sline"><span class="lbl">${t.scheme_role}</span>${esc(lang === 'hi' ? s.role_hi : s.role_en)}</div>
+    </article>`).join('');
+  return `
+  <section id="schemes">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.shield} Government Schemes</span>
+        <h2 class="h2">${esc(t.schemes_title)}</h2>
+        <p>${esc(t.schemes_sub)}</p>
+      </div>
+      <div class="schemes-grid">${cards}</div>
+      <div class="identity-box reveal">${esc(t.identity_text)}</div>
+    </div>
+  </section>`;
+}
+
+export function renderPartnerships(t) {
+  return `
+  <section class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.badge} Partnerships</span>
+        <h2 class="h2">${esc(t.partner_title)}</h2>
+        <p>${esc(t.partner_sub)}</p>
+      </div>
+      <div class="partner-grid">
+        <div class="partner-ph reveal">[ ${esc(t.partner_placeholder)} 1 ]</div>
+        <div class="partner-ph reveal">[ ${esc(t.partner_placeholder)} 2 ]</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderTraining(t, lang) {
+  const cards = TRAINING.map(w => `
+    <div class="train-card reveal">
+      <div class="wk">${w.wk}</div>
+      <h4>${esc(lang === 'hi' ? w.title_hi : w.title_en)}</h4>
+      <p>${esc(w.desc)}</p>
+    </div>`).join('');
+  return `
+  <section>
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.cap} Training</span>
+        <h2 class="h2">${esc(t.training_title)}</h2>
+        <p>${esc(t.training_sub)}</p>
+      </div>
+      <div class="train-grid">${cards}</div>
+      <p style="text-align:center;color:var(--ink-soft);margin-top:24px" class="reveal">${esc(t.training_partners)}</p>
+    </div>
+  </section>`;
+}
+
+export function renderEligibility(t) {
+  const cards = [
+    { t: t.elig_gs_t, d: t.elig_gs_d },
+    { t: t.elig_ka_t, d: t.elig_ka_d },
+    { t: t.elig_res_t, d: t.elig_res_d },
+    { t: t.elig_local_t, d: t.elig_local_d },
+  ].map(c => `<div class="card elig-card reveal"><h4>${esc(c.t)}</h4><p>${esc(c.d)}</p></div>`).join('');
+  const dates = t.dates.map(d => `<li><span>${esc(d[0])}</span><span class="d">${esc(d[1])}</span></li>`).join('');
+  return `
+  <section class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.check} Eligibility</span>
+        <h2 class="h2">${esc(t.elig_title)}</h2>
+        <p>${esc(t.elig_sub)}</p>
+      </div>
+      <div class="elig-grid">${cards}</div>
+      <div class="card reveal" style="margin-top:18px">
+        <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.dates_title}</h3>
+        <ul class="dates-list">${dates}</ul>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderFAQ(t, lang) {
+  const items = FAQ.map((f, i) => `
+    <div class="faq-item reveal" data-faq="${i}">
+      <button class="faq-q" data-faq-toggle="${i}">
+        <span>${esc(lang === 'hi' ? f.q_hi : f.q_en)}</span>
+        <span class="chev">${ICON.chev}</span>
+      </button>
+      <div class="faq-a" id="faq-a-${i}"><div class="faq-a-inner">${esc(lang === 'hi' ? f.a_hi : f.a_en)}</div></div>
+    </div>`).join('');
+  return `
+  <section id="faq">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.badge} FAQ</span>
+        <h2 class="h2">${esc(t.faq_title)}</h2>
+        <p>${esc(t.faq_sub)}</p>
+      </div>
+      <div class="faq-list">${items}</div>
+    </div>
+  </section>`;
+}
+
+export function renderFooter(t) {
+  const divs = DIVISIONS.map(d => `<span>${esc(d)}</span>`).join('');
+  return `
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#top" class="brand" style="color:#fff"><span class="leaf">${ICON.leaf}</span> Kisan Mitra</a>
+          <p style="margin-top:14px">${esc(t.footer_legal)}</p>
+          <div style="margin-top:8px" class="devanagari-head">किसान का विकास, देश का विकास</div>
+        </div>
+        <div>
+          <h4>${t.footer_contact}</h4>
+          <ul>
+            <li><a href="https://wa.me/910000000000">${ICON.whatsapp} ${t.footer_helpline}</a></li>
+            <li><a href="tel:+910000000000">${ICON.phone} 1800-000-0000</a></li>
+            <li>Lucknow, Uttar Pradesh</li>
+          </ul>
+        </div>
+        <div>
+          <h4>${t.footer_divisions}</h4>
+          <div class="divisions">${divs}</div>
+        </div>
+      </div>
+      <div class="footer-legal">© 2026 Kisan Mitra Ecosystem · Argus / RKF Strategic Initiative · ${esc(t.footer_legal)}</div>
+    </div>
+  </footer>`;
+}
