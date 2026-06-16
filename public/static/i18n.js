@@ -17,6 +17,26 @@ export const I18N = {
     hero_cta2: "Exam Pattern Dekhein",
     hero_tagline: "किसान का विकास, देश का विकास",
 
+    mission_kicker: "— 01 · MISSION",
+    mission_title: "Kisan Mitra kya hai?",
+    mission_sub: "Kisan Mitra ek poora \"Rural Operating System\" hai — gaon ke andar hi rozgaar, behtar kheti, aur tarakki ka mazboot dhaancha.",
+    mission_p1: "Hum gaon ke padhe-likhe yuvaon ko ek pariksha se chunte hain, train karte hain, aur unhe unke apne gaon ka officer bana dete hain.",
+    mission_p2: "Yahi officer kisan ki har zaroorat — mitti-paani testing, sahi beej-khaad, machinery, drone, fasal ki kharid, storage, paani aur sarkari yojnaon ka laabh — uske darwaaze tak pahunchata hai. (Rajesh Kaithwas ji ke netritva me.)",
+    mission_chips_hi: [
+      ["💼", "Employment generation"],
+      ["🧭", "Palayan ka ant"],
+      ["🌿", "Farmer service"],
+      ["🤝", "Gaon ka vikas"],
+    ],
+    mission_chips_en: [
+      ["💼", "Employment generation"],
+      ["🧭", "End of migration"],
+      ["🌿", "Farmer service"],
+      ["🤝", "Village development"],
+    ],
+    mission_img_alt: "Kisan Mitra officer interacting with farmers in a field",
+    mission_badge: "Kisan ki seva, darwaaze tak",
+
     why_title: "Kyun ye mauka khaas hai?",
     why_sub: "Teen wajah jo is naukri ko alag banati hain.",
     why_1_t: "Izzat ki naukri",
@@ -149,6 +169,26 @@ export const I18N = {
     hero_cta1: "Apply Now",
     hero_cta2: "See Exam Pattern",
     hero_tagline: "Progress of the farmer, progress of the nation",
+
+    mission_kicker: "— 01 · MISSION",
+    mission_title: "What is Kisan Mitra?",
+    mission_sub: "Kisan Mitra is a complete \"Rural Operating System\" — a strong framework for jobs, better farming, and growth within the village.",
+    mission_p1: "We select educated village youth through an exam, train them, and appoint them as officers for their own villages.",
+    mission_p2: "These officers deliver every farmer need — soil & water testing, right seeds and inputs, machinery, drones, procurement, storage, irrigation, and access to government schemes — right to the doorstep. (Under the leadership of Rajesh Kaithwas ji.)",
+    mission_chips_hi: [
+      ["💼", "Employment generation"],
+      ["🧭", "Palayan ka ant"],
+      ["🌿", "Farmer service"],
+      ["🤝", "Gaon ka vikas"],
+    ],
+    mission_chips_en: [
+      ["💼", "Employment generation"],
+      ["🧭", "End of migration"],
+      ["🌿", "Farmer service"],
+      ["🤝", "Village development"],
+    ],
+    mission_img_alt: "Kisan Mitra officer interacting with farmers in a field",
+    mission_badge: "Farmer service, to the doorstep",
 
     why_title: "Why this opportunity is special",
     why_sub: "Three reasons that set this job apart.",

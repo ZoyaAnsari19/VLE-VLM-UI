@@ -4,7 +4,7 @@
 // ============================================================
 import { I18N } from './i18n.js';
 import {
-  renderNav, renderHero, renderWhy, renderRoles, renderHierarchy, renderSalary,
+  renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
   renderPartnerships, renderTraining, renderEligibility, renderFAQ, renderFooter
 } from './sections.js';
@@ -33,6 +33,8 @@ function renderAll() {
   app.innerHTML =
     renderNav(t) +
     renderHero(t) +
+    renderMission(t, lang) +
+    renderSchemes(t, lang) +
     renderWhy(t) +
     renderRoles(t, lang) +
     renderHierarchy(t) +
@@ -41,7 +43,6 @@ function renderAll() {
     renderSecurity(t, lang) +
     renderRoadmap(t, lang) +
     renderFarmers(t, lang) +
-    renderSchemes(t, lang) +
     renderPartnerships(t) +
     renderTraining(t, lang) +
     renderEligibility(t) +

@@ -71,12 +71,40 @@ export function renderHero(t) {
           <div class="hero-tagline devanagari-head">${t.hero_tagline}</div>
         </div>
         <div class="hero-img reveal">
-          <img src="/static/img/hero.jpg" alt="Young Kisan Mitra officer in uniform standing in a green field at golden hour" loading="eager" width="640" height="800">
+          <img src="/static/img/teamPhoto.png" alt="Kisan Mitra Ecosystem team — VLE, VLM, DLO, TLO, CSE officers" loading="eager" width="640" height="512">
         </div>
       </div>
       <div class="stats">${stats}</div>
     </div>
   </header>`;
+}
+
+export function renderMission(t, lang) {
+  const chips = (lang === 'hi' ? t.mission_chips_hi : t.mission_chips_en)
+    .map(([ico, label]) => `<span class="chip"><span class="chip-ico">${ico}</span>${esc(label)}</span>`)
+    .join('');
+
+  return `
+  <section class="mission" id="mission">
+    <div class="container">
+      <div class="mission-grid">
+        <div class="mission-copy reveal">
+          <div class="mission-kicker">${esc(t.mission_kicker)}</div>
+          <h2 class="h2">${esc(t.mission_title)}</h2>
+          <p class="mission-sub">${esc(t.mission_sub)}</p>
+          <div class="mission-body">
+            <p>${esc(t.mission_p1)}</p>
+            <p>${esc(t.mission_p2)}</p>
+          </div>
+          <div class="mission-chips reveal">${chips}</div>
+        </div>
+        <div class="mission-media reveal">
+          <img src="/static/img/mission.webp" alt="${esc(t.mission_img_alt)}" loading="lazy" width="900" height="502" />
+          <span class="mission-badge">${ICON.leaf} ${esc(t.mission_badge)}</span>
+        </div>
+      </div>
+    </div>
+  </section>`;
 }
 
 export function renderWhy(t) {
