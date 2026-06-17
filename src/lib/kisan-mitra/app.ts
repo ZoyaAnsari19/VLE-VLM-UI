@@ -135,6 +135,22 @@ function bindPerksCarousel() {
   const next = document.getElementById('perksNext');
   if (!viewport || !prev || !next) return;
 
+  const syncCardWidths = () => {
+    const mobile = window.matchMedia('(max-width: 640px)').matches;
+    viewport.querySelectorAll('.perk-card').forEach(card => {
+      if (mobile) {
+        const w = viewport.clientWidth;
+        card.style.flexBasis = `${w}px`;
+        card.style.width = `${w}px`;
+        card.style.maxWidth = `${w}px`;
+      } else {
+        card.style.flexBasis = '';
+        card.style.width = '';
+        card.style.maxWidth = '';
+      }
+    });
+  };
+
   const scrollStep = () => {
     const card = viewport.querySelector('.perk-card');
     if (!card) return viewport.clientWidth * 0.85;
@@ -156,7 +172,11 @@ function bindPerksCarousel() {
     viewport.scrollBy({ left: scrollStep(), behavior: 'smooth' });
   });
   viewport.addEventListener('scroll', updateButtons, { passive: true });
-  window.addEventListener('resize', updateButtons);
+  window.addEventListener('resize', () => {
+    syncCardWidths();
+    updateButtons();
+  });
+  syncCardWidths();
   updateButtons();
 }
 

@@ -25,8 +25,8 @@ export function renderNav(t) {
       </div>
       <div class="nav-actions">
         <div class="lang-toggle" id="langToggle">
-          <button data-lang="hi">हिंदी</button>
-          <button data-lang="en">EN</button>
+          <button type="button" data-lang="hi">हिंदी</button>
+          <button type="button" data-lang="en">EN</button>
         </div>
         <a href="#apply" class="btn btn-primary nav-apply-btn" style="min-height:44px;padding:11px 20px;font-size:15px">${t.nav_apply}</a>
         <button class="hamburger" id="hamburger" aria-label="Menu">${ICON.menu}</button>
@@ -44,11 +44,11 @@ export function renderNav(t) {
       <a href="#process">${t.nav_process}</a>
       <a href="#schemes">${t.nav_schemes}</a>
       <a href="#faq">${t.nav_faq}</a>
-      <div class="lang-toggle" id="langToggleDrawer" style="margin:14px 12px">
-        <button data-lang="hi">हिंदी</button>
-        <button data-lang="en">EN</button>
+      <div class="lang-toggle lang-toggle-drawer" id="langToggleDrawer">
+        <button type="button" data-lang="hi">हिंदी</button>
+        <button type="button" data-lang="en">EN</button>
       </div>
-      <a href="#apply" class="btn btn-primary" style="margin:8px 12px">${t.nav_apply}</a>
+      <a href="#apply" class="btn btn-primary drawer-apply-btn">${t.nav_apply}</a>
     </div>
   </div>`;
 }

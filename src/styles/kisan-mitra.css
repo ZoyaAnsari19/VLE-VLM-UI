@@ -119,10 +119,52 @@ section { padding: clamp(56px, 9vw, 110px) 0; position: relative; }
 .nav-links a:hover { color: var(--green-forest); }
 .nav-actions { display: flex; align-items: center; gap: 12px; }
 .lang-toggle {
-  display: inline-flex; border: 1.5px solid var(--green-forest); border-radius: 999px; overflow: hidden; font-size: 13px; font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1.5px solid var(--green-forest);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--card-white);
 }
-.lang-toggle button { border: 0; background: transparent; color: var(--green-forest); padding: 7px 13px; cursor: pointer; font-family: inherit; font-weight: 700; }
-.lang-toggle button.active { background: var(--green-forest); color: #fff; }
+.lang-toggle button {
+  border: 0;
+  background: transparent;
+  color: var(--green-forest);
+  padding: 7px 13px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  line-height: 1.2;
+}
+.lang-toggle button.active {
+  background: var(--green-forest);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(27, 77, 62, 0.18);
+}
+.lang-toggle button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.lang-toggle-drawer {
+  display: flex;
+  width: 100%;
+  margin: 10px 0 6px;
+  padding: 4px;
+  min-height: 52px;
+  box-shadow: 0 4px 14px rgba(27, 77, 62, 0.08);
+}
+.lang-toggle-drawer button {
+  flex: 1;
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 16px;
+}
 .hamburger { display: none; background: transparent; border: 0; cursor: pointer; padding: 8px; color: var(--green-forest); }
 
 /* mobile drawer */
@@ -130,7 +172,14 @@ section { padding: clamp(56px, 9vw, 110px) 0; position: relative; }
 .drawer.open { transform: translateX(0); }
 .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid var(--line); }
 .drawer-links { display: flex; flex-direction: column; padding: 24px 20px; gap: 6px; }
-.drawer-links a { padding: 16px 12px; font-size: 20px; font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+.drawer-links a:not(.btn) { padding: 16px 12px; font-size: 20px; font-weight: 700; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); }
+.drawer-apply-btn {
+  margin-top: 8px;
+  width: 100%;
+  min-height: 52px;
+  color: #fff;
+  border-bottom: none;
+}
 
 @media (max-width: 1023px) {
   .nav-links, .nav-actions .lang-toggle, .nav-actions .nav-apply-btn { display: none; }
@@ -262,10 +311,10 @@ table.tbl td { padding: 14px 16px; border-top: 1px solid var(--line); font-size:
 table.tbl tr:nth-child(even) td { background: var(--bg-paper); }
 .salary-perks { margin-top: 28px; padding: clamp(24px, 4vw, 36px); border-radius: 20px; }
 .salary-perks-carousel { display: flex; align-items: center; gap: 14px; }
-.salary-perks-viewport { flex: 1; min-width: 0; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.salary-perks-viewport { flex: 1; min-width: 0; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; container-type: inline-size; }
 .salary-perks-viewport::-webkit-scrollbar { display: none; }
 .salary-perks-track { display: flex; gap: 18px; padding: 4px 2px 8px; }
-.perk-card { flex: 0 0 clamp(240px, 28vw, 300px); scroll-snap-align: start; background: var(--bg-cream); padding: 24px; }
+.perk-card { flex: 0 0 clamp(240px, 28vw, 300px); scroll-snap-align: start; background: var(--bg-cream); padding: 24px; min-height: 100%; }
 .perk-card::before { display: none; }
 .perks-nav { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--card-white); color: var(--green-forest); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease; }
 .perks-nav:hover:not(:disabled) { border-color: var(--green-forest); background: var(--green-soft); }
@@ -275,9 +324,19 @@ table.tbl tr:nth-child(even) td { background: var(--bg-paper); }
 .perk-title { margin: 0 0 10px; color: var(--green-forest); font-size: 1.05rem; }
 .perk-desc { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; }
 @media (max-width: 640px) {
-  .salary-perks-carousel { gap: 10px; }
-  .perks-nav { flex-basis: 40px; width: 40px; height: 40px; }
-  .perk-card { flex-basis: clamp(220px, 78vw, 300px); }
+  .salary-perks { padding: 20px 14px; }
+  .salary-perks-carousel { gap: 8px; align-items: stretch; }
+  .perks-nav { flex: 0 0 36px; width: 36px; height: 36px; align-self: center; }
+  .perks-nav svg { width: 18px; height: 18px; }
+  .salary-perks-track { gap: 12px; padding: 4px 0 8px; }
+  .perk-card {
+    flex: 0 0 100cqi;
+    width: 100cqi;
+    max-width: 100cqi;
+    scroll-snap-align: start;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 }
 
 /* ===== VACANCIES ===== */
