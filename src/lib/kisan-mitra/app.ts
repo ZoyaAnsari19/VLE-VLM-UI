@@ -7,7 +7,7 @@ import { I18N } from './i18n';
 import {
   renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary, renderVacancies,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
-    renderPartnerships, renderTraining, renderInterview, renderEligibility, renderFAQ, renderFooter
+    renderPartnerships, renderTraining, renderInterview, renderPrep, renderEligibility, renderFAQ, renderFooter
 } from './sections';
 import { initApply, setApplyLang } from './apply';
 
@@ -48,6 +48,7 @@ function renderAll() {
     renderPartnerships(t) +
     renderTraining(t, lang) +
     renderInterview(t, lang) +
+    renderPrep(t) +
     renderEligibility(t) +
     renderApplySection(t) +
     renderFAQ(t, lang) +

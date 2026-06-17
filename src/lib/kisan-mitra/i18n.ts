@@ -147,6 +147,7 @@ export const I18N = {
     training_title: "Training & Certification",
     training_sub: "8 hafte ka structured curriculum, partner universities ke saath.",
     training_partners: "Partner universities — CSAUAT Kanpur, NDUAT Ayodhya, SVPUAT Meerut, BUAT Banda + KVKs.",
+    training_img_alt: "Students preparing for training and certification",
 
     int_title: "Interview kaise hoga.",
     int_sub: "Interview ek dostana, structured panel ke saamne hota hai — aapki samajh, leadership aur gaon-seva ki niyat dekhi jaati hai. Ghabrane ki zaroorat nahi.",
@@ -164,6 +165,18 @@ export const I18N = {
       "\"VLE-VLM ke beech conflict kaise suljhaoge?\"",
       "\"1,000 kisanon ke liye 30 din me crop-insurance awareness campaign design karo.\""
     ],
+
+    prep_title: "Taiyari kahan se karein?",
+    prep_card1_t: "Official Prep Portal",
+    prep_card1_d: "Hindi/English guidebooks, 10 mock test series (asli exam jaisa interface), recorded Hindi video courses, combo packs.",
+    prep_card2_t: "Affiliated Coaching Network",
+    prep_card2_d: "UP ke districts me authorized/affiliated coaching centres — official partner institutes jahan se taiyari kar sakte hain.",
+    prep_card3_t: "Syllabus & Question Bank",
+    prep_card3_d: "UP ki agri-universities (CSAUAT, NDUAT, SVPUAT, BUAT) + KVK ke saath taiyar — official syllabus portal par milega.",
+    prep_sub: "Mehnat se taiyari karo — official portal, mock tests aur affiliated coaching ke saath aap apne sapne ko sach kar sakte ho. Padhega gaon, badhega gaon.",
+    prep_cta: "Study Material Dekho",
+    prep_note: "Note: Affiliated coaching centres dynamically list honge; koi unverified institute name pehle se nahi diya gaya.",
+    prep_img_alt: "Student preparing for exam with study material",
 
     elig_title: "Eligibility & Important Dates",
     elig_sub: "Kaun apply kar sakta hai aur kab.",
@@ -340,6 +353,7 @@ export const I18N = {
     training_title: "Training & Certification",
     training_sub: "An 8-week structured curriculum with partner universities.",
     training_partners: "Partner universities — CSAUAT Kanpur, NDUAT Ayodhya, SVPUAT Meerut, BUAT Banda + KVKs.",
+    training_img_alt: "Students preparing for training and certification",
 
     int_title: "How will the interview work?",
     int_sub: "The interview is a friendly, structured panel discussion — it evaluates your understanding, leadership, and intent to serve villages. No need to worry.",
@@ -357,6 +371,18 @@ export const I18N = {
       "\"How would you resolve a conflict between VLE and VLM?\"",
       "\"Design a 30-day crop-insurance awareness campaign for 1,000 farmers.\""
     ],
+
+    prep_title: "Where should you prepare from?",
+    prep_card1_t: "Official Prep Portal",
+    prep_card1_d: "Hindi/English guidebooks, 10 mock tests (real exam-like interface), recorded Hindi video courses, and combo packs.",
+    prep_card2_t: "Affiliated Coaching Network",
+    prep_card2_d: "Authorized/affiliated coaching centres across UP districts — official partner institutes you can prepare from.",
+    prep_card3_t: "Syllabus & Question Bank",
+    prep_card3_d: "Prepared with UP agri-universities (CSAUAT, NDUAT, SVPUAT, BUAT) + KVKs — available on the official syllabus portal.",
+    prep_sub: "Prepare with discipline — with the official portal, mock tests, and affiliated coaching, you can make your goal real.",
+    prep_cta: "View Study Material",
+    prep_note: "Note: Affiliated coaching centres will be listed dynamically; no unverified institute names are shown in advance.",
+    prep_img_alt: "Student preparing for exam with study material",
 
     elig_title: "Eligibility & Important Dates",
     elig_sub: "Who can apply and when.",

@@ -501,22 +501,34 @@ export function renderPartnerships(t) {
 }
 
 export function renderTraining(t, lang) {
-  const cards = TRAINING.map(w => `
+  const ICO = [ICON.badge, ICON.seedling, ICON.shield, ICON.credit, ICON.scan, ICON.check, ICON.pin, ICON.cap];
+  const cards = TRAINING.map((w, i) => `
     <div class="train-card reveal">
+      <div class="train-ico">${ICO[i] || ICON.badge}</div>
       <div class="wk">${w.wk}</div>
       <h4>${esc(lang === 'hi' ? w.title_hi : w.title_en)}</h4>
       <p>${esc(w.desc)}</p>
     </div>`).join('');
   return `
-  <section>
+  <section class="train-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.cap} Training</span>
         <h2 class="h2">${esc(t.training_title)}</h2>
         <p>${esc(t.training_sub)}</p>
       </div>
+      <div class="train-photos">
+        <figure class="train-photo card reveal">
+          <img src="/images/training-class.webp" alt="${esc(t.training_img_alt)}" loading="lazy" width="1400" height="800">
+          <figcaption class="train-cap">${ICON.home} Residential · hostel + khana</figcaption>
+        </figure>
+        <figure class="train-photo card reveal">
+          <img src="/images/training-field.webp" alt="${esc(t.training_img_alt)}" loading="lazy" width="1400" height="800">
+          <figcaption class="train-cap">${ICON.seedling} Field practicum</figcaption>
+        </figure>
+      </div>
       <div class="train-grid">${cards}</div>
-      <p style="text-align:center;color:var(--ink-soft);margin-top:24px" class="reveal">${esc(t.training_partners)}</p>
+      <p class="train-foot reveal"><span class="train-foot-ico">${ICON.pin}</span>${esc(t.training_partners)}</p>
     </div>
   </section>`;
 }
@@ -534,7 +546,7 @@ export function renderInterview(t, lang) {
       </div>
       <div class="int-grid">
         <div class="int-media card reveal">
-          <img src="/images/taiyari-study.webp" alt="${esc(t.int_img_alt)}" loading="lazy" width="1200" height="800">
+          <img src="/images/interview-panel.webp" alt="${esc(t.int_img_alt)}" loading="lazy" width="1200" height="800">
         </div>
         <div class="int-copy reveal">
           <p class="int-sub">${esc(t.int_sub)}</p>
@@ -558,6 +570,47 @@ export function renderInterview(t, lang) {
             </div>
           </div>
           <ul class="int-q">${qs}</ul>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderPrep(t) {
+  return `
+  <section id="prep" class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.cap} 13 · TAIYARI</span>
+        <h2 class="h2">${esc(t.prep_title)}</h2>
+      </div>
+
+      <div class="prep-cards">
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.cap}</div>
+          <h3 class="h3">${esc(t.prep_card1_t)}</h3>
+          <p>${esc(t.prep_card1_d)}</p>
+        </div>
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.badge}</div>
+          <h3 class="h3">${esc(t.prep_card2_t)}</h3>
+          <p>${esc(t.prep_card2_d)}</p>
+        </div>
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.check}</div>
+          <h3 class="h3">${esc(t.prep_card3_t)}</h3>
+          <p>${esc(t.prep_card3_d)}</p>
+        </div>
+      </div>
+
+      <div class="prep-grid">
+        <div class="card prep-img reveal">
+          <img src="/images/taiyari-study.webp" alt="${esc(t.prep_img_alt)}" loading="lazy" width="1200" height="800">
+        </div>
+        <div class="prep-copy card reveal">
+          <p class="prep-sub">${esc(t.prep_sub)}</p>
+          <a class="btn btn-saffron" href="#apply">${esc(t.prep_cta)} ${ICON.arrowRight}</a>
+          <p class="prep-note">${esc(t.prep_note)}</p>
         </div>
       </div>
     </div>
