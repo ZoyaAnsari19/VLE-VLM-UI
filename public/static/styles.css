@@ -187,28 +187,38 @@ section { padding: clamp(56px, 9vw, 110px) 0; position: relative; }
 
 /* ===== ROLE CARDS ===== */
 .roles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
-.role-card { display: flex; flex-direction: column; }
-.role-top { display: flex; gap: 16px; align-items: flex-start; }
-.role-badge { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; color: #fff; padding: 8px 14px; border-radius: 12px; line-height: 1; }
-.role-img { width: 96px; height: 96px; border-radius: 14px; object-fit: cover; border: 2px solid var(--line); flex-shrink: 0; }
-.role-card h3 { margin: 4px 0 6px; }
+.role-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.role-cover { background: var(--bg-paper); line-height: 0; }
+.role-cover img { width: 100%; height: 260px; object-fit: cover; display: block; border-radius: 20px 20px 0 0; }
+.role-body { padding: 20px 22px 18px; display: flex; flex-direction: column; flex: 1; }
+.role-pill { align-self: flex-start; font-family: 'Fraunces', serif; font-weight: 800; font-size: 13px; color: #fff; padding: 6px 11px; border-radius: 8px; line-height: 1; letter-spacing: 0.02em; }
+.role-title { margin: 14px 0 10px; font-family: 'Fraunces', serif; color: var(--green-forest); font-size: 22px; }
+.role-card-summary { margin: 0; color: var(--ink-soft); font-size: 14.5px; line-height: 1.65; }
 .role-who { color: var(--ink-soft); font-size: 15.5px; margin: 0 0 16px; }
 .role-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; font-size: 14.5px; margin-bottom: 14px; }
 .role-meta .k { color: var(--ink-soft); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; display: block; }
 .role-meta .v { font-weight: 700; }
+.role-meta .role-uniform { font-weight: 600; font-size: 13px; line-height: 1.4; }
 .role-salary { display: flex; gap: 14px; background: var(--green-soft); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
 .role-salary div { flex: 1; }
 .role-salary .k { font-size: 11.5px; text-transform: uppercase; color: var(--ink-soft); }
 .role-salary .v { font-weight: 800; color: var(--green-forest); font-size: 18px; }
+.role-duties-title { display: block; margin: 10px 0 10px; color: var(--green-forest); }
 .role-duties { margin: 0; padding: 0; list-style: none; }
 .role-duties li { padding: 7px 0 7px 26px; position: relative; font-size: 14.5px; border-top: 1px solid var(--line); }
 .role-duties li::before { content: "✓"; position: absolute; left: 0; color: var(--green-leaf); font-weight: 800; }
 .role-expand { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
-.role-expand.open { max-height: 1200px; }
-.role-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 16px; }
+.role-expand.open { max-height: 1400px; margin-top: 14px; }
+.role-card.is-open .role-cover { display: none; }
+.role-card.is-open .role-card-summary { display: none; }
+.role-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 16px; gap: 12px; }
+.role-card:not(.is-open) .role-foot { justify-content: flex-end; }
+.role-card:not(.is-open) .role-posts { display: none; }
 .role-posts { font-size: 13px; color: var(--ink-soft); }
 .role-posts b { color: var(--green-forest); font-size: 16px; }
-.role-toggle { background: transparent; border: 0; color: var(--green-forest); font-weight: 700; cursor: pointer; font-family: inherit; font-size: 15px; }
+.role-toggle { background: transparent; border: 0; color: var(--green-forest); font-weight: 800; cursor: pointer; font-family: inherit; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; }
+.role-toggle .ricon { display: inline-flex; transition: transform 0.2s ease; }
+.role-toggle[aria-expanded="true"] .ricon { transform: rotate(180deg); }
 @media (max-width: 800px) { .roles-grid { grid-template-columns: 1fr; } }
 
 /* ===== HIERARCHY ===== */

@@ -93,9 +93,13 @@ function bindGlobal() {
   document.querySelectorAll('[data-role-toggle]').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = btn.dataset.roleToggle;
+      const card = btn.closest('.role-card');
       const exp = document.getElementById('roleExp' + i);
       const open = exp.classList.toggle('open');
-      btn.firstChild.textContent = (open ? I18N[lang].role_less : I18N[lang].role_details) + ' ';
+      if (card) card.classList.toggle('is-open', open);
+      const txt = btn.querySelector('.rtxt');
+      if (txt) txt.textContent = open ? I18N[lang].role_less : I18N[lang].role_details;
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
   });
 

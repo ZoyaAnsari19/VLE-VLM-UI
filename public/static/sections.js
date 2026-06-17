@@ -134,42 +134,55 @@ export function renderWhy(t) {
 export function renderRoles(t, lang) {
   const cards = ROLES.map((r, i) => {
     const duties = (lang === 'hi' ? r.duties_hi : r.duties_en).map(d => `<li>${esc(d)}</li>`).join('');
+    const title = lang === 'hi' ? r.title_hi : r.title_en;
+    const cardSummary = lang === 'hi' ? r.card_hi : r.card_en;
+    const who = lang === 'hi' ? r.who_hi : r.who_en;
+    const reports = lang === 'hi' ? r.reports_hi : r.reports_en;
+    const coverage = lang === 'hi' ? r.coverage_hi : r.coverage_en;
+    const exam = lang === 'hi' ? r.exam_hi : r.exam_en;
+    const uniform = lang === 'hi' ? r.uniform_hi : r.uniform_en;
+
     return `
     <article class="card role-card reveal">
-      <div class="role-top">
-        <img class="role-img" src="${r.img}" alt="${r.code} officer" loading="lazy" width="96" height="96"
-             onerror="this.style.display='none'">
-        <div style="flex:1">
-          <span class="role-badge" style="background:${r.accent}">${r.code}</span>
-          <h3 class="h3">${esc(lang === 'hi' ? r.title_hi : r.title_en)}</h3>
+      <div class="role-cover">
+        <img src="${encodeURI(r.img)}" alt="${r.code} officer" loading="lazy" width="800" height="450">
+      </div>
+      <div class="role-body">
+        <span class="role-pill" style="background:${r.accent}">${r.code}</span>
+        <h3 class="role-title">${esc(title)}</h3>
+        <p class="role-card-summary">${esc(cardSummary)}</p>
+
+        <div class="role-expand" id="roleExp${i}">
+          <p class="role-who">${esc(who)}</p>
+          <div class="role-meta">
+            <div><span class="k">${t.role_reports}</span><span class="v">${esc(reports)}</span></div>
+            <div><span class="k">${t.role_coverage}</span><span class="v">${esc(coverage)}</span></div>
+            <div><span class="k">${t.role_exam}</span><span class="v">${esc(exam)}</span></div>
+            <div><span class="k">${t.role_uniform}</span><span class="v role-uniform">${esc(uniform)}</span></div>
+          </div>
+          <div class="role-salary">
+            <div><span class="k">${t.role_training}</span><span class="v">${r.train}</span></div>
+            <div><span class="k">${t.role_full}</span><span class="v">${r.full}</span></div>
+          </div>
+          <strong class="role-duties-title">${t.role_duties}</strong>
+          <ul class="role-duties">${duties}</ul>
         </div>
-      </div>
-      <p class="role-who">${esc(lang === 'hi' ? r.who_hi : r.who_en)}</p>
-      <div class="role-meta">
-        <div><span class="k">${t.role_reports}</span><span class="v">${esc(lang === 'hi' ? r.reports_hi : r.reports_en)}</span></div>
-        <div><span class="k">${t.role_coverage}</span><span class="v">${esc(lang === 'hi' ? r.coverage_hi : r.coverage_en)}</span></div>
-        <div><span class="k">${t.role_exam}</span><span class="v">${esc(lang === 'hi' ? r.exam_hi : r.exam_en)}</span></div>
-        <div><span class="k">${t.role_uniform}</span><span class="v" style="font-weight:600;font-size:13px">${esc(lang === 'hi' ? r.uniform_hi : r.uniform_en)}</span></div>
-      </div>
-      <div class="role-salary">
-        <div><span class="k">${t.role_training}</span><span class="v">${r.train}</span></div>
-        <div><span class="k">${t.role_full}</span><span class="v">${r.full}</span></div>
-      </div>
-      <div class="role-expand" id="roleExp${i}">
-        <strong style="display:block;margin:6px 0 10px;color:var(--green-forest)">${t.role_duties}</strong>
-        <ul class="role-duties">${duties}</ul>
-      </div>
-      <div class="role-foot">
-        <span class="role-posts">${t.role_posts}: <b>${r.count}</b></span>
-        <button class="role-toggle" data-role-toggle="${i}">${t.role_details} ${ICON.chev}</button>
+
+        <div class="role-foot">
+          <span class="role-posts">${t.role_posts}: <b>${r.count}</b></span>
+          <button class="role-toggle" data-role-toggle="${i}" aria-controls="roleExp${i}" aria-expanded="false">
+            <span class="rtxt">${t.role_details}</span>
+            <span class="ricon">${ICON.chev}</span>
+          </button>
+        </div>
       </div>
     </article>`;
   }).join('');
   return `
-  <section id="roles">
+  <section id="roles" class="bg-paper">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">${ICON.briefcase} 4 Officer Roles</span>
+        <span class="eyebrow">${ICON.briefcase} 04 · POSTS</span>
         <h2 class="h2">${esc(t.roles_title)}</h2>
         <p>${esc(t.roles_sub)}</p>
       </div>
