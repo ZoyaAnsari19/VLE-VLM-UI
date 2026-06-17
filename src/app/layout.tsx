@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/styles/kisan-mitra.css";
 
 export const metadata: Metadata = {
   title: "Kisan Mitra Bharti Pariksha 2026 — Apne gaon ka officer bano",
@@ -19,17 +20,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="hi">
+    <html lang="hi" translate="no" className="notranslate">
       <head>
+        <meta name="google" content="notranslate" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Tiro+Devanagari+Hindi&display=swap"
           rel="stylesheet"
         />
-        <link rel="stylesheet" href="/static/styles.css" />
       </head>
-      <body>{children}</body>
+      <body className="notranslate">{children}</body>
     </html>
   );
 }
