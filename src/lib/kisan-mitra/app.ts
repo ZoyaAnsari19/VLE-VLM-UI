@@ -5,7 +5,7 @@
 // ============================================================
 import { I18N } from './i18n';
 import {
-  renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary,
+  renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary, renderVacancies,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
   renderPartnerships, renderTraining, renderEligibility, renderFAQ, renderFooter
 } from './sections';
@@ -40,6 +40,7 @@ function renderAll() {
     renderRoles(t, lang) +
     renderHierarchy(t) +
     renderSalary(t) +
+    renderVacancies(t, lang) +
     renderExams(t, lang) +
     renderSecurity(t, lang) +
     renderRoadmap(t, lang) +
@@ -124,6 +125,39 @@ function bindGlobal() {
       ans.style.maxHeight = open ? ans.scrollHeight + 'px' : '0';
     });
   });
+
+  bindPerksCarousel();
+}
+
+function bindPerksCarousel() {
+  const viewport = document.getElementById('perksViewport');
+  const prev = document.getElementById('perksPrev');
+  const next = document.getElementById('perksNext');
+  if (!viewport || !prev || !next) return;
+
+  const scrollStep = () => {
+    const card = viewport.querySelector('.perk-card');
+    if (!card) return viewport.clientWidth * 0.85;
+    const track = viewport.querySelector('.salary-perks-track');
+    const gap = track ? parseFloat(getComputedStyle(track).gap) || 18 : 18;
+    return card.offsetWidth + gap;
+  };
+
+  const updateButtons = () => {
+    const max = viewport.scrollWidth - viewport.clientWidth;
+    prev.disabled = viewport.scrollLeft <= 4;
+    next.disabled = viewport.scrollLeft >= max - 4;
+  };
+
+  prev.addEventListener('click', () => {
+    viewport.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
+  });
+  next.addEventListener('click', () => {
+    viewport.scrollBy({ left: scrollStep(), behavior: 'smooth' });
+  });
+  viewport.addEventListener('scroll', updateButtons, { passive: true });
+  window.addEventListener('resize', updateButtons);
+  updateButtons();
 }
 
 // scroll reveal + count-up

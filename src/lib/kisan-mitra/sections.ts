@@ -245,7 +245,13 @@ export function renderSalary(t) {
         </table>
       </div>
       <div class="salary-perks bg-paper reveal">
-        <div class="salary-perks-grid">${perks}</div>
+        <div class="salary-perks-carousel">
+          <button type="button" class="perks-nav perks-prev" id="perksPrev" aria-label="${esc(t.perks_prev)}">${ICON.arrowLeft}</button>
+          <div class="salary-perks-viewport" id="perksViewport">
+            <div class="salary-perks-track">${perks}</div>
+          </div>
+          <button type="button" class="perks-nav perks-next" id="perksNext" aria-label="${esc(t.perks_next)}">${ICON.arrowRight}</button>
+        </div>
       </div>
       <div class="ev-vehicle card reveal">
         <div class="ev-vehicle-grid">
@@ -262,6 +268,36 @@ export function renderSalary(t) {
           </div>
         </div>
       </div>
+    </div>
+  </section>`;
+}
+
+export function renderVacancies(t, lang) {
+  const rows = ROLES.map(r => `
+    <tr>
+      <td><b>${r.code}</b></td>
+      <td>${esc(lang === 'hi' ? r.exam_hi : r.exam_en)}</td>
+      <td class="vac-count"><b>${r.count}</b></td>
+    </tr>`).join('');
+  const total = ROLES.reduce((sum, r) => sum + r.count, 0);
+  const divs = DIVISIONS.map(d => `<span class="vac-pill">${esc(d.replace(' (Faizabad)', ''))}</span>`).join('');
+  return `
+  <section id="vacancies" class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.briefcase} 05 · VACANCIES</span>
+        <h2 class="h2">${esc(t.vac_title)}</h2>
+      </div>
+      <div class="tbl-wrap reveal vac-tbl-wrap">
+        <table class="tbl vac-tbl">
+          <thead><tr><th>${t.vac_th_post}</th><th>${t.vac_th_exam}</th><th>${t.vac_th_count}</th></tr></thead>
+          <tbody>${rows}
+            <tr class="vac-total"><td><b>${t.vac_total}</b></td><td></td><td class="vac-count"><b>${total}</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="vac-note reveal"><span class="vac-note-ico">${ICON.pin}</span><span>${esc(t.vac_note)}</span></p>
+      <div class="vac-divisions reveal">${divs}</div>
     </div>
   </section>`;
 }
