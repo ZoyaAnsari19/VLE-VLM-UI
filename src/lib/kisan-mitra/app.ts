@@ -1,17 +1,17 @@
+// @ts-nocheck
 // ============================================================
 // MAIN ORCHESTRATOR — assembles all sections, handles nav,
 // language toggle, accordions, scroll reveal, count-up.
 // ============================================================
-import { I18N } from './i18n.js';
+import { I18N } from './i18n';
 import {
   renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
   renderPartnerships, renderTraining, renderEligibility, renderFAQ, renderFooter
-} from './sections.js';
-import { initApply, setApplyLang } from './apply.js';
+} from './sections';
+import { initApply, setApplyLang } from './apply';
 
-let lang = localStorage.getItem('km_lang') || 'hi';
-document.documentElement.lang = lang;
+let lang = 'hi';
 
 function renderApplySection(t) {
   return `
@@ -30,6 +30,7 @@ function renderApplySection(t) {
 function renderAll() {
   const t = I18N[lang];
   const app = document.getElementById('app');
+  if (!app) return;
   app.innerHTML =
     renderNav(t) +
     renderHero(t) +
@@ -162,5 +163,8 @@ function animateCount(el) {
   requestAnimationFrame(step);
 }
 
-// boot
-renderAll();
+export function initKisanMitra() {
+  lang = localStorage.getItem('km_lang') || 'hi';
+  document.documentElement.lang = lang;
+  renderAll();
+}

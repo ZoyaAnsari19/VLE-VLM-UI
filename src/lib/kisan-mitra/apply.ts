@@ -1,9 +1,10 @@
+// @ts-nocheck
 // ============================================================
 // MULTI-STEP KYC-FIRST APPLICATION FORM
 // Steps 0..9. KYC before fee. Validation, scholarship, confirmation.
 // ============================================================
-import { ICON } from './icons.js';
-import { DIVISIONS, EXAMS } from './data.js';
+import { ICON } from './icons';
+import { DIVISIONS, EXAMS } from './data';
 
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 

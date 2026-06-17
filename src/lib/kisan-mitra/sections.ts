@@ -1,8 +1,9 @@
+// @ts-nocheck
 // ============================================================
 // SECTION RENDERERS — return HTML strings for each section
 // ============================================================
-import { ICON } from './icons.js';
-import { DIVISIONS, STATS, ROLES, SALARY_TABLE, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data.js';
+import { ICON } from './icons';
+import { DIVISIONS, STATS, ROLES, SALARY_TABLE, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -71,7 +72,7 @@ export function renderHero(t) {
           <div class="hero-tagline devanagari-head">${t.hero_tagline}</div>
         </div>
         <div class="hero-img reveal">
-          <img src="/static/img/teamPhoto.png" alt="Kisan Mitra Ecosystem team — VLE, VLM, DLO, TLO, CSE officers" loading="eager" width="640" height="512">
+          <img src="/images/teamPhoto.png" alt="Kisan Mitra Ecosystem team — VLE, VLM, DLO, TLO, CSE officers" loading="eager" width="640" height="512">
         </div>
       </div>
       <div class="stats">${stats}</div>
@@ -99,7 +100,7 @@ export function renderMission(t, lang) {
           <div class="mission-chips reveal">${chips}</div>
         </div>
         <div class="mission-media reveal">
-          <img src="/static/img/mission.webp" alt="${esc(t.mission_img_alt)}" loading="lazy" width="900" height="502" />
+          <img src="/images/mission.webp" alt="${esc(t.mission_img_alt)}" loading="lazy" width="900" height="502" />
           <span class="mission-badge">${ICON.leaf} ${esc(t.mission_badge)}</span>
         </div>
       </div>
