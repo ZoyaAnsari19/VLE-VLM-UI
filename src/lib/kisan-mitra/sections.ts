@@ -7,6 +7,8 @@ import { DIVISIONS, STATS, ROLES, SALARY_TABLE, EXAMS, ROADMAP, TRAINING, SCHEME
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const SALARY_PERK_ICONS = [ICON.badge, ICON.scan, ICON.home, ICON.rupee, ICON.briefcase, ICON.shield];
+
 export function renderNav(t) {
   return `
   <nav class="nav" id="nav">
@@ -222,7 +224,12 @@ export function renderHierarchy(t) {
 export function renderSalary(t) {
   const rows = SALARY_TABLE.map(r => `
     <tr><td><b>${r.role}</b></td><td>${r.reports}</td><td>${r.train}</td><td><b style="color:var(--green-forest)">${r.full}</b></td><td>${r.count}</td></tr>`).join('');
-  const bonuses = t.benefits_list.map(b => `<li>${esc(b)}</li>`).join('');
+  const perks = t.salary_perks.map((p, i) => `
+    <article class="card perk-card reveal">
+      <div class="perk-ico">${SALARY_PERK_ICONS[i]}</div>
+      <h3 class="h3 perk-title">${esc(p.title)}</h3>
+      <p class="perk-desc">${esc(p.desc)}</p>
+    </article>`).join('');
   return `
   <section id="salary">
     <div class="container">
@@ -237,20 +244,22 @@ export function renderSalary(t) {
           <tbody>${rows}</tbody>
         </table>
       </div>
-      <div class="salary-grid">
-        <div class="card reveal">
-          <h3 class="h3" style="color:var(--green-forest);margin-top:0">${t.benefits_title}</h3>
-          <ul class="bonus-list">${bonuses}</ul>
-        </div>
-        <div class="card reveal">
-          <h3 class="h3" style="color:var(--green-forest);margin-top:0">${t.ladder_title}</h3>
-          <div class="ladder">
-            <span>VLE</span><span class="arrow">→</span>
-            <span>Senior VLE</span><span class="arrow">→</span>
-            <span>TLO</span><span class="arrow">→</span>
-            <span>DLO</span>
+      <div class="salary-perks bg-paper reveal">
+        <div class="salary-perks-grid">${perks}</div>
+      </div>
+      <div class="ev-vehicle card reveal">
+        <div class="ev-vehicle-grid">
+          <div class="ev-vehicle-media">
+            <img src="/images/vehicles.png" alt="${esc(t.ev_img_alt)}" loading="lazy" width="900" height="520">
           </div>
-          <p style="color:var(--ink-soft);margin-top:16px">${esc(t.ladder_note)}</p>
+          <div class="ev-vehicle-copy">
+            <h3 class="h3 ev-vehicle-title">${esc(t.ev_title)}</h3>
+            <p class="ev-vehicle-sub">${esc(t.ev_sub)}</p>
+            <div class="ev-vehicle-chips">
+              <span class="chip"><span class="chip-ico">${ICON.ev}</span>${esc(t.ev_chip_vle)}</span>
+              <span class="chip"><span class="chip-ico">${ICON.ev}</span>${esc(t.ev_chip_tlo)}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
