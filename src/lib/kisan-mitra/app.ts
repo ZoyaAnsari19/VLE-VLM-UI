@@ -7,7 +7,7 @@ import { I18N } from './i18n';
 import {
   renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary, renderVacancies,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
-  renderPartnerships, renderTraining, renderEligibility, renderFAQ, renderFooter
+    renderPartnerships, renderTraining, renderInterview, renderEligibility, renderFAQ, renderFooter
 } from './sections';
 import { initApply, setApplyLang } from './apply';
 
@@ -47,6 +47,7 @@ function renderAll() {
     renderFarmers(t, lang) +
     renderPartnerships(t) +
     renderTraining(t, lang) +
+    renderInterview(t, lang) +
     renderEligibility(t) +
     renderApplySection(t) +
     renderFAQ(t, lang) +
@@ -95,13 +96,7 @@ function bindGlobal() {
   document.querySelectorAll('[data-role-toggle]').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = btn.dataset.roleToggle;
-      const card = btn.closest('.role-card');
-      const exp = document.getElementById('roleExp' + i);
-      const open = exp.classList.toggle('open');
-      if (card) card.classList.toggle('is-open', open);
-      const txt = btn.querySelector('.rtxt');
-      if (txt) txt.textContent = open ? I18N[lang].role_less : I18N[lang].role_details;
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      openRoleModal(i, btn);
     });
   });
 
@@ -127,6 +122,95 @@ function bindGlobal() {
   });
 
   bindPerksCarousel();
+  bindRoleModal();
+}
+
+function bindRoleModal() {
+  const modal = document.getElementById('roleModal');
+  if (!modal) return;
+
+  const close = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (modal._kmReturnFocus) {
+      try { modal._kmReturnFocus.focus(); } catch {}
+      modal._kmReturnFocus = null;
+    }
+  };
+
+  const closeBtn = modal.querySelector('[data-modal-close]');
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) close();
+  });
+
+  modal._kmClose = close;
+}
+
+function openRoleModal(i, triggerBtn) {
+  const modal = document.getElementById('roleModal');
+  if (!modal) return;
+  const card = triggerBtn.closest('.role-card');
+  const exp = document.getElementById('roleExp' + i);
+  if (!card || !exp) return;
+
+  const titleEl = card.querySelector('.role-title');
+  const pillEl = card.querySelector('.role-pill');
+  const coverImg = card.querySelector('.role-cover img');
+  const whoEl = exp.querySelector('.role-who');
+
+  const modalTitle = document.getElementById('roleModalTitle');
+  const modalPill = document.getElementById('roleModalPill');
+  const modalSub = document.getElementById('roleModalSub');
+  const modalBody = document.getElementById('roleModalBody');
+
+  if (modalTitle) modalTitle.textContent = titleEl ? titleEl.textContent : '';
+  if (modalPill) {
+    modalPill.textContent = pillEl ? pillEl.textContent : '';
+    modalPill.style.background = pillEl ? (pillEl.style.background || '') : '';
+  }
+  if (modalSub) modalSub.textContent = whoEl ? whoEl.textContent : '';
+
+  const meta = exp.querySelector('.role-meta');
+  const salary = exp.querySelector('.role-salary');
+  const dutiesTitle = exp.querySelector('.role-duties-title');
+  const duties = exp.querySelector('.role-duties');
+
+  const imgHTML = coverImg
+    ? `<div class="km-modal-cover"><img src="${coverImg.getAttribute('src')}" alt="${coverImg.getAttribute('alt') || ''}" loading="lazy"></div>`
+    : '';
+
+  const metaHTML = meta ? `<div class="km-modal-meta">${meta.outerHTML}</div>` : '';
+  const restHTML = `
+    <div class="km-modal-details">
+      ${salary ? salary.outerHTML : ''}
+      ${dutiesTitle ? dutiesTitle.outerHTML : ''}
+      ${duties ? duties.outerHTML : ''}
+    </div>`;
+
+  if (modalBody) {
+    modalBody.innerHTML = `
+      <div class="km-modal-top">
+        ${imgHTML}
+        ${metaHTML}
+      </div>
+      ${restHTML}
+    `;
+  }
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  modal._kmReturnFocus = triggerBtn;
+  document.body.style.overflow = 'hidden';
+
+  const closeBtn = modal.querySelector('[data-modal-close]');
+  if (closeBtn) closeBtn.focus();
 }
 
 function bindPerksCarousel() {
