@@ -173,7 +173,14 @@ export function renderRoles(t, lang) {
 
         <div class="role-foot">
           <span class="role-posts">${t.role_posts}: <b>${r.count}</b></span>
-          <button class="role-toggle" data-role-toggle="${i}" aria-controls="roleExp${i}" aria-expanded="false">
+          <button
+            class="role-toggle"
+            type="button"
+            data-role-toggle="${i}"
+            aria-controls="roleModal"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
             <span class="rtxt">${t.role_details}</span>
             <span class="ricon">${ICON.chev}</span>
           </button>
@@ -190,6 +197,19 @@ export function renderRoles(t, lang) {
         <p>${esc(t.roles_sub)}</p>
       </div>
       <div class="roles-grid">${cards}</div>
+    </div>
+    <div class="km-modal" id="roleModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="${esc(t.role_details)}">
+      <div class="km-modal-panel" role="document">
+        <button type="button" class="km-modal-close" data-modal-close aria-label="${esc(t.role_close)}">${ICON.x}</button>
+        <div class="km-modal-head">
+          <span class="role-pill" id="roleModalPill"></span>
+          <div>
+            <h3 class="km-modal-title" id="roleModalTitle"></h3>
+            <div class="km-modal-sub" id="roleModalSub"></div>
+          </div>
+        </div>
+        <div class="km-modal-body" id="roleModalBody"></div>
+      </div>
     </div>
   </section>`;
 }
@@ -298,6 +318,28 @@ export function renderVacancies(t, lang) {
       </div>
       <p class="vac-note reveal"><span class="vac-note-ico">${ICON.pin}</span><span>${esc(t.vac_note)}</span></p>
       <div class="vac-divisions reveal">${divs}</div>
+      <div class="vac-phases">
+        <article class="card vac-phase-card reveal">
+          <div class="vac-phase-dot"></div>
+          <div class="vac-phase-kicker">${esc(t.vac_phase2_kicker)}</div>
+          <h3 class="h3 vac-phase-title">${esc(t.vac_phase2_title)}</h3>
+          <p class="vac-phase-line">
+            <span class="vac-phase-pre">${esc(t.vac_phase2_pre)}</span>
+            <span class="vac-phase-big">${esc(t.vac_phase2_big)}</span>
+            <span class="vac-phase-post">${esc(t.vac_phase2_post)}</span>
+          </p>
+        </article>
+        <article class="card vac-phase-card reveal">
+          <div class="vac-phase-dot"></div>
+          <div class="vac-phase-kicker">${esc(t.vac_phase3_kicker)}</div>
+          <h3 class="h3 vac-phase-title">${esc(t.vac_phase3_title)}</h3>
+          <p class="vac-phase-line">
+            <span class="vac-phase-pre">${esc(t.vac_phase3_pre)}</span>
+            <span class="vac-phase-big">${esc(t.vac_phase3_big)}</span>
+            <span class="vac-phase-post">${esc(t.vac_phase3_post)}</span>
+          </p>
+        </article>
+      </div>
     </div>
   </section>`;
 }
@@ -459,22 +501,118 @@ export function renderPartnerships(t) {
 }
 
 export function renderTraining(t, lang) {
-  const cards = TRAINING.map(w => `
+  const ICO = [ICON.badge, ICON.seedling, ICON.shield, ICON.credit, ICON.scan, ICON.check, ICON.pin, ICON.cap];
+  const cards = TRAINING.map((w, i) => `
     <div class="train-card reveal">
+      <div class="train-ico">${ICO[i] || ICON.badge}</div>
       <div class="wk">${w.wk}</div>
       <h4>${esc(lang === 'hi' ? w.title_hi : w.title_en)}</h4>
       <p>${esc(w.desc)}</p>
     </div>`).join('');
   return `
-  <section>
+  <section class="train-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.cap} Training</span>
         <h2 class="h2">${esc(t.training_title)}</h2>
         <p>${esc(t.training_sub)}</p>
       </div>
+      <div class="train-photos">
+        <figure class="train-photo card reveal">
+          <img src="/images/training-class.webp" alt="${esc(t.training_img_alt)}" loading="lazy" width="1400" height="800">
+          <figcaption class="train-cap">${ICON.home} Residential · hostel + khana</figcaption>
+        </figure>
+        <figure class="train-photo card reveal">
+          <img src="/images/training-field.webp" alt="${esc(t.training_img_alt)}" loading="lazy" width="1400" height="800">
+          <figcaption class="train-cap">${ICON.seedling} Field practicum</figcaption>
+        </figure>
+      </div>
       <div class="train-grid">${cards}</div>
-      <p style="text-align:center;color:var(--ink-soft);margin-top:24px" class="reveal">${esc(t.training_partners)}</p>
+      <p class="train-foot reveal"><span class="train-foot-ico">${ICON.pin}</span>${esc(t.training_partners)}</p>
+    </div>
+  </section>`;
+}
+
+export function renderInterview(t, lang) {
+  const qs = (lang === 'hi' ? t.int_qs_hi : t.int_qs_en)
+    .map(q => `<li>${esc(q)}</li>`)
+    .join('');
+  return `
+  <section id="interview">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.badge} 11 · INTERVIEW</span>
+        <h2 class="h2">${esc(t.int_title)}</h2>
+      </div>
+      <div class="int-grid">
+        <div class="int-media card reveal">
+          <img src="/images/interview-panel.webp" alt="${esc(t.int_img_alt)}" loading="lazy" width="1200" height="800">
+        </div>
+        <div class="int-copy reveal">
+          <p class="int-sub">${esc(t.int_sub)}</p>
+        </div>
+        <div class="card int-panel reveal">
+          <div class="int-tag"><span class="int-pill">VLE / VLM</span></div>
+          <h3 class="h3">${esc(t.int_panel1_title)}</h3>
+          <p class="int-panel-line">${esc(t.int_panel1_line)}</p>
+        </div>
+        <div class="card int-panel reveal">
+          <div class="int-tag"><span class="int-pill">TLO / DLO</span></div>
+          <h3 class="h3">${esc(t.int_panel2_title)}</h3>
+          <p class="int-panel-line">${esc(t.int_panel2_line)}</p>
+        </div>
+        <div class="card int-samples reveal">
+          <div class="int-samples-head">
+            <span class="int-samples-ico">${ICON.badge}</span>
+            <div>
+              <div class="int-samples-kicker">${esc(t.int_samples_kicker)}</div>
+              <h3 class="h3" style="margin:6px 0 0">${esc(t.int_samples_title)}</h3>
+            </div>
+          </div>
+          <ul class="int-q">${qs}</ul>
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+export function renderPrep(t) {
+  return `
+  <section id="prep" class="bg-paper">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">${ICON.cap} 13 · TAIYARI</span>
+        <h2 class="h2">${esc(t.prep_title)}</h2>
+      </div>
+
+      <div class="prep-cards">
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.cap}</div>
+          <h3 class="h3">${esc(t.prep_card1_t)}</h3>
+          <p>${esc(t.prep_card1_d)}</p>
+        </div>
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.badge}</div>
+          <h3 class="h3">${esc(t.prep_card2_t)}</h3>
+          <p>${esc(t.prep_card2_d)}</p>
+        </div>
+        <div class="card prep-card reveal">
+          <div class="prep-ico">${ICON.check}</div>
+          <h3 class="h3">${esc(t.prep_card3_t)}</h3>
+          <p>${esc(t.prep_card3_d)}</p>
+        </div>
+      </div>
+
+      <div class="prep-grid">
+        <div class="card prep-img reveal">
+          <img src="/images/taiyari-study.webp" alt="${esc(t.prep_img_alt)}" loading="lazy" width="1200" height="800">
+        </div>
+        <div class="prep-copy card reveal">
+          <p class="prep-sub">${esc(t.prep_sub)}</p>
+          <a class="btn btn-saffron" href="#apply">${esc(t.prep_cta)} ${ICON.arrowRight}</a>
+          <p class="prep-note">${esc(t.prep_note)}</p>
+        </div>
+      </div>
     </div>
   </section>`;
 }
