@@ -205,6 +205,16 @@ function bindRoleModal() {
   const closeBtn = modal.querySelector('[data-modal-close]');
   if (closeBtn) closeBtn.addEventListener('click', close);
 
+  const examBtn = modal.querySelector('[data-modal-exam-pattern]');
+  if (examBtn) {
+    examBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = modal.dataset.examId ? document.getElementById('exam-' + modal.dataset.examId) : null;
+      close();
+      (target || document.getElementById('exams'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
   const applyBtn = modal.querySelector('[data-modal-apply]');
   if (applyBtn) {
     applyBtn.addEventListener('click', (e) => {
@@ -248,6 +258,9 @@ function openRoleModal(i, triggerBtn) {
     modalPill.style.background = pillEl ? (pillEl.style.background || '') : '';
   }
   if (modalSub) modalSub.textContent = whoEl ? whoEl.textContent : '';
+
+  const roleCode = (pillEl ? pillEl.textContent : '').trim();
+  modal.dataset.examId = (roleCode === 'VLE' || roleCode === 'VLM') ? 'gram-sevak' : 'krishi-adhikari';
 
   const meta = exp.querySelector('.role-meta');
   const salary = exp.querySelector('.role-salary');

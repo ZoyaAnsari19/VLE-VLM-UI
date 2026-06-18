@@ -210,6 +210,7 @@ export function renderRoles(t, lang) {
         </div>
         <div class="km-modal-body" id="roleModalBody"></div>
         <div class="km-modal-foot">
+          <a href="#exams" class="btn btn-outline km-modal-exam" data-modal-exam-pattern>${t.hero_cta2}</a>
           <a href="#apply" class="btn btn-primary km-modal-apply" data-modal-apply>${t.nav_apply} ${ICON.arrowRight}</a>
         </div>
       </div>
@@ -358,7 +359,7 @@ export function renderExams(t, lang) {
       return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><ul>${opts}</ul></div>`;
     }).join('');
     return `
-    <article class="card exam-card reveal">
+    <article class="card exam-card reveal" id="exam-${e.id}">
       <div class="exam-head">
         <div><span class="eyebrow">${esc(lang === 'hi' ? e.for_hi : e.for_en)}</span></div>
         <span class="exam-fee">₹${e.fee}</span>

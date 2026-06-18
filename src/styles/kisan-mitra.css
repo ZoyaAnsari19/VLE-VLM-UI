@@ -424,8 +424,10 @@ section { padding: clamp(56px, 9vw, 110px) 0; position: relative; }
   border-top: 1px solid var(--line);
   background: var(--bg-cream);
   z-index: 1;
+  display: flex;
+  gap: 12px;
 }
-.km-modal-apply { width: 100%; }
+.km-modal-foot .btn { flex: 1; }
 
 /* reuse role details layout inside modal */
 .km-modal-details .role-who { display: none; }
@@ -440,6 +442,7 @@ section { padding: clamp(56px, 9vw, 110px) 0; position: relative; }
   .km-modal-top { grid-template-columns: 1fr; }
   .km-modal-cover { max-height: 240px; border-radius: 16px; }
   .km-modal-cover img { height: 240px; }
+  .km-modal-foot { flex-direction: column; }
 }
 
 /* ===== HIERARCHY ===== */
