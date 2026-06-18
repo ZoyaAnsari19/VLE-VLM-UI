@@ -209,6 +209,10 @@ export function renderRoles(t, lang) {
           </div>
         </div>
         <div class="km-modal-body" id="roleModalBody"></div>
+        <div class="km-modal-foot">
+          <a href="#exams" class="btn btn-outline km-modal-exam" data-modal-exam-pattern>${t.hero_cta2}</a>
+          <a href="#apply" class="btn btn-primary km-modal-apply" data-modal-apply>${t.nav_apply} ${ICON.arrowRight}</a>
+        </div>
       </div>
     </div>
   </section>`;
@@ -355,7 +359,7 @@ export function renderExams(t, lang) {
       return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><ul>${opts}</ul></div>`;
     }).join('');
     return `
-    <article class="card exam-card reveal">
+    <article class="card exam-card reveal" id="exam-${e.id}">
       <div class="exam-head">
         <div><span class="eyebrow">${esc(lang === 'hi' ? e.for_hi : e.for_en)}</span></div>
         <span class="exam-fee">₹${e.fee}</span>
@@ -370,8 +374,14 @@ export function renderExams(t, lang) {
         <div class="exam-row"><span class="k">${t.exam_qualifying}</span><span class="v">${e.qualifying}</span></div>
       </div>
       <div class="samples">
-        <button class="btn btn-ghost sample-toggle" data-sample-toggle="${e.id}">${t.exam_samples} ${ICON.chev}</button>
-        <div class="samples-body" id="samples-${e.id}">${samples}</div>
+        <button
+          class="btn btn-ghost sample-toggle"
+          type="button"
+          data-sample-toggle="${e.id}"
+          aria-controls="examSamplesModal"
+          aria-haspopup="dialog"
+        >${t.exam_samples} ${ICON.chev}</button>
+        <div class="samples-source" id="samples-${e.id}" hidden>${samples}</div>
       </div>
     </article>`;
   }).join('');
@@ -388,6 +398,22 @@ export function renderExams(t, lang) {
         <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.reschedule_title}</h3>
         <p style="margin:8px 0 0">• ${esc(t.reschedule_1)}</p>
         <p style="margin:6px 0 0">• ${esc(t.reschedule_2)}</p>
+      </div>
+    </div>
+    <div class="km-modal" id="examSamplesModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="${esc(t.exam_samples)}">
+      <div class="km-modal-panel" role="document">
+        <button type="button" class="km-modal-close" data-modal-close aria-label="${esc(t.role_close)}">${ICON.x}</button>
+        <div class="km-modal-head">
+          <span class="eyebrow" id="examSamplesPill"></span>
+          <div>
+            <h3 class="km-modal-title" id="examSamplesTitle"></h3>
+            <div class="km-modal-sub" id="examSamplesSub"></div>
+          </div>
+        </div>
+        <div class="km-modal-body km-exam-samples-body" id="examSamplesBody"></div>
+        <div class="km-modal-foot">
+          <a href="#apply" class="btn btn-primary km-modal-apply" data-modal-apply>${t.nav_apply} ${ICON.arrowRight}</a>
+        </div>
       </div>
     </div>
   </section>`;

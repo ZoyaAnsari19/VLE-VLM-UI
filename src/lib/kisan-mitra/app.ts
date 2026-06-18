@@ -101,14 +101,9 @@ function bindGlobal() {
     });
   });
 
-  // exam sample toggles
+  // exam sample modal
   document.querySelectorAll('[data-sample-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const id = btn.dataset.sampleToggle;
-      const body = document.getElementById('samples-' + id);
-      const open = body.classList.toggle('open');
-      btn.firstChild.textContent = (open ? I18N[lang].exam_samples_hide : I18N[lang].exam_samples) + ' ';
-    });
+    btn.addEventListener('click', () => openExamSamplesModal(btn.dataset.sampleToggle, btn));
   });
 
   // FAQ accordions
@@ -124,6 +119,73 @@ function bindGlobal() {
 
   bindPerksCarousel();
   bindRoleModal();
+  bindExamSamplesModal();
+}
+
+function bindExamSamplesModal() {
+  const modal = document.getElementById('examSamplesModal');
+  if (!modal) return;
+
+  const close = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (modal._kmReturnFocus) {
+      try { modal._kmReturnFocus.focus(); } catch {}
+      modal._kmReturnFocus = null;
+    }
+  };
+
+  const closeBtn = modal.querySelector('[data-modal-close]');
+  if (closeBtn) closeBtn.addEventListener('click', close);
+
+  const applyBtn = modal.querySelector('[data-modal-apply]');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      close();
+      document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) close();
+  });
+
+  modal._kmClose = close;
+}
+
+function openExamSamplesModal(id, triggerBtn) {
+  const modal = document.getElementById('examSamplesModal');
+  const source = document.getElementById('samples-' + id);
+  const card = triggerBtn.closest('.exam-card');
+  if (!modal || !source || !card) return;
+
+  const titleEl = card.querySelector('h3');
+  const forEl = card.querySelector('.exam-for');
+  const pillEl = card.querySelector('.exam-head .eyebrow');
+
+  const modalTitle = document.getElementById('examSamplesTitle');
+  const modalPill = document.getElementById('examSamplesPill');
+  const modalSub = document.getElementById('examSamplesSub');
+  const modalBody = document.getElementById('examSamplesBody');
+
+  if (modalTitle) modalTitle.textContent = titleEl ? titleEl.textContent : '';
+  if (modalPill) modalPill.textContent = pillEl ? pillEl.textContent : '';
+  if (modalSub) modalSub.textContent = forEl ? forEl.textContent : '';
+  if (modalBody) modalBody.innerHTML = source.innerHTML;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  modal._kmReturnFocus = triggerBtn;
+  document.body.style.overflow = 'hidden';
+
+  const closeBtn = modal.querySelector('[data-modal-close]');
+  if (closeBtn) closeBtn.focus();
 }
 
 function bindRoleModal() {
@@ -142,6 +204,25 @@ function bindRoleModal() {
 
   const closeBtn = modal.querySelector('[data-modal-close]');
   if (closeBtn) closeBtn.addEventListener('click', close);
+
+  const examBtn = modal.querySelector('[data-modal-exam-pattern]');
+  if (examBtn) {
+    examBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = modal.dataset.examId ? document.getElementById('exam-' + modal.dataset.examId) : null;
+      close();
+      (target || document.getElementById('exams'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  const applyBtn = modal.querySelector('[data-modal-apply]');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      close();
+      document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  }
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) close();
@@ -177,6 +258,9 @@ function openRoleModal(i, triggerBtn) {
     modalPill.style.background = pillEl ? (pillEl.style.background || '') : '';
   }
   if (modalSub) modalSub.textContent = whoEl ? whoEl.textContent : '';
+
+  const roleCode = (pillEl ? pillEl.textContent : '').trim();
+  modal.dataset.examId = (roleCode === 'VLE' || roleCode === 'VLM') ? 'gram-sevak' : 'krishi-adhikari';
 
   const meta = exp.querySelector('.role-meta');
   const salary = exp.querySelector('.role-salary');
