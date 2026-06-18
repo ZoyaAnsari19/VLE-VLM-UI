@@ -13,6 +13,10 @@ import { initApply, setApplyLang } from './apply';
 
 let lang = 'hi';
 
+function releaseBodyScroll() {
+  document.body.style.overflow = '';
+}
+
 function renderApplySection(t) {
   return `
   <section id="apply" class="bg-paper">
@@ -28,6 +32,7 @@ function renderApplySection(t) {
 }
 
 function renderAll() {
+  releaseBodyScroll();
   const t = I18N[lang];
   const app = document.getElementById('app');
   if (!app) return;
@@ -68,7 +73,7 @@ function switchLang(l) {
   lang = l;
   localStorage.setItem('km_lang', l);
   document.documentElement.lang = l;
-  const scrollPos = window.scrollY;
+  releaseBodyScroll();
   renderAll();
   window.scrollTo(0, 0); // re-render resets; go to top for clarity
 }
@@ -88,7 +93,7 @@ function bindGlobal() {
   // mobile drawer
   const drawer = document.getElementById('drawer');
   const openD = () => { drawer.classList.add('open'); document.body.style.overflow = 'hidden'; };
-  const closeD = () => { drawer.classList.remove('open'); document.body.style.overflow = ''; };
+  const closeD = () => { drawer.classList.remove('open'); releaseBodyScroll(); };
   document.getElementById('hamburger').addEventListener('click', openD);
   document.getElementById('drawerClose').addEventListener('click', closeD);
   drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
@@ -129,7 +134,7 @@ function bindExamSamplesModal() {
   const close = () => {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    releaseBodyScroll();
     if (modal._kmReturnFocus) {
       try { modal._kmReturnFocus.focus(); } catch {}
       modal._kmReturnFocus = null;
@@ -195,7 +200,7 @@ function bindRoleModal() {
   const close = () => {
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    releaseBodyScroll();
     if (modal._kmReturnFocus) {
       try { modal._kmReturnFocus.focus(); } catch {}
       modal._kmReturnFocus = null;
