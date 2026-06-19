@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "@/styles/kisan-mitra.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kisan.kalakar.tv";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://exam.kalakar.tv";
 const ogImageUrl = `${siteUrl}/images/og-share.png?v=3`;
 
 const ogImage = {
