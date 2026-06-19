@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "@/styles/kisan-mitra.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://kisan.kalakar.tv";
-const ogImageUrl = `${siteUrl}/images/og-team.jpg?v=2`;
+const ogImageUrl = `${siteUrl}/images/og-share.png?v=3`;
 
 const ogImage = {
   url: ogImageUrl,
-  width: 1200,
-  height: 630,
-  alt: "Kisan Mitra Ecosystem team — VLE, VLM, DLO, TLO, CSE officers",
-  type: "image/jpeg",
+  width: 682,
+  height: 539,
+  alt: "किसान मित्र इकोसिस्टम — VLE, VLM, DLO, TLO, CSE अधिकारी",
+  type: "image/png",
 };
 
 const siteDescription =
@@ -50,9 +50,9 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="682" />
+        <meta property="og:image:height" content="539" />
         <meta property="og:image:alt" content={ogImage.alt} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
