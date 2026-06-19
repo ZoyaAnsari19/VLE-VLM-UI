@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import "@/styles/kisan-mitra.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://exam.kalakar.tv";
-const ogImageUrl = `${siteUrl}/images/og-share.png?v=3`;
+const siteUrl = "https://exam.kalakar.tv";
+const ogImagePath = "/images/og-share.jpg";
+const ogImageUrl = `${siteUrl}${ogImagePath}`;
 
 const ogImage = {
-  url: ogImageUrl,
-  width: 682,
-  height: 539,
+  url: ogImagePath,
+  width: 1200,
+  height: 948,
   alt: "किसान मित्र इकोसिस्टम — VLE, VLM, DLO, TLO, CSE अधिकारी",
-  type: "image/png",
+  type: "image/jpeg",
 };
 
 const siteDescription =
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kisan Mitra Bharti Pariksha 2026",
     description: siteDescription,
-    images: [ogImageUrl],
+    images: [ogImagePath],
   },
   icons: {
     icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231B4D3E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z'/%3E%3Cpath d='M2 21c0-3 1.85-5.36 5.08-6'/%3E%3C/svg%3E",
@@ -50,9 +51,9 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:secure_url" content={ogImageUrl} />
-        <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="682" />
-        <meta property="og:image:height" content="539" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="948" />
         <meta property="og:image:alt" content={ogImage.alt} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
