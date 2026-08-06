@@ -1,10 +1,15 @@
 // @ts-nocheck
 // ============================================================
 // MULTI-STEP KYC-FIRST APPLICATION FORM
-// Steps 0..9. KYC before fee. Validation, scholarship, confirmation.
+// Two tracks, driven by the selected position's applicationTrack:
+//  - 'exam'   (Field Operations): position -> otp -> kyc -> personal ->
+//             education -> posting -> docs -> declare -> fee -> confirm
+//  - 'direct' (everyone else):    position -> otp -> personal ->
+//             education -> docs -> declare -> confirm (no Aadhaar KYC, no fee)
 // ============================================================
 import { ICON } from './icons';
 import { DIVISIONS, EXAMS } from './data';
+import { POSITIONS, DEPARTMENTS, getPosition } from './recruitment/data';
 
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -12,13 +17,14 @@ const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</
 const STORE_KEY = 'km_apply_state';
 export const formState = {
   step: 0,
-  exam: null,        // 'gram-sevak' | 'krishi-adhikari'
+  positionId: '',
+  exam: null,        // 'gram-sevak' | 'krishi-adhikari' | null — derived from the selected position
   mobile: '', otpVerified: false,
   aadhaar: '', kycConsent: false, fullName: '', dob: '', gender: '', kycVerified: false,
   parentName: '', category: '', pwd: '', email: '', division: '', district: '', tehsil: '', village: '', pincode: '', address: '',
   qualification: '', stream: '', passYear: '', percent: '', agriBg: '', experience: '',
   prefDivision: '', willingLocal: '',
-  docs: { photo: '', signature: '', aadhaarCard: '', education: '', category_cert: '', domicile: '' },
+  docs: { photo: '', signature: '', aadhaarCard: '', education: '', category_cert: '', domicile: '', resume: '', idProof: '' },
   declTruth: false, declAntiCorr: false, declTnc: false,
   payMethod: '', appId: ''
 };
@@ -33,7 +39,17 @@ function saveState() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(formState)); } catch (e) {}
 }
 
-const TOTAL_STEPS = 10; // 0..9
+const EXAM_TRACK_STEPS = ['position', 'otp', 'kyc', 'personal', 'education', 'posting', 'docs', 'declare', 'fee', 'confirm'];
+const DIRECT_TRACK_STEPS = ['position', 'otp', 'personal', 'education', 'docs', 'declare', 'confirm'];
+
+function isExamTrack() {
+  const p = getPosition(formState.positionId);
+  return !p || p.applicationTrack === 'exam';
+}
+function currentSteps() { return isExamTrack() ? EXAM_TRACK_STEPS : DIRECT_TRACK_STEPS; }
+function stepName() { return currentSteps()[formState.step] || 'confirm'; }
+function totalSteps() { return currentSteps().length; }
+
 let lang = 'hi';
 
 export function initApply(currentLang) {
@@ -43,15 +59,26 @@ export function initApply(currentLang) {
 }
 export function setApplyLang(l) { lang = l; renderForm(); }
 
+/** Called by the Positions Explorer's "Apply Now" — pre-selects the position and jumps past step 0. */
+export function applyToPosition(positionId) {
+  const position = getPosition(positionId);
+  if (!position) return;
+  formState.positionId = positionId;
+  formState.exam = position.applicationTrack === 'exam' ? position.examId : null;
+  formState.step = 1;
+  saveState();
+  renderForm();
+}
+
 const STR = {
   hi: {
     step: 'Step', of: 'of', back: 'Peeche', next: 'Aage', required: '(zaroori)',
-    s0_title: 'Pariksha / Post chuno', s0_sub: 'Apni target post ke hisaab se pariksha select karein.',
+    s0_title: 'Position Chuno', s0_sub: 'Apni target position select karein.', s0_label: 'Position',
     s1_title: 'Mobile Verification', s1_sub: 'Apna mobile number verify karein.',
     s1_mobile: 'Mobile Number', s1_send: 'OTP Bhejein', s1_otp: 'OTP (6-digit)', s1_verify: 'Verify Karein', s1_resend: 'Dobara bhejein', s1_verified: 'Mobile Verified',
     s2_title: 'KYC (Aadhaar-based)', s2_sub: 'Identity verification — fee se pehle.',
     s2_aadhaar: 'Aadhaar Number', s2_consent: 'Main apni Aadhaar details verification ke liye consent deta/deti hoon.',
-    s2_name: 'Poora Naam (Aadhaar ke anusaar)', s2_dob: 'Janm Tithi (DOB)', s2_gender: 'Gender', s2_verify: 'Aadhaar Verify Karein', s2_verified: 'KYC Verified',
+    s2_name: 'Poora Naam', s2_dob: 'Janm Tithi (DOB)', s2_gender: 'Gender', s2_verify: 'Aadhaar Verify Karein', s2_verified: 'KYC Verified',
     s3_title: 'Personal & Address Details', s3_sub: 'Apni jaankari bharein.',
     s3_parent: 'Pita / Mata ka Naam', s3_cat: 'Category', s3_pwd: 'Person with Disability?', s3_email: 'Email (optional)',
     s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Tehsil', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Poora Pata',
@@ -61,25 +88,25 @@ const STR = {
     s5_pref: 'Preferred Division', s5_willing: 'Home/nearby cluster mein serve karne ke liye willing?', s5_note: 'Top scorers ko VLM, baaki ko VLE assign kiya jaata hai — dono ek hi pariksha se.',
     s6_title: 'Document Upload', s6_sub: 'Apne documents upload karein (image/PDF).',
     s7_title: 'Declaration & Review', s7_sub: 'Apni jaankari check karein aur declare karein.',
-    s7_edit: 'Edit', s7_d1: 'Sabhi jaankari sahi hai. Galat jaankari par mera application reject ho sakta hai.', s7_d2: 'Main bhrashtachar na karne aur sach bataane ki ghoshna karta/karti hoon (anti-corruption).', s7_d3: 'Terms & Conditions + Privacy (DPDP) consent — data encrypted, 6 mahine baad delete agar select nahi hue.',
+    s7_edit: 'Edit', s7_d1: 'Sabhi jaankari sahi hai. Galat jaankari par mera application reject ho sakta hai.', s7_d2: 'Main sach bataane ki ghoshna karta/karti hoon.', s7_d3: 'Terms & Conditions + Privacy (DPDP) consent — data encrypted, 6 mahine baad delete agar select nahi hue.',
     s8_title: 'Fee Payment', s8_sub: 'KYC ho gaya — ab fee bharein.', s8_fee: 'Exam Fee', s8_discount: 'Scholarship / Waiver', s8_total: 'Dena hai', s8_pay: 'Bhugtaan Karein', s8_trust: 'Aapki fee ek escrow account mein securely jaati hai.',
-    s9_title: 'Application Submitted!', s9_sub: 'Aapka application safal raha.', s9_id: 'Aapki Application ID', s9_dl: 'Application PDF Download Karein', s9_info: 'Admit card exam se ~1 hafta pehle issue hoga. Updates aapke mobile/WhatsApp par.', s9_again: 'Naya Application',
-    err_required: 'Ye field zaroori hai', err_mobile: '10-digit mobile number daalein', err_otp: 'Sahi 6-digit OTP daalein', err_aadhaar: '12-digit Aadhaar number daalein', err_consent: 'Consent dena zaroori hai', err_pin: '6-digit pincode daalein', err_decl: 'Sabhi declarations accept karein', err_otp_first: 'Pehle OTP verify karein', err_kyc_first: 'Pehle Aadhaar verify karein', err_pay: 'Payment method chunein',
-    sending: 'Bhej rahe hain...', verifying: 'Verify ho raha hai...', paying: 'Process ho raha hai...',
+    s9_title: 'Application Submitted!', s9_sub: 'Aapka application safal raha.', s9_id: 'Aapki Application ID', s9_dl: 'Application PDF Download Karein', s9_info: 'Updates aapke mobile/WhatsApp par milenge.', s9_info_exam: 'Admit card exam se ~1 hafta pehle issue hoga. Updates aapke mobile/WhatsApp par.', s9_again: 'Naya Application',
+    err_required: 'Ye field zaroori hai', err_mobile: '10-digit mobile number daalein', err_otp: 'Sahi 6-digit OTP daalein', err_aadhaar: '12-digit Aadhaar number daalein', err_consent: 'Consent dena zaroori hai', err_pin: '6-digit pincode daalein', err_decl: 'Sabhi declarations accept karein', err_otp_first: 'Pehle OTP verify karein', err_kyc_first: 'Pehle Aadhaar verify karein', err_pay: 'Payment method chunein', err_position: 'Pehle position chunein',
+    sending: 'Bhej rahe hain...', verifying: 'Verify ho raha hai...', paying: 'Process ho raha hai...', submitting: 'Submit ho raha hai...',
     cat_options: ['General', 'OBC', 'SC', 'ST', 'EWS'], yesno: ['Haan', 'Nahi'],
     gender_opts: ['Male', 'Female', 'Other'], qual_opts: ['10th', '12th', 'Graduate', 'Post-Graduate'],
     select: 'Select karein', upload_hint: 'Click karke upload karein',
-    docs: { photo: 'Passport Photo', signature: 'Signature', aadhaarCard: 'Aadhaar Card', education: 'Education Certificate', category_cert: 'Category Certificate (if applicable)', domicile: 'Domicile Certificate (if available)' },
-    review_groups: { exam: 'Pariksha', contact: 'Contact & KYC', personal: 'Personal & Address', edu: 'Education', pref: 'Posting Preference' }
+    docs: { photo: 'Passport Photo', signature: 'Signature', aadhaarCard: 'Aadhaar Card', education: 'Education Certificate', category_cert: 'Category Certificate (if applicable)', domicile: 'Domicile Certificate (if available)', resume: 'Resume / CV', idProof: 'Pehchan Patra (ID Proof)' },
+    review_groups: { position: 'Position', contact: 'Contact & KYC', personal: 'Personal & Address', edu: 'Education', pref: 'Posting Preference' }
   },
   en: {
     step: 'Step', of: 'of', back: 'Back', next: 'Next', required: '(required)',
-    s0_title: 'Choose Exam / Post', s0_sub: 'Select the exam for your target post.',
+    s0_title: 'Choose a Position', s0_sub: 'Select your target position.', s0_label: 'Position',
     s1_title: 'Mobile Verification', s1_sub: 'Verify your mobile number.',
     s1_mobile: 'Mobile Number', s1_send: 'Send OTP', s1_otp: 'OTP (6-digit)', s1_verify: 'Verify', s1_resend: 'Resend', s1_verified: 'Mobile Verified',
     s2_title: 'KYC (Aadhaar-based)', s2_sub: 'Identity verification — before fee.',
     s2_aadhaar: 'Aadhaar Number', s2_consent: 'I consent to verification of my Aadhaar details.',
-    s2_name: 'Full Name (as per Aadhaar)', s2_dob: 'Date of Birth', s2_gender: 'Gender', s2_verify: 'Verify Aadhaar', s2_verified: 'KYC Verified',
+    s2_name: 'Full Name', s2_dob: 'Date of Birth', s2_gender: 'Gender', s2_verify: 'Verify Aadhaar', s2_verified: 'KYC Verified',
     s3_title: 'Personal & Address Details', s3_sub: 'Fill in your details.',
     s3_parent: "Father's / Mother's Name", s3_cat: 'Category', s3_pwd: 'Person with Disability?', s3_email: 'Email (optional)',
     s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Tehsil', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Full Address',
@@ -89,16 +116,16 @@ const STR = {
     s5_pref: 'Preferred Division', s5_willing: 'Willing to serve in home/nearby cluster?', s5_note: 'Top scorers are assigned VLM, the rest VLE — both from the same exam.',
     s6_title: 'Document Upload', s6_sub: 'Upload your documents (image/PDF).',
     s7_title: 'Declaration & Review', s7_sub: 'Check your details and declare.',
-    s7_edit: 'Edit', s7_d1: 'All information is correct. False information may lead to rejection.', s7_d2: 'I declare truthfulness and commit to anti-corruption.', s7_d3: 'Terms & Conditions + Privacy (DPDP) consent — data encrypted, deleted after 6 months if not selected.',
+    s7_edit: 'Edit', s7_d1: 'All information is correct. False information may lead to rejection.', s7_d2: 'I declare that the information I have provided is truthful.', s7_d3: 'Terms & Conditions + Privacy (DPDP) consent — data encrypted, deleted after 6 months if not selected.',
     s8_title: 'Fee Payment', s8_sub: 'KYC done — now pay the fee.', s8_fee: 'Exam Fee', s8_discount: 'Scholarship / Waiver', s8_total: 'Payable', s8_pay: 'Pay Now', s8_trust: 'Your fee goes securely into an escrow account.',
-    s9_title: 'Application Submitted!', s9_sub: 'Your application was successful.', s9_id: 'Your Application ID', s9_dl: 'Download Application PDF', s9_info: 'Admit card will be issued ~1 week before exam. Updates on your mobile/WhatsApp.', s9_again: 'New Application',
-    err_required: 'This field is required', err_mobile: 'Enter a 10-digit mobile number', err_otp: 'Enter a valid 6-digit OTP', err_aadhaar: 'Enter a 12-digit Aadhaar number', err_consent: 'Consent is required', err_pin: 'Enter a 6-digit pincode', err_decl: 'Accept all declarations', err_otp_first: 'Verify OTP first', err_kyc_first: 'Verify Aadhaar first', err_pay: 'Choose a payment method',
-    sending: 'Sending...', verifying: 'Verifying...', paying: 'Processing...',
+    s9_title: 'Application Submitted!', s9_sub: 'Your application was successful.', s9_id: 'Your Application ID', s9_dl: 'Download Application PDF', s9_info: 'Updates will be sent to your mobile/WhatsApp.', s9_info_exam: 'Admit card will be issued ~1 week before exam. Updates on your mobile/WhatsApp.', s9_again: 'New Application',
+    err_required: 'This field is required', err_mobile: 'Enter a 10-digit mobile number', err_otp: 'Enter a valid 6-digit OTP', err_aadhaar: 'Enter a 12-digit Aadhaar number', err_consent: 'Consent is required', err_pin: 'Enter a 6-digit pincode', err_decl: 'Accept all declarations', err_otp_first: 'Verify OTP first', err_kyc_first: 'Verify Aadhaar first', err_pay: 'Choose a payment method', err_position: 'Choose a position first',
+    sending: 'Sending...', verifying: 'Verifying...', paying: 'Processing...', submitting: 'Submitting...',
     cat_options: ['General', 'OBC', 'SC', 'ST', 'EWS'], yesno: ['Yes', 'No'],
     gender_opts: ['Male', 'Female', 'Other'], qual_opts: ['10th', '12th', 'Graduate', 'Post-Graduate'],
     select: 'Select', upload_hint: 'Click to upload',
-    docs: { photo: 'Passport Photo', signature: 'Signature', aadhaarCard: 'Aadhaar Card', education: 'Education Certificate', category_cert: 'Category Certificate (if applicable)', domicile: 'Domicile Certificate (if available)' },
-    review_groups: { exam: 'Exam', contact: 'Contact & KYC', personal: 'Personal & Address', edu: 'Education', pref: 'Posting Preference' }
+    docs: { photo: 'Passport Photo', signature: 'Signature', aadhaarCard: 'Aadhaar Card', education: 'Education Certificate', category_cert: 'Category Certificate (if applicable)', domicile: 'Domicile Certificate (if available)', resume: 'Resume / CV', idProof: 'ID Proof' },
+    review_groups: { position: 'Position', contact: 'Contact & KYC', personal: 'Personal & Address', edu: 'Education', pref: 'Posting Preference' }
   }
 };
 
@@ -147,20 +174,26 @@ function radioField(id, labelKey, value, options) {
 
 function stepHTML() {
   const L = s();
-  const st = formState.step;
+  const name = stepName();
 
-  if (st === 0) {
-    const cards = EXAMS.map(e => `
-      <div class="choice ${formState.exam === e.id ? 'selected' : ''}" data-exam="${e.id}">
-        <h4>${esc(lang === 'hi' ? e.name_hi : e.name_en)}</h4>
-        <div style="color:var(--ink-soft);font-size:14px">→ ${esc(lang === 'hi' ? e.for_hi : e.for_en)}</div>
-        <div class="cfee">Fee ₹${e.fee}</div>
-      </div>`).join('');
+  if (name === 'position') {
+    const groups = DEPARTMENTS.map(d => {
+      const opts = POSITIONS.filter(p => p.departmentId === d.id).map(p => `
+        <option value="${p.id}" ${formState.positionId === p.id ? 'selected' : ''}>${esc(lang === 'hi' ? p.title_hi : p.title_en)} — ${p.salaryDisplay}</option>`).join('');
+      return `<optgroup label="${esc(lang === 'hi' ? d.name_hi : d.name_en)}">${opts}</optgroup>`;
+    }).join('');
     return `<h3 class="h3">${L.s0_title}</h3><p class="step-sub">${L.s0_sub}</p>
-      <div class="choice-cards">${cards}</div>`;
+      <div class="field" id="field_positionId">
+        <label for="f_positionId">${L.s0_label} <span class="req">*</span></label>
+        <select id="f_positionId" data-position-select>
+          <option value="">${L.select}</option>
+          ${groups}
+        </select>
+        <div class="err">${L.err_position}</div>
+      </div>`;
   }
 
-  if (st === 1) {
+  if (name === 'otp') {
     return `<h3 class="h3">${L.s1_title}</h3><p class="step-sub">${L.s1_sub}</p>
       ${field('mobile', 's1_mobile', formState.mobile, { type: 'tel', inputmode: 'numeric', maxlength: 10, required: true, errMsg: L.err_mobile, placeholder: '10-digit' })}
       <button class="btn btn-ghost" id="sendOtp" ${formState.otpVerified ? 'disabled' : ''}>${L.s1_send}</button>
@@ -174,7 +207,7 @@ function stepHTML() {
       </div>`;
   }
 
-  if (st === 2) {
+  if (name === 'kyc') {
     return `<h3 class="h3">${L.s2_title}</h3><p class="step-sub">${L.s2_sub}</p>
       ${field('aadhaar', 's2_aadhaar', formState.aadhaar, { type: 'tel', inputmode: 'numeric', maxlength: 12, required: true, errMsg: L.err_aadhaar, placeholder: '12-digit' })}
       <div class="checkbox-row">
@@ -182,20 +215,20 @@ function stepHTML() {
         <label for="f_kycConsent">${L.s2_consent}</label>
       </div>
       <div class="field" id="field_kycConsent" style="margin-top:-10px"><div class="err">${L.err_consent}</div></div>
-      ${field('fullName', 's2_name', formState.fullName, { required: true })}
-      <div class="field-row">
-        ${field('dob', 's2_dob', formState.dob, { type: 'date', required: true })}
-        ${field('gender', 's2_gender', formState.gender, { type: 'select', options: L.gender_opts, required: true })}
-      </div>
       <button class="btn btn-primary" id="verifyKyc" ${formState.kycVerified ? 'disabled' : ''}>${L.s2_verify}</button>
       <div id="kycVerified" style="margin-top:14px;${formState.kycVerified ? '' : 'display:none'}">
         <span class="verified-badge">${ICON.check} ${L.s2_verified}</span>
       </div>`;
   }
 
-  if (st === 3) {
+  if (name === 'personal') {
     const divs = DIVISIONS;
     return `<h3 class="h3">${L.s3_title}</h3><p class="step-sub">${L.s3_sub}</p>
+      ${field('fullName', 's2_name', formState.fullName, { required: true })}
+      <div class="field-row">
+        ${field('dob', 's2_dob', formState.dob, { type: 'date', required: true })}
+        ${field('gender', 's2_gender', formState.gender, { type: 'select', options: L.gender_opts, required: true })}
+      </div>
       ${field('parentName', 's3_parent', formState.parentName, { required: true })}
       <div class="field-row">
         ${field('category', 's3_cat', formState.category, { type: 'select', options: L.cat_options, required: true })}
@@ -215,8 +248,8 @@ function stepHTML() {
       ${field('address', 's3_addr', formState.address, { type: 'textarea', required: true })}`;
   }
 
-  if (st === 4) {
-    const isKrishi = formState.exam === 'krishi-adhikari';
+  if (name === 'education') {
+    const showExperience = formState.exam !== 'gram-sevak';
     return `<h3 class="h3">${L.s4_title}</h3><p class="step-sub">${L.s4_sub}</p>
       <div class="field-row">
         ${field('qualification', 's4_qual', formState.qualification, { type: 'select', options: L.qual_opts, required: true })}
@@ -227,10 +260,10 @@ function stepHTML() {
         ${field('percent', 's4_pct', formState.percent, { required: true })}
       </div>
       ${radioField('agriBg', 's4_agri', formState.agriBg, L.yesno)}
-      ${isKrishi ? field('experience', 's4_exp', formState.experience, { type: 'tel', inputmode: 'numeric' }) : ''}`;
+      ${showExperience ? field('experience', 's4_exp', formState.experience, { type: 'tel', inputmode: 'numeric' }) : ''}`;
   }
 
-  if (st === 5) {
+  if (name === 'posting') {
     const isGram = formState.exam === 'gram-sevak';
     return `<h3 class="h3">${L.s5_title}</h3><p class="step-sub">${L.s5_sub}</p>
       ${field('prefDivision', 's5_pref', formState.prefDivision || formState.division, { type: 'select', options: DIVISIONS, required: true })}
@@ -238,9 +271,10 @@ function stepHTML() {
       ${isGram ? `<div class="identity-box" style="margin-top:6px">${L.s5_note}</div>` : ''}`;
   }
 
-  if (st === 6) {
-    const reqDocs = ['photo', 'signature', 'aadhaarCard', 'education'];
-    const optDocs = ['category_cert', 'domicile'];
+  if (name === 'docs') {
+    const examTrack = isExamTrack();
+    const reqDocs = examTrack ? ['photo', 'signature', 'aadhaarCard', 'education'] : ['photo', 'resume', 'idProof'];
+    const optDocs = examTrack ? ['category_cert', 'domicile'] : [];
     const cell = (key, req) => {
       const val = formState.docs[key];
       const isImg = val && val.startsWith('data:image');
@@ -260,27 +294,40 @@ function stepHTML() {
       </div>`;
   }
 
-  if (st === 7) {
-    const exam = EXAMS.find(e => e.id === formState.exam);
+  if (name === 'declare') {
+    const examTrack = isExamTrack();
+    const position = getPosition(formState.positionId);
+    const positionLabel = position ? (lang === 'hi' ? position.title_hi : position.title_en) : '';
     const g = (rows) => rows.map(r => `<div class="rg-row"><span class="k">${esc(r[0])}</span><span class="v">${esc(r[1] || '—')}</span></div>`).join('');
-    const group = (titleKey, editStep, rows) => `
+    const group = (titleKey, editStepName, rows) => `
       <div class="review-group">
-        <div class="rg-head"><span>${esc(L.review_groups[titleKey])}</span><button data-goto="${editStep}">${L.s7_edit}</button></div>
+        <div class="rg-head"><span>${esc(L.review_groups[titleKey])}</span><button data-goto="${currentSteps().indexOf(editStepName)}">${L.s7_edit}</button></div>
         <div class="rg-body">${g(rows)}</div>
       </div>`;
+    const contactRows = [[L.s1_mobile, formState.mobile]];
+    if (examTrack) contactRows.push([L.s2_aadhaar, formState.aadhaar ? '••••••••' + formState.aadhaar.slice(-4) : '']);
+    const groupsHTML = [
+      group('position', 'position', [[L.s0_label, positionLabel]]),
+      group('contact', 'otp', contactRows),
+      group('personal', 'personal', [
+        [L.s2_name, formState.fullName], [L.s2_dob, formState.dob], [L.s2_gender, formState.gender],
+        [L.s3_parent, formState.parentName], [L.s3_cat, formState.category], [L.s3_div, formState.division],
+        [L.s3_dist, formState.district], [L.s3_teh, formState.tehsil], [L.s3_vil, formState.village], [L.s3_pin, formState.pincode]
+      ]),
+      group('edu', 'education', [[L.s4_qual, formState.qualification], [L.s4_stream, formState.stream], [L.s4_year, formState.passYear], [L.s4_pct, formState.percent], [L.s4_agri, formState.agriBg]]),
+    ];
+    if (examTrack) {
+      groupsHTML.push(group('pref', 'posting', [[L.s5_pref, formState.prefDivision || formState.division], [L.s5_willing, formState.willingLocal]]));
+    }
     return `<h3 class="h3">${L.s7_title}</h3><p class="step-sub">${L.s7_sub}</p>
-      ${group('exam', 0, [[L.s0_title, exam ? (lang === 'hi' ? exam.name_hi : exam.name_en) : '']])}
-      ${group('contact', 1, [[L.s1_mobile, formState.mobile], [L.s2_aadhaar, formState.aadhaar ? '••••••••' + formState.aadhaar.slice(-4) : ''], [L.s2_name, formState.fullName], [L.s2_dob, formState.dob], [L.s2_gender, formState.gender]])}
-      ${group('personal', 3, [[L.s3_parent, formState.parentName], [L.s3_cat, formState.category], [L.s3_div, formState.division], [L.s3_dist, formState.district], [L.s3_teh, formState.tehsil], [L.s3_vil, formState.village], [L.s3_pin, formState.pincode]])}
-      ${group('edu', 4, [[L.s4_qual, formState.qualification], [L.s4_stream, formState.stream], [L.s4_year, formState.passYear], [L.s4_pct, formState.percent], [L.s4_agri, formState.agriBg]])}
-      ${group('pref', 5, [[L.s5_pref, formState.prefDivision || formState.division], [L.s5_willing, formState.willingLocal]])}
+      ${groupsHTML.join('')}
       <div class="checkbox-row"><input type="checkbox" id="d1" data-check="declTruth" ${formState.declTruth ? 'checked' : ''}><label for="d1">${L.s7_d1}</label></div>
       <div class="checkbox-row"><input type="checkbox" id="d2" data-check="declAntiCorr" ${formState.declAntiCorr ? 'checked' : ''}><label for="d2">${L.s7_d2}</label></div>
       <div class="checkbox-row"><input type="checkbox" id="d3" data-check="declTnc" ${formState.declTnc ? 'checked' : ''}><label for="d3">${L.s7_d3}</label></div>
       <div class="field" id="field_decl"><div class="err">${L.err_decl}</div></div>`;
   }
 
-  if (st === 8) {
+  if (name === 'fee') {
     const fee = feeFor();
     const disc = discountFor();
     const discAmt = Math.round(fee * disc);
@@ -300,7 +347,7 @@ function stepHTML() {
       <div class="trust-line">${ICON.lock} ${L.s8_trust}</div>`;
   }
 
-  if (st === 9) {
+  if (name === 'confirm') {
     return `<div class="confirm-box">
       <div class="check">${ICON.check}</div>
       <h3 class="h3">${L.s9_title}</h3>
@@ -308,7 +355,7 @@ function stepHTML() {
       <div style="color:var(--ink-soft);font-size:14px">${L.s9_id}</div>
       <div class="app-id">${esc(formState.appId)}</div>
       <div><button class="btn btn-primary" id="dlPdf">${ICON.upload} ${L.s9_dl}</button></div>
-      <p style="margin-top:20px;color:var(--ink-soft)">${L.s9_info}</p>
+      <p style="margin-top:20px;color:var(--ink-soft)">${isExamTrack() ? L.s9_info_exam : L.s9_info}</p>
       <p class="trust-line"><a href="https://wa.me/910000000000" style="color:var(--green-forest);font-weight:700">${ICON.whatsapp} WhatsApp Helpline</a></p>
       <button class="btn btn-ghost" id="newApp" style="margin-top:12px">${L.s9_again}</button>
     </div>`;
@@ -321,20 +368,22 @@ function renderForm() {
   if (!root) return;
   const L = s();
   const st = formState.step;
-  const pct = Math.round((st / (TOTAL_STEPS - 1)) * 100);
-  const showNav = st > 0 && st < 8;
+  const last = totalSteps() - 1;
+  const name = stepName();
+  const pct = Math.round((st / last) * 100);
+  const showGenericNext = st > 0 && st < last && name !== 'fee';
   root.innerHTML = `
     <div class="apply-wrap">
-      ${st < 9 ? `<div class="progress">
-        <div class="progress-top"><span>${L.step} ${st} ${L.of} 9</span><span>${pct}%</span></div>
+      ${st < last ? `<div class="progress">
+        <div class="progress-top"><span>${L.step} ${st} ${L.of} ${last}</span><span>${pct}%</span></div>
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       </div>` : ''}
       <div class="form-card">
         ${stepHTML()}
-        ${(st > 0 && st < 9) ? `<div class="form-nav">
+        ${showGenericNext ? `<div class="form-nav">
           <button class="btn btn-ghost" id="prevBtn">${ICON.chev} ${L.back}</button>
-          ${st < 8 ? `<button class="btn btn-primary" id="nextBtn">${L.next} ${ICON.arrowRight}</button>` : '<span></span>'}
-        </div>` : (st === 0 ? `<div class="form-nav"><span></span><button class="btn btn-primary" id="nextBtn">${L.next} ${ICON.arrowRight}</button></div>` : '')}
+          <button class="btn btn-primary" id="nextBtn">${L.next} ${ICON.arrowRight}</button>
+        </div>` : (st === 0 ? `<div class="form-nav"><span></span><button class="btn btn-primary" id="nextBtn">${L.next} ${ICON.arrowRight}</button></div>` : (name === 'fee' ? `<div class="form-nav"><button class="btn btn-ghost" id="prevBtn">${ICON.chev} ${L.back}</button><span></span></div>` : ''))}
       </div>
     </div>`;
   bindStep();
@@ -344,13 +393,16 @@ function renderForm() {
 function setErr(id, on) { const el = document.getElementById('field_' + id); if (el) el.classList.toggle('invalid', !!on); }
 
 function validateStep() {
-  const st = formState.step, L = s();
+  const name = stepName(), L = s();
   let ok = true;
   const need = (id, cond) => { const bad = !cond; setErr(id, bad); if (bad) ok = false; };
-  if (st === 0) { if (!formState.exam) { alert(lang === 'hi' ? 'Pehle pariksha chunein' : 'Choose an exam first'); ok = false; } }
-  else if (st === 1) { if (!formState.otpVerified) { alert(L.err_otp_first); ok = false; } }
-  else if (st === 2) { if (!formState.kycVerified) { alert(L.err_kyc_first); ok = false; } }
-  else if (st === 3) {
+  if (name === 'position') { if (!formState.positionId) { setErr('positionId', true); ok = false; } }
+  else if (name === 'otp') { if (!formState.otpVerified) { alert(L.err_otp_first); ok = false; } }
+  else if (name === 'kyc') { if (!formState.kycVerified) { alert(L.err_kyc_first); ok = false; } }
+  else if (name === 'personal') {
+    need('fullName', formState.fullName.trim());
+    need('dob', formState.dob);
+    need('gender', formState.gender);
     need('parentName', formState.parentName.trim());
     need('category', formState.category);
     need('pwd', formState.pwd);
@@ -361,24 +413,24 @@ function validateStep() {
     need('pincode', /^\d{6}$/.test(formState.pincode));
     need('address', formState.address.trim());
   }
-  else if (st === 4) {
+  else if (name === 'education') {
     need('qualification', formState.qualification);
     need('stream', formState.stream.trim());
     need('passYear', /^\d{4}$/.test(formState.passYear));
     need('percent', formState.percent.trim());
     need('agriBg', formState.agriBg);
   }
-  else if (st === 5) {
+  else if (name === 'posting') {
     need('prefDivision', formState.prefDivision || formState.division);
     need('willingLocal', formState.willingLocal);
   }
-  else if (st === 6) {
+  else if (name === 'docs') {
     formState._docErr = true;
-    const reqDocs = ['photo', 'signature', 'aadhaarCard', 'education'];
+    const reqDocs = isExamTrack() ? ['photo', 'signature', 'aadhaarCard', 'education'] : ['photo', 'resume', 'idProof'];
     ok = reqDocs.every(k => formState.docs[k]);
     if (!ok) renderForm();
   }
-  else if (st === 7) {
+  else if (name === 'declare') {
     const allDecl = formState.declTruth && formState.declAntiCorr && formState.declTnc;
     setErr('decl', !allDecl);
     if (!allDecl) ok = false;
@@ -392,6 +444,8 @@ async function mockApi(path, body) {
     return await r.json();
   } catch (e) { return { success: true }; }
 }
+
+function generateAppId() { return 'KM-2026-' + Math.random().toString(36).slice(2, 8).toUpperCase(); }
 
 function bindStep() {
   const st = formState.step, L = s();
@@ -410,6 +464,18 @@ function bindStep() {
     el.addEventListener('change', () => { formState[el.dataset.field] = el.value; saveState(); });
   });
 
+  // position dropdown
+  const positionSelect = document.getElementById('f_positionId');
+  if (positionSelect) {
+    positionSelect.addEventListener('change', () => {
+      const position = getPosition(positionSelect.value);
+      formState.positionId = positionSelect.value;
+      formState.exam = position && position.applicationTrack === 'exam' ? position.examId : null;
+      setErr('positionId', false);
+      saveState();
+    });
+  }
+
   // checkboxes
   document.querySelectorAll('[data-check]').forEach(el => {
     el.addEventListener('change', () => { formState[el.dataset.check] = el.checked; setErr(el.dataset.check, false); setErr('decl', false); saveState(); });
@@ -426,22 +492,24 @@ function bindStep() {
     });
   });
 
-  // exam choice
-  document.querySelectorAll('[data-exam]').forEach(el => {
-    el.addEventListener('click', () => {
-      formState.exam = el.dataset.exam;
-      document.querySelectorAll('[data-exam]').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected'); saveState();
-    });
-  });
-
   // nav buttons
   const prev = document.getElementById('prevBtn');
   if (prev) prev.addEventListener('click', () => { formState.step = Math.max(0, st - 1); saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' }); });
   const next = document.getElementById('nextBtn');
-  if (next) next.addEventListener('click', () => { if (validateStep()) { formState.step = st + 1; saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' }); } });
+  if (next) next.addEventListener('click', () => {
+    if (!validateStep()) return;
+    if (stepName() === 'declare' && !isExamTrack()) {
+      // direct-apply track: no fee step — submit straight from the declaration step
+      formState.appId = generateAppId();
+      formState.step = currentSteps().length - 1;
+      saveState(); renderForm();
+      document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    formState.step = st + 1; saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+  });
 
-  // Step 1: OTP
+  // Step: OTP
   const sendOtp = document.getElementById('sendOtp');
   if (sendOtp) sendOtp.addEventListener('click', async () => {
     if (!/^\d{10}$/.test(formState.mobile)) { setErr('mobile', true); return; }
@@ -460,22 +528,19 @@ function bindStep() {
     if (r.success !== false) { formState.otpVerified = true; saveState(); renderForm(); }
   });
 
-  // Step 2: KYC
+  // Step: KYC
   const verifyKyc = document.getElementById('verifyKyc');
   if (verifyKyc) verifyKyc.addEventListener('click', async () => {
     let bad = false;
     if (!/^\d{12}$/.test(formState.aadhaar)) { setErr('aadhaar', true); bad = true; }
     if (!formState.kycConsent) { setErr('kycConsent', true); bad = true; }
-    if (!formState.fullName.trim()) { setErr('fullName', true); bad = true; }
-    if (!formState.dob) { setErr('dob', true); bad = true; }
-    if (!formState.gender) { setErr('gender', true); bad = true; }
     if (bad) return;
     verifyKyc.textContent = L.verifying;
     const r = await mockApi('/api/kyc', { aadhaar: formState.aadhaar, name: formState.fullName });
     if (r.success !== false) { formState.kycVerified = true; saveState(); renderForm(); }
   });
 
-  // Step 6: file uploads
+  // Step: file uploads
   document.querySelectorAll('[data-doc]').forEach(box => {
     const key = box.dataset.doc;
     const inp = box.querySelector('[data-doc-input]');
@@ -489,12 +554,12 @@ function bindStep() {
     });
   });
 
-  // Step 7: edit links
+  // Step: review edit links
   document.querySelectorAll('[data-goto]').forEach(el => {
     el.addEventListener('click', () => { formState.step = parseInt(el.dataset.goto); saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' }); });
   });
 
-  // Step 8: payment
+  // Step: payment (exam track only)
   document.querySelectorAll('[data-pay]').forEach(el => {
     el.addEventListener('click', () => { formState.payMethod = el.dataset.pay; document.querySelectorAll('[data-pay]').forEach(p => p.classList.remove('selected')); el.classList.add('selected'); setErr('pay', false); saveState(); });
   });
@@ -504,15 +569,24 @@ function bindStep() {
     payNow.textContent = L.paying; payNow.disabled = true;
     const fee = feeFor(); const total = fee - Math.round(fee * discountFor());
     const r = await mockApi('/api/payment', { exam: formState.exam, method: formState.payMethod, amount: total });
-    formState.appId = (r && r.appId) ? r.appId : 'KM-2026-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-    formState.step = 9; saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
+    formState.appId = (r && r.appId) ? r.appId : generateAppId();
+    formState.step = currentSteps().length - 1; saveState(); renderForm(); document.getElementById('apply').scrollIntoView({ behavior: 'smooth' });
   });
 
-  // Step 9
+  // Confirmation step
   const dlPdf = document.getElementById('dlPdf');
   if (dlPdf) dlPdf.addEventListener('click', () => downloadPdf());
   const newApp = document.getElementById('newApp');
-  if (newApp) newApp.addEventListener('click', () => { localStorage.removeItem(STORE_KEY); Object.assign(formState, { step: 0, exam: null, mobile: '', otpVerified: false, aadhaar: '', kycConsent: false, fullName: '', dob: '', gender: '', kycVerified: false, parentName: '', category: '', pwd: '', email: '', division: '', district: '', tehsil: '', village: '', pincode: '', address: '', qualification: '', stream: '', passYear: '', percent: '', agriBg: '', experience: '', prefDivision: '', willingLocal: '', docs: {}, declTruth: false, declAntiCorr: false, declTnc: false, payMethod: '', appId: '' }); renderForm(); });
+  if (newApp) newApp.addEventListener('click', () => {
+    localStorage.removeItem(STORE_KEY);
+    Object.assign(formState, {
+      step: 0, positionId: '', exam: null, mobile: '', otpVerified: false, aadhaar: '', kycConsent: false, fullName: '', dob: '', gender: '', kycVerified: false,
+      parentName: '', category: '', pwd: '', email: '', division: '', district: '', tehsil: '', village: '', pincode: '', address: '',
+      qualification: '', stream: '', passYear: '', percent: '', agriBg: '', experience: '', prefDivision: '', willingLocal: '',
+      docs: {}, declTruth: false, declAntiCorr: false, declTnc: false, payMethod: '', appId: ''
+    });
+    renderForm();
+  });
 }
 
 let resendInt;
@@ -525,11 +599,13 @@ function startResendTimer() {
 
 function downloadPdf() {
   // Generate a simple printable HTML and trigger print-to-PDF
-  const exam = EXAMS.find(e => e.id === formState.exam);
+  const position = getPosition(formState.positionId);
+  const examTrack = isExamTrack();
   const w = window.open('', '_blank');
   const rows = [
-    ['Application ID', formState.appId], ['Exam', exam ? exam.name_en : ''], ['Name', formState.fullName],
+    ['Application ID', formState.appId], ['Position', position ? position.title_en : ''], ['Name', formState.fullName],
     ['Mobile', formState.mobile], ['DOB', formState.dob], ['Gender', formState.gender], ['Category', formState.category],
+    ...(examTrack ? [['Aadhaar', formState.aadhaar ? '••••••••' + formState.aadhaar.slice(-4) : '']] : []),
     ['Division', formState.division], ['District', formState.district], ['Tehsil', formState.tehsil], ['Village', formState.village],
     ['Pincode', formState.pincode], ['Qualification', formState.qualification], ['Stream', formState.stream], ['Year', formState.passYear]
   ].map(r => `<tr><td style="padding:8px;border:1px solid #ddd;color:#555">${r[0]}</td><td style="padding:8px;border:1px solid #ddd;font-weight:700">${esc(r[1] || '')}</td></tr>`).join('');

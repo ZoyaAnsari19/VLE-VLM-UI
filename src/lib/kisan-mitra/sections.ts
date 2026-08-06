@@ -3,7 +3,8 @@
 // SECTION RENDERERS — return HTML strings for each section
 // ============================================================
 import { ICON } from './icons';
-import { DIVISIONS, STATS, ROLES, SALARY_TABLE, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
+import { DIVISIONS, STATS, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
+import { PHASE1_VACANCIES } from './recruitment/data';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -134,120 +135,7 @@ export function renderWhy(t) {
   </section>`;
 }
 
-export function renderRoles(t, lang) {
-  const cards = ROLES.map((r, i) => {
-    const duties = (lang === 'hi' ? r.duties_hi : r.duties_en).map(d => `<li>${esc(d)}</li>`).join('');
-    const title = lang === 'hi' ? r.title_hi : r.title_en;
-    const cardSummary = lang === 'hi' ? r.card_hi : r.card_en;
-    const who = lang === 'hi' ? r.who_hi : r.who_en;
-    const reports = lang === 'hi' ? r.reports_hi : r.reports_en;
-    const coverage = lang === 'hi' ? r.coverage_hi : r.coverage_en;
-    const exam = lang === 'hi' ? r.exam_hi : r.exam_en;
-    const uniform = lang === 'hi' ? r.uniform_hi : r.uniform_en;
-
-    return `
-    <article class="card role-card reveal">
-      <div class="role-cover">
-        <img src="${encodeURI(r.img)}" alt="${r.code} officer" loading="lazy" width="800" height="450">
-      </div>
-      <div class="role-body">
-        <span class="role-pill" style="background:${r.accent}">${r.code}</span>
-        <h3 class="role-title">${esc(title)}</h3>
-        <p class="role-card-summary">${esc(cardSummary)}</p>
-
-        <div class="role-expand" id="roleExp${i}">
-          <p class="role-who">${esc(who)}</p>
-          <div class="role-meta">
-            <div><span class="k">${t.role_reports}</span><span class="v">${esc(reports)}</span></div>
-            <div><span class="k">${t.role_coverage}</span><span class="v">${esc(coverage)}</span></div>
-            <div><span class="k">${t.role_exam}</span><span class="v">${esc(exam)}</span></div>
-            <div><span class="k">${t.role_uniform}</span><span class="v role-uniform">${esc(uniform)}</span></div>
-          </div>
-          <div class="role-salary">
-            <div><span class="k">${t.role_training}</span><span class="v">${r.train}</span></div>
-            <div><span class="k">${t.role_full}</span><span class="v">${r.full}</span></div>
-          </div>
-          <strong class="role-duties-title">${t.role_duties}</strong>
-          <ul class="role-duties">${duties}</ul>
-        </div>
-
-        <div class="role-foot">
-          <span class="role-posts">${t.role_posts}: <b>${r.count}</b></span>
-          <button
-            class="role-toggle"
-            type="button"
-            data-role-toggle="${i}"
-            aria-controls="roleModal"
-            aria-haspopup="dialog"
-            aria-expanded="false"
-          >
-            <span class="rtxt">${t.role_details}</span>
-            <span class="ricon">${ICON.chev}</span>
-          </button>
-        </div>
-      </div>
-    </article>`;
-  }).join('');
-  return `
-  <section id="roles" class="bg-paper">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">${ICON.briefcase} 04 · POSTS</span>
-        <h2 class="h2">${esc(t.roles_title)}</h2>
-        <p>${esc(t.roles_sub)}</p>
-      </div>
-      <div class="roles-grid">${cards}</div>
-    </div>
-    <div class="km-modal" id="roleModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="${esc(t.role_details)}">
-      <div class="km-modal-panel" role="document">
-        <button type="button" class="km-modal-close" data-modal-close aria-label="${esc(t.role_close)}">${ICON.x}</button>
-        <div class="km-modal-head">
-          <span class="role-pill" id="roleModalPill"></span>
-          <div>
-            <h3 class="km-modal-title" id="roleModalTitle"></h3>
-            <div class="km-modal-sub" id="roleModalSub"></div>
-          </div>
-        </div>
-        <div class="km-modal-body" id="roleModalBody"></div>
-        <div class="km-modal-foot">
-          <a href="#exams" class="btn btn-outline km-modal-exam" data-modal-exam-pattern>${t.hero_cta2}</a>
-          <a href="#apply" class="btn btn-primary km-modal-apply" data-modal-apply>${t.nav_apply} ${ICON.arrowRight}</a>
-        </div>
-      </div>
-    </div>
-  </section>`;
-}
-
-export function renderHierarchy(t) {
-  return `
-  <section class="bg-paper">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="eyebrow">${ICON.briefcase} Hierarchy</span>
-        <h2 class="h2">${esc(t.hier_title)}</h2>
-        <p>${esc(t.hier_sub)}</p>
-      </div>
-      <div class="hier reveal">
-        <div class="hier-node hq">${esc(t.hier_hq)}</div>
-        <div class="hier-arrow"></div>
-        <div class="hier-node">DLO ×12<span class="sub">Division Level Officer</span></div>
-        <div class="hier-arrow"></div>
-        <div class="hier-node">TLO ×40<span class="sub">Tehsil Leader Officer</span></div>
-        <div class="hier-arrow"></div>
-        <div class="hier-row">
-          <div class="hier-node">VLM ×200<span class="sub">Village Level Manager</span></div>
-          <div class="hier-node">VLE ×200<span class="sub">Village Level Executive</span></div>
-        </div>
-        <div class="hier-arrow"></div>
-        <div class="hier-node" style="background:var(--green-soft)">${esc(t.hier_villages)}</div>
-      </div>
-    </div>
-  </section>`;
-}
-
 export function renderSalary(t) {
-  const rows = SALARY_TABLE.map(r => `
-    <tr><td><b>${r.role}</b></td><td>${r.reports}</td><td>${r.train}</td><td><b style="color:var(--green-forest)">${r.full}</b></td><td>${r.count}</td></tr>`).join('');
   const perks = t.salary_perks.map((p, i) => `
     <article class="card perk-card reveal">
       <div class="perk-ico">${SALARY_PERK_ICONS[i]}</div>
@@ -255,18 +143,12 @@ export function renderSalary(t) {
       <p class="perk-desc">${esc(p.desc)}</p>
     </article>`).join('');
   return `
-  <section id="salary">
+  <section class="bg-paper salary-perks-section">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">${ICON.rupee} Salary & Career</span>
+        <span class="eyebrow">${ICON.rupee} Perks & Mobility</span>
         <h2 class="h2">${esc(t.salary_title)}</h2>
         <p>${esc(t.salary_sub)}</p>
-      </div>
-      <div class="tbl-wrap reveal">
-        <table class="tbl">
-          <thead><tr><th>${t.salary_th_role}</th><th>${t.salary_th_reports}</th><th>${t.salary_th_train}</th><th>${t.salary_th_full}</th><th>${t.salary_th_count}</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
       </div>
       <div class="salary-perks bg-paper reveal">
         <div class="salary-perks-carousel">
@@ -297,19 +179,19 @@ export function renderSalary(t) {
 }
 
 export function renderVacancies(t, lang) {
-  const rows = ROLES.map(r => `
+  const rows = PHASE1_VACANCIES.map(r => `
     <tr>
-      <td><b>${r.code}</b></td>
+      <td><b>${r.role}</b></td>
       <td>${esc(lang === 'hi' ? r.exam_hi : r.exam_en)}</td>
       <td class="vac-count"><b>${r.count}</b></td>
     </tr>`).join('');
-  const total = ROLES.reduce((sum, r) => sum + r.count, 0);
+  const total = PHASE1_VACANCIES.reduce((sum, r) => sum + r.count, 0);
   const divs = DIVISIONS.map(d => `<span class="vac-pill">${esc(d.replace(' (Faizabad)', ''))}</span>`).join('');
   return `
   <section id="vacancies" class="bg-paper">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">${ICON.briefcase} 05 · VACANCIES</span>
+        <span class="eyebrow">${ICON.briefcase} Phase 1 Vacancies</span>
         <h2 class="h2">${esc(t.vac_title)}</h2>
       </div>
       <div class="tbl-wrap reveal vac-tbl-wrap">
@@ -465,7 +347,7 @@ export function renderFarmers(t, lang) {
   const govt = ['PM-KISAN', 'PMFBY', 'KCC', 'PM-KUSUM', 'Soil Health Card', 'MGNREGA', 'PMAY-G', 'e-NAM', 'ODOP'].map(s => `<span class="chip">${s}</span>`).join('');
   const member = MEMBER_BENEFITS.map(m => `<span class="chip">${esc(lang === 'hi' ? m.hi : m.en)}</span>`).join('');
   return `
-  <section class="bg-paper">
+  <section class="bg-paper farmers-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.seedling} For Farmers</span>
@@ -511,7 +393,7 @@ export function renderSchemes(t, lang) {
 
 export function renderPartnerships(t) {
   return `
-  <section class="bg-paper">
+  <section class="bg-paper partnerships-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.badge} Partnerships</span>
@@ -652,7 +534,7 @@ export function renderEligibility(t) {
   ].map(c => `<div class="card elig-card reveal"><h4>${esc(c.t)}</h4><p>${esc(c.d)}</p></div>`).join('');
   const dates = t.dates.map(d => `<li><span>${esc(d[0])}</span><span class="d">${esc(d[1])}</span></li>`).join('');
   return `
-  <section class="bg-paper">
+  <section class="bg-paper eligibility-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.check} Eligibility</span>
