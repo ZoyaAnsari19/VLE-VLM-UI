@@ -5,13 +5,15 @@
 // ============================================================
 import { I18N } from './i18n';
 import {
-  renderNav, renderHero, renderMission, renderWhy, renderRoles, renderHierarchy, renderSalary, renderVacancies,
+  renderNav, renderHero, renderMission, renderWhy, renderSalary, renderVacancies,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
     renderPartnerships, renderTraining, renderInterview, renderPrep, renderEligibility, renderFAQ, renderFooter
 } from './sections';
 import { initApply, setApplyLang } from './apply';
 
 let lang = 'hi';
+let topEl = null;
+let bottomEl = null;
 
 function releaseBodyScroll() {
   document.body.style.overflow = '';
@@ -34,16 +36,14 @@ function renderApplySection(t) {
 function renderAll() {
   releaseBodyScroll();
   const t = I18N[lang];
-  const app = document.getElementById('app');
-  if (!app) return;
-  app.innerHTML =
+  if (!topEl || !bottomEl) return;
+  topEl.innerHTML =
     renderNav(t) +
     renderHero(t) +
     renderMission(t, lang) +
     renderSchemes(t, lang) +
-    renderWhy(t) +
-    renderRoles(t, lang) +
-    renderHierarchy(t) +
+    renderWhy(t);
+  bottomEl.innerHTML =
     renderSalary(t) +
     renderVacancies(t, lang) +
     renderExams(t, lang) +
@@ -76,6 +76,7 @@ function switchLang(l) {
   releaseBodyScroll();
   renderAll();
   window.scrollTo(0, 0); // re-render resets; go to top for clarity
+  window.dispatchEvent(new CustomEvent('km:lang-change', { detail: l }));
 }
 
 function bindGlobal() {
@@ -98,14 +99,6 @@ function bindGlobal() {
   document.getElementById('drawerClose').addEventListener('click', closeD);
   drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
 
-  // role detail toggles
-  document.querySelectorAll('[data-role-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = btn.dataset.roleToggle;
-      openRoleModal(i, btn);
-    });
-  });
-
   // exam sample modal
   document.querySelectorAll('[data-sample-toggle]').forEach(btn => {
     btn.addEventListener('click', () => openExamSamplesModal(btn.dataset.sampleToggle, btn));
@@ -123,7 +116,6 @@ function bindGlobal() {
   });
 
   bindPerksCarousel();
-  bindRoleModal();
   bindExamSamplesModal();
 }
 
@@ -183,116 +175,6 @@ function openExamSamplesModal(id, triggerBtn) {
   if (modalPill) modalPill.textContent = pillEl ? pillEl.textContent : '';
   if (modalSub) modalSub.textContent = forEl ? forEl.textContent : '';
   if (modalBody) modalBody.innerHTML = source.innerHTML;
-
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
-  modal._kmReturnFocus = triggerBtn;
-  document.body.style.overflow = 'hidden';
-
-  const closeBtn = modal.querySelector('[data-modal-close]');
-  if (closeBtn) closeBtn.focus();
-}
-
-function bindRoleModal() {
-  const modal = document.getElementById('roleModal');
-  if (!modal) return;
-
-  const close = () => {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    releaseBodyScroll();
-    if (modal._kmReturnFocus) {
-      try { modal._kmReturnFocus.focus(); } catch {}
-      modal._kmReturnFocus = null;
-    }
-  };
-
-  const closeBtn = modal.querySelector('[data-modal-close]');
-  if (closeBtn) closeBtn.addEventListener('click', close);
-
-  const examBtn = modal.querySelector('[data-modal-exam-pattern]');
-  if (examBtn) {
-    examBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const target = modal.dataset.examId ? document.getElementById('exam-' + modal.dataset.examId) : null;
-      close();
-      (target || document.getElementById('exams'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
-
-  const applyBtn = modal.querySelector('[data-modal-apply]');
-  if (applyBtn) {
-    applyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      close();
-      document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) close();
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) close();
-  });
-
-  modal._kmClose = close;
-}
-
-function openRoleModal(i, triggerBtn) {
-  const modal = document.getElementById('roleModal');
-  if (!modal) return;
-  const card = triggerBtn.closest('.role-card');
-  const exp = document.getElementById('roleExp' + i);
-  if (!card || !exp) return;
-
-  const titleEl = card.querySelector('.role-title');
-  const pillEl = card.querySelector('.role-pill');
-  const coverImg = card.querySelector('.role-cover img');
-  const whoEl = exp.querySelector('.role-who');
-
-  const modalTitle = document.getElementById('roleModalTitle');
-  const modalPill = document.getElementById('roleModalPill');
-  const modalSub = document.getElementById('roleModalSub');
-  const modalBody = document.getElementById('roleModalBody');
-
-  if (modalTitle) modalTitle.textContent = titleEl ? titleEl.textContent : '';
-  if (modalPill) {
-    modalPill.textContent = pillEl ? pillEl.textContent : '';
-    modalPill.style.background = pillEl ? (pillEl.style.background || '') : '';
-  }
-  if (modalSub) modalSub.textContent = whoEl ? whoEl.textContent : '';
-
-  const roleCode = (pillEl ? pillEl.textContent : '').trim();
-  modal.dataset.examId = (roleCode === 'VLE' || roleCode === 'VLM') ? 'gram-sevak' : 'krishi-adhikari';
-
-  const meta = exp.querySelector('.role-meta');
-  const salary = exp.querySelector('.role-salary');
-  const dutiesTitle = exp.querySelector('.role-duties-title');
-  const duties = exp.querySelector('.role-duties');
-
-  const imgHTML = coverImg
-    ? `<div class="km-modal-cover"><img src="${coverImg.getAttribute('src')}" alt="${coverImg.getAttribute('alt') || ''}" loading="lazy"></div>`
-    : '';
-
-  const metaHTML = meta ? `<div class="km-modal-meta">${meta.outerHTML}</div>` : '';
-  const restHTML = `
-    <div class="km-modal-details">
-      ${salary ? salary.outerHTML : ''}
-      ${dutiesTitle ? dutiesTitle.outerHTML : ''}
-      ${duties ? duties.outerHTML : ''}
-    </div>`;
-
-  if (modalBody) {
-    modalBody.innerHTML = `
-      <div class="km-modal-top">
-        ${imgHTML}
-        ${metaHTML}
-      </div>
-      ${restHTML}
-    `;
-  }
 
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
@@ -391,7 +273,9 @@ function animateCount(el) {
   requestAnimationFrame(step);
 }
 
-export function initKisanMitra() {
+export function initKisanMitra(top, bottom) {
+  topEl = top;
+  bottomEl = bottom;
   lang = localStorage.getItem('km_lang') || 'hi';
   document.documentElement.lang = lang;
   renderAll();
