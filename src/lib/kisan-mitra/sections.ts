@@ -3,7 +3,7 @@
 // SECTION RENDERERS — return HTML strings for each section
 // ============================================================
 import { ICON } from './icons';
-import { DIVISIONS, STATS, EXAMS, ROADMAP, TRAINING, SCHEMES, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
+import { DIVISIONS, STATS, HERO_VIKAS, MISSION_HIGHLIGHTS, EXAMS, ROADMAP, TRAINING, SCHEMES, SCHEME_TRUST, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
 import { PHASE1_VACANCIES } from './recruitment/data';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -54,53 +54,76 @@ export function renderNav(t) {
   </div>`;
 }
 
-export function renderHero(t) {
+export function renderHero(t, lang) {
   const stats = STATS.map(s => `
-    <div class="stat">
-      <div class="num" ${s.display ? '' : `data-count="${s.value}"`}>${s.display || '0'}</div>
-      <div class="lbl">${esc(s.label_hi)}</div>
+    <div class="hero-stat">
+      <span class="hero-stat-ico">${ICON[s.icon]}</span>
+      <div class="hero-stat-body">
+        <div class="num" ${s.display ? '' : `data-count="${s.value}"`}>${s.display || '0'}</div>
+        <div class="lbl">${esc(lang === 'hi' ? s.label_hi : s.label_en)}</div>
+        <div class="sublbl">${esc(lang === 'hi' ? s.sublabel_hi : s.sublabel_en)}</div>
+      </div>
+    </div>`).join('');
+  const vikas = HERO_VIKAS.map(v => `
+    <div class="hero-vikas-item">
+      <span class="hero-vikas-ico">${ICON[v.icon]}</span>
+      <div class="hero-vikas-title">${esc(lang === 'hi' ? v.title_hi : v.title_en)}</div>
+      <div class="hero-vikas-sub">${esc(lang === 'hi' ? v.sub_hi : v.sub_en)}</div>
     </div>`).join('');
   return `
   <header class="hero" id="top">
     <div class="container">
       <div class="hero-grid">
         <div class="reveal">
-          <span class="eyebrow">${t.hero_eyebrow}</span>
-          <h1 class="h1">${esc(t.hero_h1)}</h1>
-          <p class="hero-sub">${esc(t.hero_sub)}</p>
+          <span class="eyebrow"><span class="eyebrow-ico">${ICON.leaf}</span>${t.hero_eyebrow}</span>
+          <h1 class="h1 hero-h1">${esc(t.hero_h1_line1)}<br><span class="accent">${esc(t.hero_h1_line2)}</span></h1>
+          <p class="hero-sub">${esc(t.hero_sub)} <b>${esc(t.hero_sub_bold)}</b></p>
           <div class="hero-ctas">
             <a href="#apply" class="btn btn-primary">${t.hero_cta1} ${ICON.arrowRight}</a>
-            <a href="#exams" class="btn btn-outline">${t.hero_cta2}</a>
+            <a href="#exams" class="btn btn-outline">${ICON.fileText}${t.hero_cta2}</a>
           </div>
-          <div class="hero-tagline devanagari-head">${t.hero_tagline}</div>
         </div>
-        <div class="hero-img reveal">
-          <img src="/images/teamPhoto.png" alt="Kisan Mitra Ecosystem team — VLE, VLM, DLO, TLO, CSE officers" loading="eager" width="640" height="512">
-        </div>
+        <div class="hero-vikas-card reveal">${vikas}</div>
       </div>
-      <div class="stats">${stats}</div>
+      <div class="stats hero-stats">${stats}</div>
     </div>
   </header>`;
 }
 
 export function renderMission(t, lang) {
-  const chips = (lang === 'hi' ? t.mission_chips_hi : t.mission_chips_en)
-    .map(([ico, label]) => `<span class="chip"><span class="chip-ico">${ico}</span>${esc(label)}</span>`)
-    .join('');
+  const highlights = MISSION_HIGHLIGHTS.map(h => `
+    <div class="highlight-card highlight-${h.color} reveal">
+      <span class="highlight-ico">${ICON[h.icon]}</span>
+      <div class="highlight-label">${esc(lang === 'hi' ? h.label_hi : h.label_en)}</div>
+      <span class="highlight-underline"></span>
+    </div>`).join('');
 
   return `
   <section class="mission" id="mission">
     <div class="container">
       <div class="mission-grid">
         <div class="mission-copy reveal">
-          <div class="mission-kicker">${esc(t.mission_kicker)}</div>
+          <div class="mission-kicker"><span class="mission-kicker-ico">${ICON.leaf}</span>${esc(t.mission_kicker)}</div>
           <h2 class="h2">${esc(t.mission_title)}</h2>
           <p class="mission-sub">${esc(t.mission_sub)}</p>
-          <div class="mission-body">
-            <p>${esc(t.mission_p1)}</p>
-            <p>${esc(t.mission_p2)}</p>
+          <div class="mission-steps">
+            <div class="mission-step">
+              <span class="mission-step-num">01</span>
+              <div class="mission-step-body">
+                <h4><span class="mission-step-ico">${ICON.cap}</span>${esc(t.mission_step1_label)}</h4>
+                <p>${esc(t.mission_p1)}</p>
+              </div>
+            </div>
+            <div class="mission-step">
+              <span class="mission-step-num">02</span>
+              <div class="mission-step-body">
+                <h4><span class="mission-step-ico">${ICON.pin}</span>${esc(t.mission_step2_label)}</h4>
+                <p>${esc(t.mission_p2)}</p>
+              </div>
+            </div>
           </div>
-          <div class="mission-chips reveal">${chips}</div>
+          <div class="mission-leader"><span class="mission-leader-ico">${ICON.badge}</span>${esc(t.mission_leader)}</div>
+          <div class="mission-highlights">${highlights}</div>
         </div>
         <div class="mission-media reveal">
           <img src="/images/mission.webp" alt="${esc(t.mission_img_alt)}" loading="lazy" width="900" height="502" />
@@ -113,14 +136,18 @@ export function renderMission(t, lang) {
 
 export function renderWhy(t) {
   const cards = [
-    { ico: ICON.badge, t: t.why_1_t, d: t.why_1_d },
-    { ico: ICON.ev, t: t.why_2_t, d: t.why_2_d },
+    { ico: ICON.award, t: t.why_1_t, d: t.why_1_d },
+    { ico: ICON.home, t: t.why_2_t, d: t.why_2_d },
     { ico: ICON.rupee, t: t.why_3_t, d: t.why_3_d },
-  ].map(c => `
+  ].map((c, i) => `
     <div class="card why-card reveal">
-      <div class="ico">${c.ico}</div>
+      <span class="why-card-dots" aria-hidden="true"></span>
+      <span class="why-card-num">0${i + 1}</span>
+      <div class="ico-ring"><div class="ico">${c.ico}</div></div>
       <h3 class="h3">${esc(c.t)}</h3>
+      <div class="why-card-divider"><span>${ICON.leaf}</span></div>
       <p>${esc(c.d)}</p>
+      <span class="why-card-arrow">${ICON.arrowRight}</span>
     </div>`).join('');
   return `
   <section class="bg-paper">
@@ -186,7 +213,7 @@ export function renderVacancies(t, lang) {
       <td class="vac-count"><b>${r.count}</b></td>
     </tr>`).join('');
   const total = PHASE1_VACANCIES.reduce((sum, r) => sum + r.count, 0);
-  const divs = DIVISIONS.map(d => `<span class="vac-pill">${esc(d.replace(' (Faizabad)', ''))}</span>`).join('');
+  const divs = DIVISIONS.map(d => `<span class="vac-pill">${esc(d)}</span>`).join('');
   return `
   <section id="vacancies" class="bg-paper">
     <div class="container">
@@ -371,21 +398,36 @@ export function renderFarmers(t, lang) {
 export function renderSchemes(t, lang) {
   const cards = SCHEMES.map(s => `
     <article class="card scheme-card reveal">
+      <span class="scheme-card-chevron">${ICON.chevronRight}</span>
       <div class="ico">${ICON[s.icon] || ICON.seedling}</div>
       <h4>${esc(s.name)}</h4>
       ${s.sub ? `<div class="ssub">${esc(s.sub)}</div>` : ''}
-      <div class="sline"><span class="lbl">${t.scheme_benefit}</span>${esc(lang === 'hi' ? s.benefit_hi : s.benefit_en)}</div>
-      <div class="sline"><span class="lbl">${t.scheme_role}</span>${esc(lang === 'hi' ? s.role_hi : s.role_en)}</div>
+      <div class="scheme-card-divider"><span>${ICON.leaf}</span></div>
+      <div class="sline"><span class="lbl">${ICON.users}${t.scheme_benefit}</span><div class="sval">${esc(lang === 'hi' ? s.benefit_hi : s.benefit_en)}</div></div>
+      <div class="sline"><span class="lbl">${ICON.shield}${t.scheme_role}</span><div class="sval">${esc(lang === 'hi' ? s.role_hi : s.role_en)}</div></div>
     </article>`).join('');
+  const trust = SCHEME_TRUST.map(x => `
+    <div class="scheme-trust-item reveal">
+      <span class="scheme-trust-ico">${ICON[x.icon]}</span>
+      <div>
+        <div class="scheme-trust-title">${esc(lang === 'hi' ? x.title_hi : x.title_en)}</div>
+        <div class="scheme-trust-sub">${esc(lang === 'hi' ? x.sub_hi : x.sub_en)}</div>
+      </div>
+    </div>`).join('');
   return `
   <section id="schemes">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.shield} Government Schemes</span>
-        <h2 class="h2">${esc(t.schemes_title)}</h2>
+        <div class="schemes-title-wrap">
+          <span class="schemes-title-leaf schemes-title-leaf-l" aria-hidden="true">${ICON.leaf}</span>
+          <h2 class="h2">${esc(t.schemes_title_pre)} <span class="accent">${esc(t.schemes_title_accent)}</span> ${esc(t.schemes_title_post)}</h2>
+          <span class="schemes-title-leaf schemes-title-leaf-r" aria-hidden="true">${ICON.leaf}</span>
+        </div>
         <p>${esc(t.schemes_sub)}</p>
       </div>
       <div class="schemes-grid">${cards}</div>
+      <div class="scheme-trust-row">${trust}</div>
       <div class="identity-box reveal">${esc(t.identity_text)}</div>
     </div>
   </section>`;
@@ -588,7 +630,7 @@ export function renderFooter(t) {
           <ul>
             <li><a href="https://wa.me/910000000000">${ICON.whatsapp} ${t.footer_helpline}</a></li>
             <li><a href="tel:+910000000000">${ICON.phone} 1800-000-0000</a></li>
-            <li>Lucknow, Uttar Pradesh</li>
+            <li>Mumbai, Maharashtra</li>
           </ul>
         </div>
         <div>

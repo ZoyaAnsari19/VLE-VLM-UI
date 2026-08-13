@@ -39,7 +39,7 @@ function renderAll() {
   if (!topEl || !bottomEl) return;
   topEl.innerHTML =
     renderNav(t) +
-    renderHero(t) +
+    renderHero(t, lang) +
     renderMission(t, lang) +
     renderSchemes(t, lang) +
     renderWhy(t);

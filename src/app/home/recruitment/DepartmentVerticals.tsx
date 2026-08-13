@@ -5,7 +5,7 @@ import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartmentVerticals } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 interface DepartmentVerticalsProps {
   lang: Lang;

@@ -11,7 +11,7 @@ import { SearchBar } from "./SearchBar";
 import { SalaryRangeFilter } from "./SalaryRangeFilter";
 import { PositionCard } from "./PositionCard";
 import { PositionDetailModal } from "./PositionDetailModal";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 const PAGE_SIZE = 6;
 

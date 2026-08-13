@@ -4,7 +4,7 @@ import { I18N } from "@/lib/kisan-mitra/i18n";
 import { ICON } from "@/lib/kisan-mitra/icons";
 import { getPosition } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 import { DepartmentVerticals } from "./DepartmentVerticals";
 
 interface OrgHierarchyProps {

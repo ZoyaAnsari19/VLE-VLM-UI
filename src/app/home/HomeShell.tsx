@@ -7,7 +7,7 @@ import { RecruitmentExplorer } from "./recruitment/RecruitmentExplorer";
 import { OrgHierarchy } from "./recruitment/OrgHierarchy";
 import { RecruitmentMatrix } from "./recruitment/RecruitmentMatrix";
 
-export function KisanMitraShell() {
+export function HomeShell() {
   // Always starts "hi" to match the server-rendered HTML (layout.tsx sets <html lang="hi">).
   // The saved preference is read from localStorage post-mount, below — reading it in a lazy
   // initializer instead would make the client's pre-hydration render diverge from the server's

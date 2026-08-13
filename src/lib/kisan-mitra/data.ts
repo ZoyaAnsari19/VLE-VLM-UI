@@ -5,15 +5,31 @@
 // ============================================================
 
 export const DIVISIONS = [
-  "Lucknow", "Kanpur", "Agra", "Meerut", "Bareilly", "Moradabad",
-  "Varanasi", "Prayagraj", "Gorakhpur", "Ayodhya (Faizabad)", "Aligarh", "Jhansi"
+  "Konkan", "Pune", "Nashik", "Aurangabad (Chhatrapati Sambhajinagar)", "Amravati", "Nagpur"
 ];
 
 export const STATS = [
-  { value: 452, label_hi: "Phase 1 Officer Posts", label_en: "Phase 1 Officer Posts", suffix: "" },
-  { value: 12, label_hi: "UP Revenue Divisions", label_en: "UP Revenue Divisions", suffix: "" },
-  { value: 600, label_hi: "Pilot Villages", label_en: "Pilot Villages", suffix: "" },
-  { value: 0, display: "₹35K–80K", label_hi: "Monthly Salary (full pay)", label_en: "Monthly Salary (full pay)", suffix: "" }
+  { value: 452, icon: "users", label_hi: "Officer Posts", label_en: "Officer Posts", sublabel_hi: "Phase 1 Officer Posts", sublabel_en: "Phase 1 Officer Posts" },
+  { value: 6, icon: "building", label_hi: "Revenue Divisions", label_en: "Revenue Divisions", sublabel_hi: "Maharashtra bhar mein", sublabel_en: "Across Maharashtra" },
+  { value: 600, icon: "home", label_hi: "Pilot Villages", label_en: "Pilot Villages", sublabel_hi: "Maharashtra bhar mein", sublabel_en: "Across Maharashtra" },
+  { value: 0, display: "₹35K–80K", icon: "rupee", label_hi: "Monthly Salary (Full Pay)", label_en: "Monthly Salary (Full Pay)", sublabel_hi: "Aakarshak salary package", sublabel_en: "Attractive Salary Package" }
+];
+
+// Thematic mini-cards shown alongside the hero copy — not tied to any
+// specific role/position (the site now spans 21 positions across 6
+// departments; role selection happens in the Positions Explorer/Apply
+// flow, not the hero).
+export const MISSION_HIGHLIGHTS = [
+  { icon: "briefcase", color: "navy", label_hi: "Employment generation", label_en: "Employment generation" },
+  { icon: "users", color: "green", label_hi: "Farmer service", label_en: "Farmer service" },
+  { icon: "seedling", color: "mint", label_hi: "Gaon ka vikas", label_en: "Village development" },
+  { icon: "compass", color: "blue", label_hi: "Palayan ka ant", label_en: "End of migration" },
+];
+
+export const HERO_VIKAS = [
+  { icon: "leaf", title_hi: "Kisaan ka Vikas", title_en: "Farmer's Growth", sub_hi: "Kisano ko sashakt banana", sub_en: "Empowering Farmers" },
+  { icon: "users", title_hi: "Desh ka Vikas", title_en: "Nation's Growth", sub_hi: "Ek majboot Bharat ka nirmaan", sub_en: "Building a Stronger India" },
+  { icon: "trendingUp", title_hi: "Vikas ka Saathi", title_en: "Partner in Progress", sub_hi: "Gramin badlaav ke saath", sub_en: "Together for Rural Transformation" }
 ];
 
 export const ROLES = [
@@ -154,8 +170,8 @@ export const ROLES = [
     who_en: "Architect of 1 revenue division — partnerships, P&L ownership, HQ reporting.",
     card_hi: "Poore division ka officer (1 per division). Kaam: partnerships, audits, bulk deals, P&L, HQ reporting. (Krishi Adhikari Pariksha se.)",
     card_en: "Officer for the entire division (1 per division). Work: partnerships, audits, bulk deals, P&L, HQ reporting. (Via Krishi Adhikari Pariksha.)",
-    reports_hi: "Argus / RKF HQ (Lucknow)",
-    reports_en: "Argus / RKF HQ (Lucknow)",
+    reports_hi: "Argus / RKF HQ (Mumbai)",
+    reports_en: "Argus / RKF HQ (Mumbai)",
     coverage_hi: "1 full division (TLOs under him)",
     coverage_en: "1 full division (TLOs under him)",
     train: "₹26,000",
@@ -193,7 +209,7 @@ export const SALARY_TABLE = [
   { role: "VLE", reports: "VLM", train: "₹15,000", full: "₹35,000", count: 200 },
   { role: "VLM", reports: "TLO", train: "₹18,000", full: "₹45,000", count: 200 },
   { role: "TLO", reports: "DLO", train: "₹22,000", full: "₹60,000", count: 40 },
-  { role: "DLO", reports: "HQ (Lucknow)", train: "₹26,000", full: "₹80,000", count: 12 }
+  { role: "DLO", reports: "HQ (Mumbai)", train: "₹26,000", full: "₹80,000", count: 12 }
 ];
 
 export const EXAMS = [
@@ -220,7 +236,7 @@ export const EXAMS = [
     note_hi: "Top scorers → VLM, next tier → VLE",
     note_en: "Top scorers → VLM, next tier → VLE",
     samples: [
-      { q: "UP mein zyadatar field crops ke liye ideal soil pH range hai:", opts: ["3.5–4.5", "6.0–7.5", "8.5–9.5", "10–11"], correct: 1 },
+      { q: "Maharashtra mein zyadatar field crops ke liye ideal soil pH range hai:", opts: ["3.5–4.5", "6.0–7.5", "8.5–9.5", "10–11"], correct: 1 },
       { q: "PM-KISAN ke tehat eligible kisan parivaar ko saalana DBT milti hai:", opts: ["₹2,000", "₹4,000", "₹6,000", "₹10,000"], correct: 2 },
       { q: "Kisan Credit Card (KCC) par crop loan ka effective interest aam taur par hota hai:", opts: ["~4%", "9%", "12%", "18%"], correct: 0 },
       { q: "2-acre plot, 18 quintal/acre, mandi price ₹2,200/quintal — gross value:", opts: ["₹39,600", "₹79,200", "₹19,800", "₹1,58,400"], correct: 1 },
@@ -232,8 +248,8 @@ export const EXAMS = [
     id: "krishi-adhikari",
     name_hi: "Krishi Adhikari Pariksha",
     name_en: "Krishi Adhikari Pariksha",
-    for_hi: "TLO / DLO",
-    for_en: "TLO / DLO",
+    for_hi: "TEO / Division Level Officer / Divisional Director",
+    for_en: "TEO / Division Level Officer / Divisional Director",
     fee: 1000,
     duration_hi: "120 minutes",
     duration_en: "120 minutes",
@@ -254,10 +270,186 @@ export const EXAMS = [
     note_en: "Graduate (agri/management preferred)",
     samples: [
       { q: "PMFBY ke tehat Kharif food/oilseed crop ke liye farmer premium share capped hai:", opts: ["1.5%", "2%", "5%", "10%"], correct: 1 },
-      { q: "Ek TLO 10 field officers supervise kar raha hai; ek cluster consistently enrollment target miss kar raha hai. Pehla management step:", opts: ["VLE terminate karo", "Cluster ka data review + field visit karke root cause diagnose karo", "Budget cut", "Ignore"], correct: 1 },
-      { q: "Bank 0.4% referral deta hai KCC par; TLO ki tehsil ₹5 Cr KCC facilitate karti hai — referral income:", opts: ["₹20,000", "₹2,00,000", "₹2,000", "₹20,00,000"], correct: 1 },
+      { q: "Ek TEO 10 field officers supervise kar raha hai; ek cluster consistently enrollment target miss kar raha hai. Pehla management step:", opts: ["VLE terminate karo", "Cluster ka data review + field visit karke root cause diagnose karo", "Budget cut", "Ignore"], correct: 1 },
+      { q: "Bank 0.4% referral deta hai KCC par; TEO ki taluka ₹5 Cr KCC facilitate karti hai — referral income:", opts: ["₹20,000", "₹2,00,000", "₹2,000", "₹20,00,000"], correct: 1 },
       { q: "(Short answer) ≤80 words mein bataao: ek single-day bank camp kaise chalaoge jisme 200 farmers KCC par convert ho?", opts: [], correct: -1, descriptive: true },
-      { q: "(Case study) Ek gaon apna aaloo store karta hai better price ki ummeed mein, par price 20% gir jaata hai aur quality kharaab. DLO ke roop mein kaunsi storage-and-market policy lagaoge?", opts: [], correct: -1, descriptive: true }
+      { q: "(Case study) Ek gaon apna aaloo store karta hai better price ki ummeed mein, par price 20% gir jaata hai aur quality kharaab. Division Level Officer ke roop mein kaunsi storage-and-market policy lagaoge?", opts: [], correct: -1, descriptive: true }
+    ]
+  },
+  {
+    id: "vipnan",
+    name_hi: "Vipnan Pariksha",
+    name_en: "Vipnan Pariksha (Marketing Selection Exam)",
+    for_hi: "Sales & Marketing Executive (Domestic / International)",
+    for_en: "Sales & Marketing Executive (Domestic / International)",
+    fee: 600,
+    duration_hi: "90 minutes",
+    duration_en: "90 minutes",
+    questions_hi: "100 MCQ (1 mark each)",
+    questions_en: "100 MCQ (1 mark each)",
+    sections: ["General Knowledge — 20", "Sales & Marketing Concepts — 40", "Communication / English — 25", "Numerical — 15"],
+    negative_hi: "−0.25 per wrong answer",
+    negative_en: "−0.25 per wrong answer",
+    qualifying: "60 / 100",
+    note_hi: "Strong English/global-trade score → International track, baaki → Domestic",
+    note_en: "Strong English/global-trade score → International track, rest → Domestic",
+    samples: [
+      { q: "B2B aur B2C sales mein mool antar hai:", opts: ["B2B business-to-business hai, B2C business-to-consumer", "Dono same hain", "B2C sirf export ke liye hota hai", "B2B mein koi negotiation nahi hota"], correct: 0 },
+      { q: "Ek sales pipeline mein \"lead qualification\" ka matlab hai:", opts: ["Random logon ko call karna", "Assess karna ki lead genuinely interested aur capable hai", "Sirf pricing bhejna", "Lead ko ignore karna"], correct: 1 }
+    ]
+  },
+  {
+    id: "vyavsaya-vikas",
+    name_hi: "Vyavsaya Vikas Pariksha",
+    name_en: "Vyavsaya Vikas Pariksha (Business Development Selection Exam)",
+    for_hi: "Business Development Executive / Manager (MLA CTB, RBSM & Music Festival)",
+    for_en: "Business Development Executive / Manager (MLA CTB, RBSM & Music Festival)",
+    fee: 700,
+    duration_hi: "100 minutes",
+    duration_en: "100 minutes",
+    questions_hi: "100 MCQ (1 mark) + 5 short-answer (2 marks) = 110 marks",
+    questions_en: "100 MCQ (1 mark) + 5 short-answer (2 marks) = 110 marks",
+    sections: ["General Knowledge — 15", "Business Development & Sponsorship Concepts — 40", "Event/Partnership Case Studies — 30", "Hindi — 15"],
+    negative_hi: "−0.25 per wrong MCQ",
+    negative_en: "−0.25 per wrong MCQ",
+    qualifying: "65 / 110",
+    note_hi: "Top scorers → Manager, baaki → Executive",
+    note_en: "Top scorers → Manager, rest → Executive",
+    samples: [
+      { q: "Ek sponsorship proposal mein sabse zaroori cheez hai:", opts: ["Sirf logo placement", "Sponsor ko clear ROI/visibility deliverables dikhana", "Lambi company history", "Koi budget na dena"], correct: 1 },
+      { q: "(Short answer) ≤80 words mein bataao: ek corporate sponsor ko Music Festival mein ₹10 lakh sponsorship ke liye kaise convince karoge?", opts: [], correct: -1, descriptive: true }
+    ]
+  },
+  {
+    id: "vyapar",
+    name_hi: "Vyapar Pariksha",
+    name_en: "Vyapar Pariksha (Trade Selection Exam)",
+    for_hi: "Import Manager / Export Manager",
+    for_en: "Import Manager / Export Manager",
+    fee: 800,
+    duration_hi: "110 minutes",
+    duration_en: "110 minutes",
+    questions_hi: "100 MCQ (1 mark) + 8 short-answer (2 marks) = 116 marks",
+    questions_en: "100 MCQ (1 mark) + 8 short-answer (2 marks) = 116 marks",
+    sections: ["General Knowledge — 15", "International Trade & Compliance (DGFT/Customs/FEMA/GST) — 45", "Logistics & Documentation — 30", "Hindi — 10"],
+    negative_hi: "−0.25 per wrong MCQ",
+    negative_en: "−0.25 per wrong MCQ",
+    qualifying: "70 / 116",
+    note_hi: "Graduate (International Trade/Agribusiness preferred)",
+    note_en: "Graduate (International Trade/Agribusiness preferred)",
+    samples: [
+      { q: "Export shipment ke liye \"Certificate of Origin\" ka kaam hai:", opts: ["Product ka manufacturing country prove karna", "Sirf price declare karna", "Insurance cover dena", "Kuch nahi"], correct: 0 },
+      { q: "DGFT (Directorate General of Foreign Trade) ka mool kaam hai:", opts: ["Income tax collect karna", "India ke import-export policy ko regulate karna", "Sirf visa issue karna", "Banking regulation"], correct: 1 }
+    ]
+  },
+  {
+    id: "vyapar-nideshak",
+    name_hi: "Vyapar Nideshak Pariksha",
+    name_en: "Vyapar Nideshak Pariksha (Trade Director Selection Exam)",
+    for_hi: "Director (Export & Import / International Trade)",
+    for_en: "Director (Export & Import / International Trade)",
+    fee: 1500,
+    duration_hi: "150 minutes",
+    duration_en: "150 minutes",
+    questions_hi: "100 MCQ (1 mark) + 10 essay/case-study (5 marks) = 150 marks",
+    questions_en: "100 MCQ (1 mark) + 10 essay/case-study (5 marks) = 150 marks",
+    sections: ["Trade Policy & Strategy — 40", "Leadership & Negotiation — 30", "Case Studies — 30", "Regulatory Compliance — 30", "Essays — 20"],
+    negative_hi: "−0.33 per wrong MCQ (essays mein nahi)",
+    negative_en: "−0.33 per wrong MCQ (none for essays)",
+    qualifying: "90 / 150",
+    note_hi: "Post-Graduate (International Trade/MBA preferred); exam ke baad senior management panel interview",
+    note_en: "Post-Graduate (International Trade/MBA preferred); followed by a senior management panel interview",
+    samples: [
+      { q: "Ek international joint venture negotiate karte waqt sabse important consideration hai:", opts: ["Sirf price", "Long-term strategic fit, IP protection, aur exit terms", "Meeting ki location", "Kuch nahi"], correct: 1 },
+      { q: "(Case study) Ek key export market mein sudden tariff badh jaata hai jisse margins 15% kam ho jaate hain. Director ke roop mein pehle 90 din ka response plan kya hoga?", opts: [], correct: -1, descriptive: true }
+    ]
+  },
+  {
+    id: "prakriya",
+    name_hi: "Prakriya Pariksha",
+    name_en: "Prakriya Pariksha (Processing Selection Exam)",
+    for_hi: "Primary/District Processing Centre Executive, Warehouse Manager",
+    for_en: "Primary/District Processing Centre Executive, Warehouse Manager",
+    fee: 600,
+    duration_hi: "90 minutes",
+    duration_en: "90 minutes",
+    questions_hi: "100 MCQ (1 mark each)",
+    questions_en: "100 MCQ (1 mark each)",
+    sections: ["General Knowledge — 20", "Food Processing & Quality Standards (FSSAI/HACCP/GMP) — 40", "Inventory & Warehouse Management — 25", "Hindi — 15"],
+    negative_hi: "−0.25 per wrong answer",
+    negative_en: "−0.25 per wrong answer",
+    qualifying: "60 / 100",
+    note_hi: "12th/Graduate, basic food-handling/quality-check training",
+    note_en: "12th/Graduate, basic food-handling/quality-check training",
+    samples: [
+      { q: "FSSAI ka poora naam hai:", opts: ["Food Safety and Standards Authority of India", "Federal State Storage Authority of India", "Farmers Support and Subsidy Authority of India", "Kuch nahi"], correct: 0 },
+      { q: "FIFO inventory practice ka matlab hai:", opts: ["First In, First Out", "Fast Inventory, Fast Output", "Final Invoice For Order", "Kuch nahi"], correct: 0 }
+    ]
+  },
+  {
+    id: "prakriya-prabandhak",
+    name_hi: "Prakriya Prabandhak Pariksha",
+    name_en: "Prakriya Prabandhak Pariksha (Processing Manager Selection Exam)",
+    for_hi: "Storage Manager, Food Processing Unit Manager",
+    for_en: "Storage Manager, Food Processing Unit Manager",
+    fee: 1000,
+    duration_hi: "120 minutes",
+    duration_en: "120 minutes",
+    questions_hi: "100 MCQ (1 mark) + 10 short-answer (2 marks) = 120 marks",
+    questions_en: "100 MCQ (1 mark) + 10 short-answer (2 marks) = 120 marks",
+    sections: ["General Knowledge — 15", "Advanced Food Safety & Compliance — 35", "Production/Storage Planning & Cost Control — 35", "Leadership & Team Management — 25", "Hindi — 10"],
+    negative_hi: "−0.33 per wrong MCQ",
+    negative_en: "−0.33 per wrong MCQ",
+    qualifying: "75 / 120",
+    note_hi: "Graduate/Post-Graduate (Food Technology preferred), kam se kam 3–5 saal anubhav",
+    note_en: "Graduate/Post-Graduate (Food Technology preferred), at least 3–5 years of experience",
+    samples: [
+      { q: "HACCP framework mool roop se focus karta hai:", opts: ["Marketing strategy par", "Food safety hazards ko identify aur control karne par", "Employee salary par", "Kuch nahi"], correct: 1 },
+      { q: "(Short answer) ≤80 words mein bataao: ek storage facility mein spoilage losses ko 30% kaise kam karoge?", opts: [], correct: -1, descriptive: true }
+    ]
+  },
+  {
+    id: "samuday-vikas",
+    name_hi: "Samuday Vikas Pariksha",
+    name_en: "Samuday Vikas Pariksha (Community Development Selection Exam)",
+    for_hi: "CSR Executive, Agro Estate Manager, Events Team (Mid Level)",
+    for_en: "CSR Executive, Agro Estate Manager, Events Team (Mid Level)",
+    fee: 600,
+    duration_hi: "90 minutes",
+    duration_en: "90 minutes",
+    questions_hi: "100 MCQ (1 mark each)",
+    questions_en: "100 MCQ (1 mark each)",
+    sections: ["General Knowledge — 20", "CSR / Agriculture / Event Concepts — 40", "Community Engagement — 25", "Hindi — 15"],
+    negative_hi: "−0.25 per wrong answer",
+    negative_en: "−0.25 per wrong answer",
+    qualifying: "60 / 100",
+    note_hi: "Graduate (Social Work/Agriculture/Event Management preferred)",
+    note_en: "Graduate (Social Work/Agriculture/Event Management preferred)",
+    samples: [
+      { q: "Companies Act, 2013 ke Schedule VII mein kya define hota hai:", opts: ["Tax slabs", "CSR activities jo eligible hain", "Company registration process", "Kuch nahi"], correct: 1 },
+      { q: "FIFO/FEFO jaisi practices kis field mein use hoti hain:", opts: ["Sirf marketing", "Inventory/storage management", "Event planning", "Kuch nahi"], correct: 1 }
+    ]
+  },
+  {
+    id: "netritva",
+    name_hi: "Netritva Pariksha",
+    name_en: "Netritva Pariksha (Leadership Selection Exam)",
+    for_hi: "Events Team (Senior Level)",
+    for_en: "Events Team (Senior Level)",
+    fee: 1000,
+    duration_hi: "120 minutes",
+    duration_en: "120 minutes",
+    questions_hi: "100 MCQ (1 mark) + 10 short-answer (2 marks) = 120 marks",
+    questions_en: "100 MCQ (1 mark) + 10 short-answer (2 marks) = 120 marks",
+    sections: ["General Knowledge — 15", "Event Strategy & Sponsor Management — 35", "Leadership & Crisis Management (Case Studies) — 35", "Hindi — 10", "Essays — 25"],
+    negative_hi: "−0.33 per wrong MCQ",
+    negative_en: "−0.33 per wrong MCQ",
+    qualifying: "75 / 120",
+    note_hi: "Graduate/Post-Graduate, kam se kam 5 saal event-management leadership anubhav",
+    note_en: "Graduate/Post-Graduate, at least 5 years of event-management leadership experience",
+    samples: [
+      { q: "Ek large-scale event mein last-minute VIP cancellation ho jaaye to sabse pehla step hona chahiye:", opts: ["Event cancel karna", "Protocol team ko turant inform karna aur seating/agenda adjust karna", "Kuch na karna", "Media ko turant batana"], correct: 1 },
+      { q: "(Case study) Ek music festival mein sound system technical failure ho jaata hai 5,000 attendees ke saamne. Senior Events Lead ke roop mein aapka immediate action plan?", opts: [], correct: -1, descriptive: true }
     ]
   }
 ];
@@ -295,6 +487,13 @@ export const SCHEMES = [
   { name: "MGNREGA", icon: "hammer", benefit_hi: "100 din rozgaar guarantee", benefit_en: "100 days employment guarantee", role_hi: "Household registration, farm-work application", role_en: "Household registration, farm-work application" },
   { name: "PMAY-G", icon: "home", benefit_hi: "Pucca ghar ke liye ₹1.2–1.3 lakh", benefit_en: "₹1.2–1.3 lakh for a pucca house", role_hi: "Survey verification, application, follow-up", role_en: "Survey verification, application, follow-up" },
   { name: "e-NAM / ODOP", icon: "market", benefit_hi: "Better market access & district products", benefit_en: "Better market access & district products", role_hi: "Mandi linkage, FPO support", role_en: "Mandi linkage, FPO support" }
+];
+
+export const SCHEME_TRUST = [
+  { icon: "users", title_hi: "Har Yojana, Har Kisan", sub_hi: "Sahi jaankari, sahi haq", title_en: "Every Scheme, Every Farmer", sub_en: "Right information, right entitlement" },
+  { icon: "shield", title_hi: "Pardarshita & Vishwas", sub_hi: "Transparent process, trusted support", title_en: "Transparency & Trust", sub_en: "Transparent process, trusted support" },
+  { icon: "headset", title_hi: "Officer Saath Hamesha", sub_hi: "Har kadam par madad", title_en: "Officer By Your Side", sub_en: "Support at every step" },
+  { icon: "leaf", title_hi: "Kisan Ka Vikas", sub_hi: "Samriddh kisan, samriddh desh", title_en: "Farmer's Growth", sub_en: "Prosperous farmer, prosperous nation" },
 ];
 
 export const MEMBER_BENEFITS = [

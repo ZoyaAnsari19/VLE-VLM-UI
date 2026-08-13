@@ -4,7 +4,7 @@ import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 interface PositionCardProps {
   position: Position;

@@ -81,7 +81,7 @@ const STR = {
     s2_name: 'Poora Naam', s2_dob: 'Janm Tithi (DOB)', s2_gender: 'Gender', s2_verify: 'Aadhaar Verify Karein', s2_verified: 'KYC Verified',
     s3_title: 'Personal & Address Details', s3_sub: 'Apni jaankari bharein.',
     s3_parent: 'Pita / Mata ka Naam', s3_cat: 'Category', s3_pwd: 'Person with Disability?', s3_email: 'Email (optional)',
-    s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Tehsil', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Poora Pata',
+    s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Taluka', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Poora Pata',
     s4_title: 'Educational Qualification', s4_sub: 'Apni shiksha ki jaankari.',
     s4_qual: 'Highest Qualification', s4_stream: 'Stream / Subject', s4_year: 'Year of Passing', s4_pct: 'Percentage / CGPA', s4_agri: 'Agriculture background?', s4_exp: 'Management / work experience (years, optional)',
     s5_title: 'Post & Posting Preference', s5_sub: 'Apni posting preference batayein.',
@@ -109,7 +109,7 @@ const STR = {
     s2_name: 'Full Name', s2_dob: 'Date of Birth', s2_gender: 'Gender', s2_verify: 'Verify Aadhaar', s2_verified: 'KYC Verified',
     s3_title: 'Personal & Address Details', s3_sub: 'Fill in your details.',
     s3_parent: "Father's / Mother's Name", s3_cat: 'Category', s3_pwd: 'Person with Disability?', s3_email: 'Email (optional)',
-    s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Tehsil', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Full Address',
+    s3_state: 'State', s3_div: 'Division', s3_dist: 'District', s3_teh: 'Taluka', s3_vil: 'Village', s3_pin: 'Pincode', s3_addr: 'Full Address',
     s4_title: 'Educational Qualification', s4_sub: 'Your education details.',
     s4_qual: 'Highest Qualification', s4_stream: 'Stream / Subject', s4_year: 'Year of Passing', s4_pct: 'Percentage / CGPA', s4_agri: 'Agriculture background?', s4_exp: 'Management / work experience (years, optional)',
     s5_title: 'Post & Posting Preference', s5_sub: 'Tell us your posting preference.',
@@ -235,7 +235,7 @@ function stepHTML() {
         ${radioField('pwd', 's3_pwd', formState.pwd, L.yesno)}
       </div>
       ${field('email', 's3_email', formState.email, { type: 'email' })}
-      ${field('state', 's3_state', 'Uttar Pradesh', { disabled: true })}
+      ${field('state', 's3_state', 'Maharashtra', { disabled: true })}
       <div class="field-row">
         ${field('division', 's3_div', formState.division, { type: 'select', options: divs, required: true })}
         ${field('district', 's3_dist', formState.district, { required: true })}
@@ -606,7 +606,7 @@ function downloadPdf() {
     ['Application ID', formState.appId], ['Position', position ? position.title_en : ''], ['Name', formState.fullName],
     ['Mobile', formState.mobile], ['DOB', formState.dob], ['Gender', formState.gender], ['Category', formState.category],
     ...(examTrack ? [['Aadhaar', formState.aadhaar ? '••••••••' + formState.aadhaar.slice(-4) : '']] : []),
-    ['Division', formState.division], ['District', formState.district], ['Tehsil', formState.tehsil], ['Village', formState.village],
+    ['Division', formState.division], ['District', formState.district], ['Taluka', formState.tehsil], ['Village', formState.village],
     ['Pincode', formState.pincode], ['Qualification', formState.qualification], ['Stream', formState.stream], ['Year', formState.passYear]
   ].map(r => `<tr><td style="padding:8px;border:1px solid #ddd;color:#555">${r[0]}</td><td style="padding:8px;border:1px solid #ddd;font-weight:700">${esc(r[1] || '')}</td></tr>`).join('');
   w.document.write(`<html><head><title>${formState.appId}</title></head><body style="font-family:sans-serif;max-width:700px;margin:30px auto;padding:20px">

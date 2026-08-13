@@ -5,7 +5,7 @@ import { I18N } from "@/lib/kisan-mitra/i18n";
 import { ICON } from "@/lib/kisan-mitra/icons";
 import { POSITIONS, getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 type SortKey = "position" | "department" | "salary" | "reporting";
 type SortDir = "asc" | "desc";

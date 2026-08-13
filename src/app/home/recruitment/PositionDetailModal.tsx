@@ -4,7 +4,7 @@ import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
-import { Modal } from "./Modal";
+import { Modal } from "@/components/Modal";
 
 interface PositionDetailModalProps {
   position: Position | null;
@@ -24,6 +24,8 @@ export function PositionDetailModal({ position, lang, onClose, onApply }: Positi
   const responsibilities = lang === "hi" ? position.responsibilities_hi : position.responsibilities_en;
   const reportingOfficer = lang === "hi" ? position.reportingOfficer_hi : position.reportingOfficer_en;
   const careerPath = lang === "hi" ? position.careerPath_hi : position.careerPath_en;
+  const uniform = lang === "hi" ? position.uniform_hi : position.uniform_en;
+  const monthlyTargets = lang === "hi" ? position.monthlyTargets_hi : position.monthlyTargets_en;
   const deptName = dept ? (lang === "hi" ? dept.name_hi : dept.name_en) : "";
 
   return (
@@ -79,6 +81,23 @@ export function PositionDetailModal({ position, lang, onClose, onApply }: Positi
               </span>
             ))}
           </div>
+        </div>
+
+        <div className="rec-modal-grid">
+          <div className="rec-modal-section">
+            <span className="k">{t.label_uniform}</span>
+            <p className="rec-modal-text">{uniform}</p>
+          </div>
+          {monthlyTargets && monthlyTargets.length > 0 && (
+            <div className="rec-modal-section">
+              <span className="k">{t.label_monthly_targets}</span>
+              <ul className="role-duties">
+                {monthlyTargets.map((mt, i) => (
+                  <li key={i}>{mt}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
       <div className="km-modal-foot">
