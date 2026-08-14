@@ -127,19 +127,26 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
               <div
                 key={department.id}
                 className="dv-card"
-                style={{ ["--v-accent" as string]: department.accent, ["--v-tint" as string]: `${department.accent}1A` }}
+                style={{
+                  ["--v-accent" as string]: department.accent,
+                  ["--v-tint" as string]: `${department.accent}1A`,
+                  ["--v-badge-bg" as string]: `${department.accent}29`,
+                }}
               >
+                <span className="dv-card-count">
+                  <span className="dv-card-count-ico" dangerouslySetInnerHTML={{ __html: ICON.users }} />
+                  {all.length} {t.dv_roles}
+                </span>
+
                 <button type="button" className="dv-card-head" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
-                  <span className="dv-badge" style={{ background: `${department.accent}1F`, color: department.accent }}>
-                    <span dangerouslySetInnerHTML={{ __html: ICON[department.icon as keyof typeof ICON] }} />
-                  </span>
-                  <span className="dv-count">
-                    {all.length} {t.dv_roles}
+                  <span className="dv-ico-ring">
+                    <span className="dv-badge" dangerouslySetInnerHTML={{ __html: ICON[department.icon as keyof typeof ICON] }} />
                   </span>
                 </button>
                 <span className="dv-card-title" style={{ color: department.accent }}>
                   {lang === "hi" ? department.name_hi : department.name_en}
                 </span>
+                <span className="dv-card-title-underline" />
                 {!isOpen && description && <p className="dv-card-desc">{description}</p>}
 
                 {isOpen && (
@@ -164,13 +171,7 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
                   </div>
                 )}
 
-                <button
-                  type="button"
-                  className="dv-view-roles"
-                  style={{ color: department.accent }}
-                  onClick={() => toggle(department.id)}
-                  aria-expanded={isOpen}
-                >
+                <button type="button" className="dv-view-roles-btn" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
                   {t.dv_view_roles}
                   <span className={`dv-chevron${isOpen ? " open" : ""}`} dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
                 </button>

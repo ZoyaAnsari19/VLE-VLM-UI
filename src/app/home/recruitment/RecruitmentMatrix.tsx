@@ -10,7 +10,7 @@ import { useReveal } from "@/components/useReveal";
 type SortKey = "position" | "department" | "salary" | "reporting";
 type SortDir = "asc" | "desc";
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 5;
 
 interface RecruitmentMatrixProps {
   lang: Lang;

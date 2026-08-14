@@ -3,8 +3,8 @@
 // SECTION RENDERERS — return HTML strings for each section
 // ============================================================
 import { ICON } from './icons';
-import { DIVISIONS, STATS, HERO_VIKAS, MISSION_HIGHLIGHTS, EXAMS, ROADMAP, TRAINING, SCHEMES, SCHEME_TRUST, MEMBER_BENEFITS, FARMER_GOVT_CHIPS, FARMER_IMPACT, INTERVIEW_MEDIA_BADGES, INTERVIEW_POINTS, INTERVIEW_Q_ICONS, PREP_BENEFITS, MAHARASHTRA_DISTRICTS, FOOTER_ABOUT_STATS, FOOTER_QUICK_LINKS, FOOTER_SOCIAL, FAQ, SECURITY } from './data';
-import { PHASE1_VACANCIES, getPosition } from './recruitment/data';
+import { DIVISIONS, STATS, HERO_VIKAS, MISSION_HIGHLIGHTS, EXAMS, ROADMAP, TRAINING, SCHEMES, SCHEME_TRUST, MEMBER_BENEFITS, FARMER_GOVT_CHIPS, FARMER_IMPACT, INTERVIEW_MEDIA_BADGES, INTERVIEW_POINTS, INTERVIEW_Q_ICONS, INTERVIEW_PANELS, PREP_BENEFITS, MAHARASHTRA_DISTRICTS, FOOTER_ABOUT_STATS, FOOTER_QUICK_LINKS, FOOTER_SOCIAL, FAQ, SECURITY } from './data';
+import { PHASE1_VACANCIES, getPosition, getDepartment } from './recruitment/data';
 
 const VAC_ROLE_POSITION_ID = { VLE: 'vle', VLM: 'vlm', TEO: 'teo', DLO: 'division-level-officer' };
 
@@ -16,46 +16,47 @@ const boldMd = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
 
 const SALARY_PERK_ICONS = [ICON.badge, ICON.scan, ICON.home, ICON.rupee, ICON.briefcase, ICON.shield];
 
-export function renderNav(t) {
+export function renderNav(t, basePath) {
+  const b = basePath || '';
   return `
   <nav class="nav" id="nav">
     <div class="container nav-inner">
-      <a href="#top" class="brand">
+      <a href="${b}#top" class="brand">
         <span class="leaf">${ICON.leaf}</span> Kisan Mitra
       </a>
       <div class="nav-links">
-        <a href="#roles">${t.nav_roles}</a>
-        <a href="#exams">${t.nav_exams}</a>
-        <a href="#process">${t.nav_process}</a>
-        <a href="#schemes">${t.nav_schemes}</a>
-        <a href="#faq">${t.nav_faq}</a>
+        <a href="${b}#roles">${t.nav_roles}</a>
+        <a href="${b}#exams">${t.nav_exams}</a>
+        <a href="${b}#process">${t.nav_process}</a>
+        <a href="${b}#schemes">${t.nav_schemes}</a>
+        <a href="${b}#faq">${t.nav_faq}</a>
       </div>
       <div class="nav-actions">
         <div class="lang-toggle" id="langToggle">
           <button type="button" data-lang="hi">हिंदी</button>
           <button type="button" data-lang="en">EN</button>
         </div>
-        <a href="#apply" class="btn btn-primary nav-apply-btn" style="min-height:44px;padding:11px 20px;font-size:15px">${t.nav_apply}</a>
+        <a href="${b}#apply" class="btn btn-primary nav-apply-btn" style="min-height:44px;padding:11px 20px;font-size:15px">${t.nav_apply}</a>
         <button class="hamburger" id="hamburger" aria-label="Menu">${ICON.menu}</button>
       </div>
     </div>
   </nav>
   <div class="drawer" id="drawer">
     <div class="drawer-head">
-      <a href="#top" class="brand"><span class="leaf">${ICON.leaf}</span> Kisan Mitra</a>
+      <a href="${b}#top" class="brand"><span class="leaf">${ICON.leaf}</span> Kisan Mitra</a>
       <button class="hamburger" id="drawerClose" aria-label="Close">${ICON.x}</button>
     </div>
     <div class="drawer-links">
-      <a href="#roles">${t.nav_roles}</a>
-      <a href="#exams">${t.nav_exams}</a>
-      <a href="#process">${t.nav_process}</a>
-      <a href="#schemes">${t.nav_schemes}</a>
-      <a href="#faq">${t.nav_faq}</a>
+      <a href="${b}#roles">${t.nav_roles}</a>
+      <a href="${b}#exams">${t.nav_exams}</a>
+      <a href="${b}#process">${t.nav_process}</a>
+      <a href="${b}#schemes">${t.nav_schemes}</a>
+      <a href="${b}#faq">${t.nav_faq}</a>
       <div class="lang-toggle lang-toggle-drawer" id="langToggleDrawer">
         <button type="button" data-lang="hi">हिंदी</button>
         <button type="button" data-lang="en">EN</button>
       </div>
-      <a href="#apply" class="btn btn-primary drawer-apply-btn">${t.nav_apply}</a>
+      <a href="${b}#apply" class="btn btn-primary drawer-apply-btn">${t.nav_apply}</a>
     </div>
   </div>`;
 }
@@ -320,8 +321,9 @@ export function renderVacancies(t, lang) {
 
 const EXAMS_VISIBLE_COUNT = 4;
 
-export function renderExams(t, lang) {
-  const cards = EXAMS.map((e, i) => {
+export function renderExams(t, lang, showAll) {
+  const visibleExams = showAll ? EXAMS : EXAMS.slice(0, EXAMS_VISIBLE_COUNT);
+  const cards = visibleExams.map((e) => {
     const sections = e.sections.map(s => `<li>${esc(s)}</li>`).join('');
     const samples = e.samples.map((q, qi) => {
       if (q.descriptive) {
@@ -330,9 +332,8 @@ export function renderExams(t, lang) {
       const opts = q.opts.map((o, oi) => `<li class="${oi === q.correct ? 'correct' : ''}">${esc(o)}</li>`).join('');
       return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><ul>${opts}</ul></div>`;
     }).join('');
-    const extraClass = i >= EXAMS_VISIBLE_COUNT ? ' exam-card-extra' : '';
     return `
-    <article class="card exam-card${extraClass} reveal" id="exam-${e.id}">
+    <article class="card exam-card reveal" id="exam-${e.id}">
       <div class="exam-head">
         <div><span class="eyebrow">${esc(lang === 'hi' ? e.for_hi : e.for_en)}</span></div>
         <span class="exam-fee">₹${e.fee}</span>
@@ -367,9 +368,9 @@ export function renderExams(t, lang) {
         <p>${esc(t.exams_sub)}</p>
       </div>
       <div class="exams-grid" id="examsGrid">${cards}</div>
-      ${EXAMS.length > EXAMS_VISIBLE_COUNT ? `
+      ${!showAll && EXAMS.length > EXAMS_VISIBLE_COUNT ? `
       <div class="rec-view-all">
-        <button type="button" class="btn btn-outline" id="examsViewAll">${t.exams_view_all} (${EXAMS.length})</button>
+        <a href="/exams" class="btn btn-outline">${t.exams_view_all} (${EXAMS.length})</a>
       </div>` : ''}
       <div class="card reveal" style="margin-top:22px">
         <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.reschedule_title}</h3>
@@ -622,6 +623,25 @@ export function renderInterview(t, lang) {
       <div class="int-panel-stat"><span>${ICON.pieChart}</span><div><span class="k">${t.int_th_weightage}</span><span class="v">Exam ${esc(examWeight)}</span></div></div>
       <div class="int-panel-stat"><span>${ICON.users}</span><div><span class="k">${t.int_th_interview}</span><span class="v">${esc(intWeight)}</span></div></div>
     </div>`;
+  const panelCards = INTERVIEW_PANELS.map(p => {
+    const dept = getDepartment(p.deptId);
+    const accent = dept ? dept.accent : 'var(--green-forest)';
+    return `
+    <div class="card int-panel reveal" style="--v-accent:${accent}">
+      <div class="int-panel-head">
+        <span class="int-panel-ico" style="background:${accent}1F;color:${accent}">${ICON.users}</span>
+        <div>
+          <div class="int-tag"><span class="int-pill" style="background:${accent}1F;color:${accent}">${esc(lang === 'hi' ? p.badge_hi : p.badge_en)}</span></div>
+          <h3 class="h3" style="color:${accent}">${esc(t.int_panel_card_title)}</h3>
+        </div>
+      </div>
+      ${panelStats(
+        lang === 'hi' ? p.composition_hi : p.composition_en,
+        lang === 'hi' ? p.duration_hi : p.duration_en,
+        p.examWeight, p.intWeight
+      )}
+    </div>`;
+  }).join('');
   return `
   <section id="interview">
     <div class="container">
@@ -642,35 +662,17 @@ export function renderInterview(t, lang) {
             <div class="int-points">${points}</div>
           </div>
         </div>
-        <div class="int-panels-grid">
-          <div class="card int-panel int-panel-1 reveal">
-            <div class="int-panel-head">
-              <span class="int-panel-ico">${ICON.users}</span>
-              <div>
-                <div class="int-tag"><span class="int-pill">VLE / VLM</span></div>
-                <h3 class="h3">${esc(t.int_panel1_title)}</h3>
-              </div>
-            </div>
-            ${panelStats(t.int_panel1_composition, t.int_panel1_duration, t.int_panel1_exam_weight, t.int_panel1_int_weight)}
+        <div class="int-panels-carousel">
+          <button type="button" class="perks-nav int-panels-prev" id="intPanelsPrev" aria-label="${esc(t.perks_prev)}">${ICON.arrowLeft}</button>
+          <div class="int-panels-viewport" id="intPanelsViewport">
+            <div class="int-panels-track" id="intPanelsTrack">${panelCards}</div>
           </div>
-          <div class="card int-panel int-panel-2 reveal">
-            <div class="int-panel-head">
-              <span class="int-panel-ico">${ICON.users}</span>
-              <div>
-                <div class="int-tag"><span class="int-pill int-pill-gold">TLO / DLO</span></div>
-                <h3 class="h3">${esc(t.int_panel2_title)}</h3>
-              </div>
-            </div>
-            ${panelStats(t.int_panel2_composition, t.int_panel2_duration, t.int_panel2_exam_weight, t.int_panel2_int_weight)}
-          </div>
+          <button type="button" class="perks-nav int-panels-next" id="intPanelsNext" aria-label="${esc(t.perks_next)}">${ICON.arrowRight}</button>
         </div>
         <div class="card int-samples reveal">
           <div class="int-samples-head">
             <span class="int-samples-ico">${ICON.fileText}</span>
-            <div>
-              <div class="int-samples-kicker">${esc(t.int_samples_kicker)}</div>
-              <h3 class="h3" style="margin:6px 0 0">${esc(t.int_samples_title)}</h3>
-            </div>
+            <h3 class="h3" style="margin:0">${esc(t.int_samples_title)}</h3>
           </div>
           <ul class="int-q">${qs}</ul>
         </div>
@@ -780,11 +782,12 @@ export function renderFAQ(t, lang) {
   </section>`;
 }
 
-export function renderFooter(t, lang) {
+export function renderFooter(t, lang, basePath) {
+  const b = basePath || '';
   const aboutStats = FOOTER_ABOUT_STATS.map(s => `
     <div class="footer-stat"><span>${ICON[s.icon]}</span>${esc(lang === 'hi' ? s.label_hi : s.label_en)}</div>`).join('');
   const links = FOOTER_QUICK_LINKS.map(l => `
-    <li><a href="${l.href}"><span>${ICON.chevronRight}</span>${esc(lang === 'hi' ? l.label_hi : l.label_en)}</a></li>`).join('');
+    <li><a href="${l.href.startsWith('#') ? b + l.href : l.href}"><span>${ICON.chevronRight}</span>${esc(lang === 'hi' ? l.label_hi : l.label_en)}</a></li>`).join('');
   const districts = MAHARASHTRA_DISTRICTS.map(d => `<span class="district-pill">${esc(d)}</span>`).join('');
   const social = FOOTER_SOCIAL.map(s => `
     <a class="social-ico" href="#" aria-label="${esc(s.label)}">${ICON[s.icon]}</a>`).join('');
@@ -817,7 +820,7 @@ export function renderFooter(t, lang) {
           </div>
           <span class="footer-underline"></span>
           <div class="footer-districts">${districts}</div>
-          <a href="#vacancies" class="footer-all-districts">${esc(t.footer_all_districts)} <span>${ICON.chevronRight}</span></a>
+          <a href="${b}#vacancies" class="footer-all-districts">${esc(t.footer_all_districts)} <span>${ICON.chevronRight}</span></a>
         </div>
       </div>
 

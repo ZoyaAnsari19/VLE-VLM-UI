@@ -541,6 +541,64 @@ export const INTERVIEW_POINTS = [
 
 export const INTERVIEW_Q_ICONS = ["seedling", "flask", "calendar", "users", "megaphone"];
 
+// Panel & Weightage per exam track — covers all 10 exams/21 positions.
+// Panel composition, duration and interview-weight scale with seniority
+// (mirrors the fee/duration scaling already used in EXAMS): junior/mid
+// roles get a short, exam-heavy panel; senior/director roles get a longer,
+// more interview-weighted one with an external/HQ panelist.
+export const INTERVIEW_PANELS = [
+  {
+    examId: "gram-sevak", deptId: "field-operations", badge_hi: "VLE / VLM", badge_en: "VLE / VLM",
+    composition_hi: "1 TEO + 1 DLO + 1 HR", composition_en: "1 TEO + 1 DLO + 1 HR",
+    duration_hi: "15 minute", duration_en: "15 minutes", examWeight: "70%", intWeight: "30%",
+  },
+  {
+    examId: "krishi-adhikari", deptId: "field-operations", badge_hi: "TEO / DLO / DD", badge_en: "TEO / DLO / DD",
+    composition_hi: "1 DLO + 1 senior officer + 1 bahari expert", composition_en: "1 DLO + 1 senior officer + 1 external expert",
+    duration_hi: "30 minute", duration_en: "30 minutes", examWeight: "60%", intWeight: "40%",
+  },
+  {
+    examId: "vipnan", deptId: "sales-marketing", badge_hi: "Sales & Marketing", badge_en: "Sales & Marketing",
+    composition_hi: "1 Sales & Marketing Head + 1 HR", composition_en: "1 Sales & Marketing Head + 1 HR",
+    duration_hi: "15 minute", duration_en: "15 minutes", examWeight: "70%", intWeight: "30%",
+  },
+  {
+    examId: "vyavsaya-vikas", deptId: "business-development", badge_hi: "Business Development", badge_en: "Business Development",
+    composition_hi: "1 BD Manager/Head + 1 HR", composition_en: "1 BD Manager/Head + 1 HR",
+    duration_hi: "20 minute", duration_en: "20 minutes", examWeight: "65%", intWeight: "35%",
+  },
+  {
+    examId: "vyapar", deptId: "export-import", badge_hi: "Import / Export Manager", badge_en: "Import / Export Manager",
+    composition_hi: "1 Director (Export-Import) + 1 HR + 1 bahari trade expert", composition_en: "1 Director (Export-Import) + 1 HR + 1 external trade expert",
+    duration_hi: "25 minute", duration_en: "25 minutes", examWeight: "60%", intWeight: "40%",
+  },
+  {
+    examId: "vyapar-nideshak", deptId: "export-import", badge_hi: "Director (Export-Import)", badge_en: "Director (Export-Import)",
+    composition_hi: "1 HQ Leadership + 1 Senior Director + 1 bahari trade expert", composition_en: "1 HQ Leadership + 1 Senior Director + 1 external trade expert",
+    duration_hi: "40 minute", duration_en: "40 minutes", examWeight: "55%", intWeight: "45%",
+  },
+  {
+    examId: "prakriya", deptId: "processing", badge_hi: "PPC / DPC / Warehouse", badge_en: "PPC / DPC / Warehouse",
+    composition_hi: "1 Processing Division Head + 1 HR", composition_en: "1 Processing Division Head + 1 HR",
+    duration_hi: "15 minute", duration_en: "15 minutes", examWeight: "70%", intWeight: "30%",
+  },
+  {
+    examId: "prakriya-prabandhak", deptId: "processing", badge_hi: "FPUM / Storage Manager", badge_en: "FPUM / Storage Manager",
+    composition_hi: "1 Processing Division Head + 1 senior officer + 1 HR", composition_en: "1 Processing Division Head + 1 senior officer + 1 HR",
+    duration_hi: "25 minute", duration_en: "25 minutes", examWeight: "60%", intWeight: "40%",
+  },
+  {
+    examId: "samuday-vikas", deptId: "corporate", badge_hi: "CSR / Estate / Events", badge_en: "CSR / Estate / Events",
+    composition_hi: "1 Corporate Affairs Head + 1 HR", composition_en: "1 Corporate Affairs Head + 1 HR",
+    duration_hi: "15 minute", duration_en: "15 minutes", examWeight: "70%", intWeight: "30%",
+  },
+  {
+    examId: "netritva", deptId: "corporate", badge_hi: "Events (Senior)", badge_en: "Events (Senior)",
+    composition_hi: "1 Corporate Affairs Head + 1 senior event lead + 1 HR", composition_en: "1 Corporate Affairs Head + 1 senior event lead + 1 HR",
+    duration_hi: "25 minute", duration_en: "25 minutes", examWeight: "60%", intWeight: "40%",
+  },
+];
+
 export const PREP_BENEFITS = [
   { icon: "shield", label_hi: "Trusted Resources", label_en: "Trusted Resources" },
   { icon: "award", label_hi: "Quality Preparation", label_en: "Quality Preparation" },

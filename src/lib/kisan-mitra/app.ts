@@ -15,6 +15,10 @@ import { initApply, setApplyLang } from './apply';
 let lang = 'hi';
 let topEl = null;
 let bottomEl = null;
+let examsPageEl = null;
+// whichever init*() ran last decides what a language switch re-renders —
+// the home page renders all sections, the /exams page renders just itself.
+let currentRenderer = null;
 
 function releaseBodyScroll() {
   document.body.style.overflow = '';
@@ -76,7 +80,7 @@ function switchLang(l) {
   localStorage.setItem('km_lang', l);
   document.documentElement.lang = l;
   releaseBodyScroll();
-  renderAll();
+  if (currentRenderer) currentRenderer();
   window.scrollTo(0, 0); // re-render resets; go to top for clarity
   window.dispatchEvent(new CustomEvent('km:lang-change', { detail: l }));
 }
@@ -129,18 +133,6 @@ function bindGlobal() {
       const thanks = document.getElementById('newsletterThanks');
       if (thanks) thanks.hidden = false;
       newsletterForm.reset();
-    });
-  }
-
-  // exams "view all" — reveal the remaining exam cards and retire the button
-  const examsViewAll = document.getElementById('examsViewAll');
-  if (examsViewAll) {
-    examsViewAll.addEventListener('click', () => {
-      const grid = document.getElementById('examsGrid');
-      if (!grid) return;
-      grid.classList.add('expanded');
-      grid.querySelectorAll('.exam-card-extra.reveal').forEach(el => el.classList.add('in'));
-      (examsViewAll.closest('.rec-view-all') || examsViewAll).remove();
     });
   }
 }
@@ -272,6 +264,10 @@ function bindPerksCarousel() {
     viewportId: 'roadmapViewport', prevId: 'roadmapPrev', nextId: 'roadmapNext',
     cardSelector: '.step', trackSelector: '#roadmapTrack', fullWidthCardsOnMobile: false,
   });
+  bindCarousel({
+    viewportId: 'intPanelsViewport', prevId: 'intPanelsPrev', nextId: 'intPanelsNext',
+    cardSelector: '.int-panel', trackSelector: '#intPanelsTrack', fullWidthCardsOnMobile: false,
+  });
 }
 
 // scroll reveal + count-up
@@ -316,5 +312,27 @@ export function initKisanMitra(top, bottom) {
   bottomEl = bottom;
   lang = localStorage.getItem('km_lang') || 'hi';
   document.documentElement.lang = lang;
+  currentRenderer = renderAll;
   renderAll();
+}
+
+function renderExamsPage() {
+  releaseBodyScroll();
+  const t = I18N[lang];
+  if (!examsPageEl) return;
+  examsPageEl.innerHTML =
+    renderNav(t, '/') +
+    renderExams(t, lang, true) +
+    renderFooter(t, lang, '/');
+  bindGlobal();
+  setupReveal();
+  setActiveLangButtons();
+}
+
+export function initExamsPage(container) {
+  examsPageEl = container;
+  lang = localStorage.getItem('km_lang') || 'hi';
+  document.documentElement.lang = lang;
+  currentRenderer = renderExamsPage;
+  renderExamsPage();
 }
