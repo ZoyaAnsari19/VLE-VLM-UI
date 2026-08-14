@@ -3,8 +3,10 @@
 // SECTION RENDERERS — return HTML strings for each section
 // ============================================================
 import { ICON } from './icons';
-import { DIVISIONS, STATS, HERO_VIKAS, MISSION_HIGHLIGHTS, EXAMS, ROADMAP, TRAINING, SCHEMES, SCHEME_TRUST, MEMBER_BENEFITS, FAQ, SECURITY } from './data';
-import { PHASE1_VACANCIES } from './recruitment/data';
+import { DIVISIONS, STATS, HERO_VIKAS, MISSION_HIGHLIGHTS, EXAMS, ROADMAP, TRAINING, SCHEMES, SCHEME_TRUST, MEMBER_BENEFITS, FARMER_GOVT_CHIPS, FARMER_IMPACT, INTERVIEW_MEDIA_BADGES, INTERVIEW_POINTS, INTERVIEW_Q_ICONS, PREP_BENEFITS, MAHARASHTRA_DISTRICTS, FOOTER_ABOUT_STATS, FOOTER_QUICK_LINKS, FOOTER_SOCIAL, FAQ, SECURITY } from './data';
+import { PHASE1_VACANCIES, getPosition } from './recruitment/data';
+
+const VAC_ROLE_POSITION_ID = { VLE: 'vle', VLM: 'vlm', TEO: 'teo', DLO: 'division-level-officer' };
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -229,59 +231,97 @@ export function renderSalary(t) {
 }
 
 export function renderVacancies(t, lang) {
-  const rows = PHASE1_VACANCIES.map(r => `
+  const rows = PHASE1_VACANCIES.map(r => {
+    const pos = getPosition(VAC_ROLE_POSITION_ID[r.role]);
+    const accent = pos ? pos.accent : 'var(--green-forest)';
+    return `
     <tr>
-      <td><b>${r.role}</b></td>
+      <td>
+        <span class="vac-role">
+          <span class="vac-role-ico" style="background:${accent}1F;color:${accent}">${ICON.users}</span>
+          <b>${r.role}</b>
+        </span>
+      </td>
       <td>${esc(lang === 'hi' ? r.exam_hi : r.exam_en)}</td>
       <td class="vac-count"><b>${r.count}</b></td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
   const total = PHASE1_VACANCIES.reduce((sum, r) => sum + r.count, 0);
-  const divs = DIVISIONS.map(d => `<span class="vac-pill">${esc(d)}</span>`).join('');
+  const divs = DIVISIONS.map(d => `<span class="vac-pill">${ICON.building}${esc(d)}</span>`).join('');
+  const impact = t.vac_impact.map(x => `
+    <div class="vac-impact-item">
+      <span class="vac-impact-ico">${ICON[x.icon]}</span>
+      <div>
+        <div class="vac-impact-label">${esc(x.label)}</div>
+        <div class="vac-impact-sub">${esc(x.sub)}</div>
+      </div>
+    </div>`).join('');
   return `
   <section id="vacancies" class="bg-paper">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.briefcase} Phase 1 Vacancies</span>
-        <h2 class="h2">${esc(t.vac_title)}</h2>
+        <h2 class="h2">${esc(t.vac_title_pre)} <span class="accent">${esc(t.vac_title_accent)}</span> ${esc(t.vac_title_post)}</h2>
+        <p>${esc(t.vac_sub)}</p>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div class="tbl-wrap reveal vac-tbl-wrap">
         <table class="tbl vac-tbl">
-          <thead><tr><th>${t.vac_th_post}</th><th>${t.vac_th_exam}</th><th>${t.vac_th_count}</th></tr></thead>
+          <thead>
+            <tr>
+              <th><span class="vac-th">${ICON.shield}${t.vac_th_post}</span></th>
+              <th><span class="vac-th">${ICON.fileText}${t.vac_th_exam}</span></th>
+              <th><span class="vac-th">${ICON.users}${t.vac_th_count}</span></th>
+            </tr>
+          </thead>
           <tbody>${rows}
-            <tr class="vac-total"><td><b>${t.vac_total}</b></td><td></td><td class="vac-count"><b>${total}</b></td></tr>
+            <tr class="vac-total"><td><b>${t.vac_total}</b></td><td></td><td class="vac-count"><b><span class="vac-total-pill">${total}</span></b></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="vac-note reveal"><span class="vac-note-ico">${ICON.pin}</span><span>${esc(t.vac_note)}</span></p>
+      <div class="vac-note reveal"><span class="vac-note-ico">${ICON.pin}</span><span>${esc(t.vac_note)}</span></div>
+
+      <h3 class="h3 vac-divisions-title"><span>${ICON.pin}</span>${esc(t.vac_divisions_title)}</h3>
       <div class="vac-divisions reveal">${divs}</div>
+
       <div class="vac-phases">
         <article class="card vac-phase-card reveal">
           <div class="vac-phase-dot"></div>
           <div class="vac-phase-kicker">${esc(t.vac_phase2_kicker)}</div>
           <h3 class="h3 vac-phase-title">${esc(t.vac_phase2_title)}</h3>
-          <p class="vac-phase-line">
-            <span class="vac-phase-pre">${esc(t.vac_phase2_pre)}</span>
-            <span class="vac-phase-big">${esc(t.vac_phase2_big)}</span>
-            <span class="vac-phase-post">${esc(t.vac_phase2_post)}</span>
-          </p>
+          <div class="vac-phase-body">
+            <p class="vac-phase-line">
+              <span class="vac-phase-pre">${esc(t.vac_phase2_pre)}</span>
+              <span class="vac-phase-big">${esc(t.vac_phase2_big)}</span>
+              <span class="vac-phase-post">${esc(t.vac_phase2_post)}</span>
+            </p>
+            <span class="vac-phase-ico">${ICON.seedling}</span>
+          </div>
         </article>
         <article class="card vac-phase-card reveal">
           <div class="vac-phase-dot"></div>
           <div class="vac-phase-kicker">${esc(t.vac_phase3_kicker)}</div>
           <h3 class="h3 vac-phase-title">${esc(t.vac_phase3_title)}</h3>
-          <p class="vac-phase-line">
-            <span class="vac-phase-pre">${esc(t.vac_phase3_pre)}</span>
-            <span class="vac-phase-big">${esc(t.vac_phase3_big)}</span>
-            <span class="vac-phase-post">${esc(t.vac_phase3_post)}</span>
-          </p>
+          <div class="vac-phase-body">
+            <p class="vac-phase-line">
+              <span class="vac-phase-pre">${esc(t.vac_phase3_pre)}</span>
+              <span class="vac-phase-big">${esc(t.vac_phase3_big)}</span>
+              <span class="vac-phase-post">${esc(t.vac_phase3_post)}</span>
+            </p>
+            <span class="vac-phase-ico">${ICON.users}</span>
+          </div>
         </article>
       </div>
+
+      <div class="vac-impact-strip reveal">${impact}</div>
     </div>
   </section>`;
 }
 
+const EXAMS_VISIBLE_COUNT = 4;
+
 export function renderExams(t, lang) {
-  const cards = EXAMS.map(e => {
+  const cards = EXAMS.map((e, i) => {
     const sections = e.sections.map(s => `<li>${esc(s)}</li>`).join('');
     const samples = e.samples.map((q, qi) => {
       if (q.descriptive) {
@@ -290,8 +330,9 @@ export function renderExams(t, lang) {
       const opts = q.opts.map((o, oi) => `<li class="${oi === q.correct ? 'correct' : ''}">${esc(o)}</li>`).join('');
       return `<div class="sample-q"><div class="qt">Q${qi + 1}. ${esc(q.q)}</div><ul>${opts}</ul></div>`;
     }).join('');
+    const extraClass = i >= EXAMS_VISIBLE_COUNT ? ' exam-card-extra' : '';
     return `
-    <article class="card exam-card reveal" id="exam-${e.id}">
+    <article class="card exam-card${extraClass} reveal" id="exam-${e.id}">
       <div class="exam-head">
         <div><span class="eyebrow">${esc(lang === 'hi' ? e.for_hi : e.for_en)}</span></div>
         <span class="exam-fee">₹${e.fee}</span>
@@ -325,7 +366,11 @@ export function renderExams(t, lang) {
         <h2 class="h2">${esc(t.exams_title)}</h2>
         <p>${esc(t.exams_sub)}</p>
       </div>
-      <div class="exams-grid">${cards}</div>
+      <div class="exams-grid" id="examsGrid">${cards}</div>
+      ${EXAMS.length > EXAMS_VISIBLE_COUNT ? `
+      <div class="rec-view-all">
+        <button type="button" class="btn btn-outline" id="examsViewAll">${t.exams_view_all} (${EXAMS.length})</button>
+      </div>` : ''}
       <div class="card reveal" style="margin-top:22px">
         <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.reschedule_title}</h3>
         <p style="margin:8px 0 0">• ${esc(t.reschedule_1)}</p>
@@ -352,21 +397,30 @@ export function renderExams(t, lang) {
 }
 
 export function renderSecurity(t, lang) {
-  const items = SECURITY.map(s => `
+  const items = SECURITY.map((s, i) => `
     <div class="sec-item reveal">
-      <div class="ico">${ICON[s.icon] || ICON.shield}</div>
+      <span class="sec-item-num">0${i + 1}</span>
+      <div class="sec-ico-ring"><div class="ico">${ICON[s.icon] || ICON.shield}</div></div>
       <h4>${esc(lang === 'hi' ? s.title_hi : s.title_en)}</h4>
+      <span class="sec-item-underline"></span>
       <p>${esc(lang === 'hi' ? s.desc_hi : s.desc_en)}</p>
     </div>`).join('');
   return `
-  <section id="process" class="bg-green">
+  <section id="process" class="bg-green sec-section">
+    <span class="sec-bg-dots" aria-hidden="true"></span>
+    <span class="sec-bg-watermark" aria-hidden="true">${ICON.shield}</span>
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">${ICON.lock} Security</span>
-        <h2 class="h2" style="color:#fff">${esc(t.sec_title)}</h2>
+        <span class="eyebrow">${ICON.shield} Security</span>
+        <h2 class="h2" style="color:#fff">${esc(t.sec_title_pre)} <span class="accent sec-title-accent">${esc(t.sec_title_accent)}</span></h2>
         <p>${esc(t.sec_sub)}</p>
+        <div class="section-divider sec-divider"><span>${ICON.shield}</span></div>
       </div>
       <div class="sec-grid">${items}</div>
+      <div class="sec-trust-strip reveal">
+        <span class="sec-trust-item">${ICON.check}${esc(t.sec_trust_1)}</span>
+        <span class="sec-trust-item">${ICON.check}${esc(t.sec_trust_2)}</span>
+      </div>
     </div>
   </section>`;
 }
@@ -374,7 +428,10 @@ export function renderSecurity(t, lang) {
 export function renderRoadmap(t, lang) {
   const steps = ROADMAP.map(s => `
     <div class="step reveal">
-      <div class="step-num">${s.n}</div>
+      <div class="step-top">
+        <div class="step-num">${s.n}</div>
+        <div class="step-ico">${ICON[s.icon] || ICON.badge}</div>
+      </div>
       <div class="step-body">
         <h4>${esc(lang === 'hi' ? s.title_hi : s.title_en)}</h4>
         <p>${esc(lang === 'hi' ? s.desc_hi : s.desc_en)}</p>
@@ -388,32 +445,63 @@ export function renderRoadmap(t, lang) {
         <h2 class="h2">${esc(t.roadmap_title)}</h2>
         <p>${esc(t.roadmap_sub)}</p>
       </div>
-      <div class="steps">${steps}</div>
+      <div class="roadmap-carousel">
+        <button type="button" class="perks-nav roadmap-prev" id="roadmapPrev" aria-label="${esc(t.perks_prev)}">${ICON.arrowLeft}</button>
+        <div class="roadmap-viewport" id="roadmapViewport">
+          <div class="steps" id="roadmapTrack">${steps}</div>
+        </div>
+        <button type="button" class="perks-nav roadmap-next" id="roadmapNext" aria-label="${esc(t.perks_next)}">${ICON.arrowRight}</button>
+      </div>
     </div>
   </section>`;
 }
 
 export function renderFarmers(t, lang) {
-  const govt = ['PM-KISAN', 'PMFBY', 'KCC', 'PM-KUSUM', 'Soil Health Card', 'MGNREGA', 'PMAY-G', 'e-NAM', 'ODOP'].map(s => `<span class="chip">${s}</span>`).join('');
-  const member = MEMBER_BENEFITS.map(m => `<span class="chip">${esc(lang === 'hi' ? m.hi : m.en)}</span>`).join('');
+  const govt = FARMER_GOVT_CHIPS.map(s => `<span class="chip farmer-chip"><span class="chip-ico">${ICON[s.icon]}</span>${esc(s.name)}</span>`).join('');
+  const member = MEMBER_BENEFITS.map(m => `<span class="chip farmer-chip"><span class="chip-ico">${ICON[m.icon]}</span>${esc(lang === 'hi' ? m.hi : m.en)}</span>`).join('');
+  const impact = FARMER_IMPACT.map(x => `
+    <div class="farmer-impact-item">
+      <span class="farmer-impact-ico">${ICON[x.icon]}</span>
+      <div class="farmer-impact-title">${esc(lang === 'hi' ? x.title_hi : x.title_en)}</div>
+      <div class="farmer-impact-sub">${esc(lang === 'hi' ? x.sub_hi : x.sub_en)}</div>
+    </div>`).join('');
   return `
   <section class="bg-paper farmers-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.seedling} For Farmers</span>
-        <h2 class="h2">${esc(t.farmers_title)}</h2>
+        <h2 class="h2">${esc(t.farmers_title_pre)} <span class="accent">${esc(t.farmers_title_accent)}</span> ${esc(t.farmers_title_post)}</h2>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div class="farmers-grid">
-        <div class="card farmer-col reveal">
-          <h3 class="h3">${esc(t.farmers_govt)}</h3>
-          <div class="chip-list">${govt}</div>
+        <div class="card farmer-col farmer-col-govt reveal">
+          <div class="farmer-col-head">
+            <span class="farmer-col-ico">${ICON.building}</span>
+            <div>
+              <h3 class="h3">${esc(t.farmers_govt)}</h3>
+              <p class="farmer-col-sub">${esc(t.farmers_govt_sub)}</p>
+            </div>
+          </div>
+          <div class="chip-list farmer-chip-list">${govt}</div>
         </div>
-        <div class="card farmer-col reveal">
-          <h3 class="h3">${esc(t.farmers_member)}</h3>
-          <div class="chip-list">${member}</div>
+        <div class="card farmer-col farmer-col-member reveal">
+          <div class="farmer-col-head">
+            <span class="farmer-col-ico">${ICON.shield}</span>
+            <div>
+              <h3 class="h3">${esc(t.farmers_member)}</h3>
+              <p class="farmer-col-sub">${esc(t.farmers_member_sub)}</p>
+            </div>
+          </div>
+          <div class="chip-list farmer-chip-list">${member}</div>
         </div>
       </div>
-      <p class="farmer-line reveal">${esc(t.farmers_line)}</p>
+      <div class="farmer-bridge reveal">
+        <div class="farmer-bridge-main">
+          <span class="farmer-bridge-ico">${ICON.users}</span>
+          <p class="farmer-line">${esc(t.farmers_line_pre)} <span class="accent">${esc(t.farmers_line_accent)}</span>${t.farmers_line_post ? ' ' + esc(t.farmers_line_post) : ''}</p>
+        </div>
+        <div class="farmer-impact-strip">${impact}</div>
+      </div>
     </div>
   </section>`;
 }
@@ -457,6 +545,12 @@ export function renderSchemes(t, lang) {
 }
 
 export function renderPartnerships(t) {
+  const slot = (n) => `
+    <div class="partner-ph reveal">
+      <span class="partner-ph-ico">${ICON.badge}</span>
+      <span class="partner-ph-num">${t.partner_slot} 0${n}</span>
+      <p class="partner-ph-text">${esc(t.partner_placeholder)}</p>
+    </div>`;
   return `
   <section class="bg-paper partnerships-section">
     <div class="container">
@@ -465,10 +559,7 @@ export function renderPartnerships(t) {
         <h2 class="h2">${esc(t.partner_title)}</h2>
         <p>${esc(t.partner_sub)}</p>
       </div>
-      <div class="partner-grid">
-        <div class="partner-ph reveal">[ ${esc(t.partner_placeholder)} 1 ]</div>
-        <div class="partner-ph reveal">[ ${esc(t.partner_placeholder)} 2 ]</div>
-      </div>
+      <div class="partner-grid">${slot(1)}${slot(2)}</div>
     </div>
   </section>`;
 }
@@ -507,36 +598,75 @@ export function renderTraining(t, lang) {
 }
 
 export function renderInterview(t, lang) {
-  const qs = (lang === 'hi' ? t.int_qs_hi : t.int_qs_en)
-    .map(q => `<li>${esc(q)}</li>`)
-    .join('');
+  const questions = lang === 'hi' ? t.int_qs_hi : t.int_qs_en;
+  const qs = questions.map((q, i) => `
+    <li class="int-q-item">
+      <span class="int-q-num">0${i + 1}</span>
+      <span class="int-q-text">${esc(q)}</span>
+      <span class="int-q-ico">${ICON[INTERVIEW_Q_ICONS[i]] || ICON.seedling}</span>
+    </li>`).join('');
+  const mediaBadges = INTERVIEW_MEDIA_BADGES.map(b => `
+    <span class="int-media-badge"><span>${ICON[b.icon]}</span>${esc(lang === 'hi' ? b.label_hi : b.label_en)}</span>`).join('');
+  const points = INTERVIEW_POINTS.map(p => `
+    <div class="int-point">
+      <span class="int-point-ico">${ICON[p.icon]}</span>
+      <div>
+        <div class="int-point-title">${esc(lang === 'hi' ? p.title_hi : p.title_en)}</div>
+        <p class="int-point-desc">${esc(lang === 'hi' ? p.desc_hi : p.desc_en)}</p>
+      </div>
+    </div>`).join('');
+  const panelStats = (composition, duration, examWeight, intWeight) => `
+    <div class="int-panel-stats">
+      <div class="int-panel-stat"><span>${ICON.users}</span><div><span class="k">${t.int_th_panel}</span><span class="v">${esc(composition)}</span></div></div>
+      <div class="int-panel-stat"><span>${ICON.clock}</span><div><span class="k">${t.int_th_duration}</span><span class="v">${esc(duration)}</span></div></div>
+      <div class="int-panel-stat"><span>${ICON.pieChart}</span><div><span class="k">${t.int_th_weightage}</span><span class="v">Exam ${esc(examWeight)}</span></div></div>
+      <div class="int-panel-stat"><span>${ICON.users}</span><div><span class="k">${t.int_th_interview}</span><span class="v">${esc(intWeight)}</span></div></div>
+    </div>`;
   return `
   <section id="interview">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">${ICON.badge} 11 · INTERVIEW</span>
-        <h2 class="h2">${esc(t.int_title)}</h2>
+        <span class="eyebrow">${ICON.check} 11 · INTERVIEW</span>
+        <h2 class="h2">${esc(t.int_title_pre)} <span class="accent">${esc(t.int_title_accent)}</span> ${esc(t.int_title_post)}</h2>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div class="int-grid">
-        <div class="int-media card reveal">
-          <img src="/images/interview-panel.webp" alt="${esc(t.int_img_alt)}" loading="lazy" width="1200" height="800">
+        <div class="int-top-grid">
+          <div class="int-media card reveal">
+            <img src="/images/interview-panel.webp" alt="${esc(t.int_img_alt)}" loading="lazy" width="1200" height="800">
+            <div class="int-media-badges">${mediaBadges}</div>
+          </div>
+          <div class="int-copy reveal">
+            <h3 class="h3 int-copy-title">${esc(t.int_copy_title)}</h3>
+            <p class="int-sub">${esc(t.int_sub)}</p>
+            <div class="int-points">${points}</div>
+          </div>
         </div>
-        <div class="int-copy reveal">
-          <p class="int-sub">${esc(t.int_sub)}</p>
-        </div>
-        <div class="card int-panel reveal">
-          <div class="int-tag"><span class="int-pill">VLE / VLM</span></div>
-          <h3 class="h3">${esc(t.int_panel1_title)}</h3>
-          <p class="int-panel-line">${esc(t.int_panel1_line)}</p>
-        </div>
-        <div class="card int-panel reveal">
-          <div class="int-tag"><span class="int-pill">TLO / DLO</span></div>
-          <h3 class="h3">${esc(t.int_panel2_title)}</h3>
-          <p class="int-panel-line">${esc(t.int_panel2_line)}</p>
+        <div class="int-panels-grid">
+          <div class="card int-panel int-panel-1 reveal">
+            <div class="int-panel-head">
+              <span class="int-panel-ico">${ICON.users}</span>
+              <div>
+                <div class="int-tag"><span class="int-pill">VLE / VLM</span></div>
+                <h3 class="h3">${esc(t.int_panel1_title)}</h3>
+              </div>
+            </div>
+            ${panelStats(t.int_panel1_composition, t.int_panel1_duration, t.int_panel1_exam_weight, t.int_panel1_int_weight)}
+          </div>
+          <div class="card int-panel int-panel-2 reveal">
+            <div class="int-panel-head">
+              <span class="int-panel-ico">${ICON.users}</span>
+              <div>
+                <div class="int-tag"><span class="int-pill int-pill-gold">TLO / DLO</span></div>
+                <h3 class="h3">${esc(t.int_panel2_title)}</h3>
+              </div>
+            </div>
+            ${panelStats(t.int_panel2_composition, t.int_panel2_duration, t.int_panel2_exam_weight, t.int_panel2_int_weight)}
+          </div>
         </div>
         <div class="card int-samples reveal">
           <div class="int-samples-head">
-            <span class="int-samples-ico">${ICON.badge}</span>
+            <span class="int-samples-ico">${ICON.fileText}</span>
             <div>
               <div class="int-samples-kicker">${esc(t.int_samples_kicker)}</div>
               <h3 class="h3" style="margin:6px 0 0">${esc(t.int_samples_title)}</h3>
@@ -549,31 +679,30 @@ export function renderInterview(t, lang) {
   </section>`;
 }
 
-export function renderPrep(t) {
+export function renderPrep(t, lang) {
+  const prepCard = (n, icon, title, bullets, footerIco, footer) => `
+    <div class="card prep-card prep-card-${n} reveal">
+      <div class="prep-ico">${ICON[icon]}</div>
+      <h3 class="h3">${esc(title)}</h3>
+      <span class="prep-title-underline"></span>
+      <ul class="prep-bullets">${bullets.map(b => `<li><span>${ICON.check}</span>${esc(b)}</li>`).join('')}</ul>
+      <div class="prep-footer"><span>${ICON[footerIco]}</span>${esc(footer)}</div>
+    </div>`;
+  const benefits = PREP_BENEFITS.map(b => `
+    <span class="prep-benefit"><span class="prep-benefit-ico">${ICON[b.icon]}</span>${esc(lang === 'hi' ? b.label_hi : b.label_en)}</span>`).join('');
   return `
   <section id="prep" class="bg-paper">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.cap} 13 · TAIYARI</span>
-        <h2 class="h2">${esc(t.prep_title)}</h2>
+        <h2 class="h2">${esc(t.prep_title_pre)} <span class="accent">${esc(t.prep_title_accent)}</span> ${esc(t.prep_title_post)}</h2>
+        <p>${esc(t.prep_head_sub)}</p>
       </div>
 
       <div class="prep-cards">
-        <div class="card prep-card reveal">
-          <div class="prep-ico">${ICON.cap}</div>
-          <h3 class="h3">${esc(t.prep_card1_t)}</h3>
-          <p>${esc(t.prep_card1_d)}</p>
-        </div>
-        <div class="card prep-card reveal">
-          <div class="prep-ico">${ICON.badge}</div>
-          <h3 class="h3">${esc(t.prep_card2_t)}</h3>
-          <p>${esc(t.prep_card2_d)}</p>
-        </div>
-        <div class="card prep-card reveal">
-          <div class="prep-ico">${ICON.check}</div>
-          <h3 class="h3">${esc(t.prep_card3_t)}</h3>
-          <p>${esc(t.prep_card3_d)}</p>
-        </div>
+        ${prepCard(1, 'cap', t.prep_card1_t, t.prep_card1_bullets, 'globe', t.prep_card1_footer)}
+        ${prepCard(2, 'badge', t.prep_card2_t, t.prep_card2_bullets, 'building', t.prep_card2_footer)}
+        ${prepCard(3, 'fileText', t.prep_card3_t, t.prep_card3_bullets, 'fileText', t.prep_card3_footer)}
       </div>
 
       <div class="prep-grid">
@@ -581,9 +710,13 @@ export function renderPrep(t) {
           <img src="/images/taiyari-study.webp" alt="${esc(t.prep_img_alt)}" loading="lazy" width="1200" height="800">
         </div>
         <div class="prep-copy card reveal">
-          <p class="prep-sub">${esc(t.prep_sub)}</p>
-          <a class="btn btn-saffron" href="#apply">${esc(t.prep_cta)} ${ICON.arrowRight}</a>
-          <p class="prep-note">${esc(t.prep_note)}</p>
+          <div class="prep-goal">
+            <span class="prep-goal-ico">${ICON.target}</span>
+            <p class="prep-sub">${esc(t.prep_sub)}</p>
+          </div>
+          <a class="btn btn-saffron prep-cta" href="#apply">${ICON.fileText}${esc(t.prep_cta)} ${ICON.arrowRight}</a>
+          <div class="prep-benefits">${benefits}</div>
+          <div class="prep-note"><span>${ICON.info}</span>${esc(t.prep_note)}</div>
         </div>
       </div>
     </div>
@@ -592,23 +725,33 @@ export function renderPrep(t) {
 
 export function renderEligibility(t) {
   const cards = [
-    { t: t.elig_gs_t, d: t.elig_gs_d },
-    { t: t.elig_ka_t, d: t.elig_ka_d },
-    { t: t.elig_res_t, d: t.elig_res_d },
-    { t: t.elig_local_t, d: t.elig_local_d },
-  ].map(c => `<div class="card elig-card reveal"><h4>${esc(c.t)}</h4><p>${esc(c.d)}</p></div>`).join('');
-  const dates = t.dates.map(d => `<li><span>${esc(d[0])}</span><span class="d">${esc(d[1])}</span></li>`).join('');
+    { t: t.elig_gs_t, d: t.elig_gs_d, icon: 'cap', accent: 'green' },
+    { t: t.elig_ka_t, d: t.elig_ka_d, icon: 'award', accent: 'gold' },
+    { t: t.elig_res_t, d: t.elig_res_d, icon: 'credit', accent: 'gold' },
+    { t: t.elig_local_t, d: t.elig_local_d, icon: 'pin', accent: 'green' },
+  ].map(c => `
+    <div class="card elig-card elig-card-${c.accent} reveal">
+      <span class="elig-card-ico">${ICON[c.icon]}</span>
+      <h4>${esc(c.t)}</h4>
+      <p>${esc(c.d)}</p>
+    </div>`).join('');
+  const dates = t.dates.map(d => `
+    <li>
+      <span class="dates-label"><span class="dates-ico">${ICON.calendar}</span>${esc(d[0])}</span>
+      <span class="d">${esc(d[1])}</span>
+    </li>`).join('');
   return `
   <section class="bg-paper eligibility-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.check} Eligibility</span>
-        <h2 class="h2">${esc(t.elig_title)}</h2>
+        <h2 class="h2">${esc(t.elig_title_pre)} <span class="accent">${esc(t.elig_title_accent)}</span></h2>
         <p>${esc(t.elig_sub)}</p>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div class="elig-grid">${cards}</div>
-      <div class="card reveal" style="margin-top:18px">
-        <h3 class="h3" style="margin-top:0;color:var(--green-forest)">${t.dates_title}</h3>
+      <div class="card reveal dates-card" style="margin-top:18px">
+        <h3 class="h3 dates-title"><span>${ICON.calendar}</span>${t.dates_title}</h3>
         <ul class="dates-list">${dates}</ul>
       </div>
     </div>
@@ -637,30 +780,66 @@ export function renderFAQ(t, lang) {
   </section>`;
 }
 
-export function renderFooter(t) {
-  const divs = DIVISIONS.map(d => `<span>${esc(d)}</span>`).join('');
+export function renderFooter(t, lang) {
+  const aboutStats = FOOTER_ABOUT_STATS.map(s => `
+    <div class="footer-stat"><span>${ICON[s.icon]}</span>${esc(lang === 'hi' ? s.label_hi : s.label_en)}</div>`).join('');
+  const links = FOOTER_QUICK_LINKS.map(l => `
+    <li><a href="${l.href}"><span>${ICON.chevronRight}</span>${esc(lang === 'hi' ? l.label_hi : l.label_en)}</a></li>`).join('');
+  const districts = MAHARASHTRA_DISTRICTS.map(d => `<span class="district-pill">${esc(d)}</span>`).join('');
+  const social = FOOTER_SOCIAL.map(s => `
+    <a class="social-ico" href="#" aria-label="${esc(s.label)}">${ICON[s.icon]}</a>`).join('');
   return `
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div>
-          <a href="#top" class="brand" style="color:#fff"><span class="leaf">${ICON.leaf}</span> Kisan Mitra</a>
-          <p style="margin-top:14px">${esc(t.footer_legal)}</p>
-          <div style="margin-top:8px" class="devanagari-head">किसान का विकास, देश का विकास</div>
+        <div class="footer-col">
+          <div class="footer-col-head">
+            <span class="footer-col-ico">${ICON.leaf}</span>
+            <h4>${esc(t.footer_about_title)}</h4>
+          </div>
+          <span class="footer-underline"></span>
+          <p>${esc(t.footer_legal)}</p>
+          <p class="footer-tagline">${esc(t.footer_about_tagline)}</p>
+          <div class="footer-stats">${aboutStats}</div>
         </div>
-        <div>
-          <h4>${t.footer_contact}</h4>
-          <ul>
-            <li><a href="https://wa.me/910000000000">${ICON.whatsapp} ${t.footer_helpline}</a></li>
-            <li><a href="tel:+910000000000">${ICON.phone} 1800-000-0000</a></li>
-            <li>Mumbai, Maharashtra</li>
-          </ul>
+        <div class="footer-col">
+          <div class="footer-col-head">
+            <span class="footer-col-ico">${ICON.compass}</span>
+            <h4>${esc(t.footer_links_title)}</h4>
+          </div>
+          <span class="footer-underline"></span>
+          <ul class="footer-links">${links}</ul>
         </div>
-        <div>
-          <h4>${t.footer_divisions}</h4>
-          <div class="divisions">${divs}</div>
+        <div class="footer-col">
+          <div class="footer-col-head">
+            <span class="footer-col-ico">${ICON.pin}</span>
+            <h4>${esc(t.footer_districts_title)}</h4>
+          </div>
+          <span class="footer-underline"></span>
+          <div class="footer-districts">${districts}</div>
+          <a href="#vacancies" class="footer-all-districts">${esc(t.footer_all_districts)} <span>${ICON.chevronRight}</span></a>
         </div>
       </div>
+
+      <div class="footer-newsletter" id="footerNewsletter">
+        <div class="footer-newsletter-copy">
+          <span class="footer-newsletter-ico">${ICON.fileText}</span>
+          <div>
+            <h4>${esc(t.footer_newsletter_title)}</h4>
+            <p>${esc(t.footer_newsletter_desc)}</p>
+          </div>
+        </div>
+        <form class="footer-newsletter-form" id="newsletterForm">
+          <input type="email" required placeholder="${esc(t.footer_newsletter_placeholder)}" aria-label="${esc(t.footer_newsletter_placeholder)}">
+          <button type="submit" class="btn btn-saffron">${esc(t.footer_newsletter_btn)} ${ICON.chevronRight}</button>
+        </form>
+        <div class="footer-social">
+          <span class="footer-social-title">${esc(t.footer_social_title)}</span>
+          <div class="footer-social-icons">${social}</div>
+        </div>
+        <p class="footer-newsletter-thanks" id="newsletterThanks" hidden>${esc(t.footer_newsletter_thanks)}</p>
+      </div>
+
       <div class="footer-legal">© 2026 Kisan Mitra Ecosystem · Argus / RKF Strategic Initiative · ${esc(t.footer_legal)}</div>
     </div>
   </footer>`;

@@ -4,6 +4,7 @@
 // language toggle, accordions, scroll reveal, count-up.
 // ============================================================
 import { I18N } from './i18n';
+import { ICON } from './icons';
 import {
   renderNav, renderHero, renderMission, renderWhy, renderSalary, renderVacancies,
   renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
@@ -24,9 +25,10 @@ function renderApplySection(t) {
   <section id="apply" class="bg-paper">
     <div class="container">
       <div class="section-head reveal">
-        <span class="eyebrow">Apply</span>
-        <h2 class="h2">${t.apply_title}</h2>
+        <span class="eyebrow">${ICON.fileText} Apply</span>
+        <h2 class="h2">${t.apply_title_pre} <span class="accent">${t.apply_title_accent}</span> ${t.apply_title_post}</h2>
         <p>${t.apply_sub}</p>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div id="applyRoot"></div>
     </div>
@@ -53,11 +55,11 @@ function renderAll() {
     renderPartnerships(t) +
     renderTraining(t, lang) +
     renderInterview(t, lang) +
-    renderPrep(t) +
+    renderPrep(t, lang) +
     renderEligibility(t) +
     renderApplySection(t) +
     renderFAQ(t, lang) +
-    renderFooter(t);
+    renderFooter(t, lang);
   bindGlobal();
   initApply(lang);
   setupReveal();
@@ -117,6 +119,30 @@ function bindGlobal() {
 
   bindPerksCarousel();
   bindExamSamplesModal();
+
+  // footer newsletter — no backend yet, so just acknowledge locally instead
+  // of pretending the address was stored anywhere.
+  const newsletterForm = document.getElementById('newsletterForm');
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const thanks = document.getElementById('newsletterThanks');
+      if (thanks) thanks.hidden = false;
+      newsletterForm.reset();
+    });
+  }
+
+  // exams "view all" — reveal the remaining exam cards and retire the button
+  const examsViewAll = document.getElementById('examsViewAll');
+  if (examsViewAll) {
+    examsViewAll.addEventListener('click', () => {
+      const grid = document.getElementById('examsGrid');
+      if (!grid) return;
+      grid.classList.add('expanded');
+      grid.querySelectorAll('.exam-card-extra.reveal').forEach(el => el.classList.add('in'));
+      (examsViewAll.closest('.rec-view-all') || examsViewAll).remove();
+    });
+  }
 }
 
 function bindExamSamplesModal() {
@@ -185,15 +211,16 @@ function openExamSamplesModal(id, triggerBtn) {
   if (closeBtn) closeBtn.focus();
 }
 
-function bindPerksCarousel() {
-  const viewport = document.getElementById('perksViewport');
-  const prev = document.getElementById('perksPrev');
-  const next = document.getElementById('perksNext');
+function bindCarousel({ viewportId, prevId, nextId, cardSelector, trackSelector, fullWidthCardsOnMobile }) {
+  const viewport = document.getElementById(viewportId);
+  const prev = document.getElementById(prevId);
+  const next = document.getElementById(nextId);
   if (!viewport || !prev || !next) return;
 
   const syncCardWidths = () => {
+    if (!fullWidthCardsOnMobile) return;
     const mobile = window.matchMedia('(max-width: 640px)').matches;
-    viewport.querySelectorAll('.perk-card').forEach(card => {
+    viewport.querySelectorAll(cardSelector).forEach(card => {
       if (mobile) {
         const w = viewport.clientWidth;
         card.style.flexBasis = `${w}px`;
@@ -208,9 +235,9 @@ function bindPerksCarousel() {
   };
 
   const scrollStep = () => {
-    const card = viewport.querySelector('.perk-card');
+    const card = viewport.querySelector(cardSelector);
     if (!card) return viewport.clientWidth * 0.85;
-    const track = viewport.querySelector('.salary-perks-track');
+    const track = viewport.querySelector(trackSelector);
     const gap = track ? parseFloat(getComputedStyle(track).gap) || 18 : 18;
     return card.offsetWidth + gap;
   };
@@ -234,6 +261,17 @@ function bindPerksCarousel() {
   });
   syncCardWidths();
   updateButtons();
+}
+
+function bindPerksCarousel() {
+  bindCarousel({
+    viewportId: 'perksViewport', prevId: 'perksPrev', nextId: 'perksNext',
+    cardSelector: '.perk-card', trackSelector: '.salary-perks-track', fullWidthCardsOnMobile: true,
+  });
+  bindCarousel({
+    viewportId: 'roadmapViewport', prevId: 'roadmapPrev', nextId: 'roadmapNext',
+    cardSelector: '.step', trackSelector: '#roadmapTrack', fullWidthCardsOnMobile: false,
+  });
 }
 
 // scroll reveal + count-up

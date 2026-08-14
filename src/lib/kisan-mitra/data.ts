@@ -455,16 +455,16 @@ export const EXAMS = [
 ];
 
 export const ROADMAP = [
-  { n: 1, title_hi: "Registration & KYC", title_en: "Registration & KYC", desc_hi: "Form bharo, Aadhaar KYC, fee pay (₹500 / ₹1,000) → Application ID milega.", desc_en: "Fill form, Aadhaar KYC, pay fee (₹500 / ₹1,000) → get Application ID." },
-  { n: 2, title_hi: "Admit Card", title_en: "Admit Card", desc_hi: "QR-coded admit card (photo, venue, slot, terminal) ~1 week pehle; one-time face photo capture.", desc_en: "QR-coded admit card ~1 week before; one-time face photo capture." },
-  { n: 3, title_hi: "Pre-Entry Screening", title_en: "Pre-Entry Screening", desc_hi: "Exam day: gate par admit-card QR scan, metal detector + bag scan.", desc_en: "Exam day: admit-card QR scan, metal detector + bag scan at gate." },
-  { n: 4, title_hi: "Terminal Login & Exam", title_en: "Terminal Login & Exam", desc_hi: "Aadhaar QR + face verify → lockdown → 90/120-min paper.", desc_en: "Aadhaar QR + face verify → lockdown → 90/120-min paper." },
-  { n: 5, title_hi: "Live Proctoring", title_en: "Live Proctoring", desc_hi: "Control room + AI; flags review ke liye.", desc_en: "Control room + AI; flags for review." },
-  { n: 6, title_hi: "Result & Audit", title_en: "Result & Audit", desc_hi: "Auto-scored, merit list with full audit trail.", desc_en: "Auto-scored, merit list with full audit trail." },
-  { n: 7, title_hi: "Interview", title_en: "Interview", desc_hi: "Shortlisted candidates (VLE/VLM: 15 min; TLO/DLO: 30 min).", desc_en: "Shortlisted candidates (VLE/VLM: 15 min; TLO/DLO: 30 min)." },
-  { n: 8, title_hi: "Selection & Offer", title_en: "Selection & Offer", desc_hi: "Local-first posting, document verification, offer letter, anti-corruption declaration.", desc_en: "Local-first posting, document verification, offer letter, anti-corruption declaration." },
-  { n: 9, title_hi: "Training", title_en: "Training", desc_hi: "2 months residential + 2 months supervised provisioning (reduced pay).", desc_en: "2 months residential + 2 months supervised provisioning (reduced pay)." },
-  { n: 10, title_hi: "Deployment", title_en: "Deployment", desc_hi: "Full pay from Month 5; uniform + EV + field device.", desc_en: "Full pay from Month 5; uniform + EV + field device." }
+  { n: 1, icon: "badge", title_hi: "Registration & KYC", title_en: "Registration & KYC", desc_hi: "Form bharo, Aadhaar KYC, fee pay (₹500 / ₹1,000) → Application ID milega.", desc_en: "Fill form, Aadhaar KYC, pay fee (₹500 / ₹1,000) → get Application ID." },
+  { n: 2, icon: "scan", title_hi: "Admit Card", title_en: "Admit Card", desc_hi: "QR-coded admit card (photo, venue, slot, terminal) ~1 week pehle; one-time face photo capture.", desc_en: "QR-coded admit card ~1 week before; one-time face photo capture." },
+  { n: 3, icon: "shield", title_hi: "Pre-Entry Screening", title_en: "Pre-Entry Screening", desc_hi: "Exam day: gate par admit-card QR scan, metal detector + bag scan.", desc_en: "Exam day: admit-card QR scan, metal detector + bag scan at gate." },
+  { n: 4, icon: "lock", title_hi: "Terminal Login & Exam", title_en: "Terminal Login & Exam", desc_hi: "Aadhaar QR + face verify → lockdown → 90/120-min paper.", desc_en: "Aadhaar QR + face verify → lockdown → 90/120-min paper." },
+  { n: 5, icon: "eye", title_hi: "Live Proctoring", title_en: "Live Proctoring", desc_hi: "Control room + AI; flags review ke liye.", desc_en: "Control room + AI; flags for review." },
+  { n: 6, icon: "trendingUp", title_hi: "Result & Audit", title_en: "Result & Audit", desc_hi: "Auto-scored, merit list with full audit trail.", desc_en: "Auto-scored, merit list with full audit trail." },
+  { n: 7, icon: "users", title_hi: "Interview", title_en: "Interview", desc_hi: "Shortlisted candidates (VLE/VLM: 15 min; TLO/DLO: 30 min).", desc_en: "Shortlisted candidates (VLE/VLM: 15 min; TLO/DLO: 30 min)." },
+  { n: 8, icon: "fileText", title_hi: "Selection & Offer", title_en: "Selection & Offer", desc_hi: "Local-first posting, document verification, offer letter, anti-corruption declaration.", desc_en: "Local-first posting, document verification, offer letter, anti-corruption declaration." },
+  { n: 9, icon: "cap", title_hi: "Training", title_en: "Training", desc_hi: "2 months residential + 2 months supervised provisioning (reduced pay).", desc_en: "2 months residential + 2 months supervised provisioning (reduced pay)." },
+  { n: 10, icon: "ev", title_hi: "Deployment", title_en: "Deployment", desc_hi: "Full pay from Month 5; uniform + EV + field device.", desc_en: "Full pay from Month 5; uniform + EV + field device." }
 ];
 
 export const TRAINING = [
@@ -497,12 +497,88 @@ export const SCHEME_TRUST = [
 ];
 
 export const MEMBER_BENEFITS = [
-  { hi: "Harvest-linked credit", en: "Harvest-linked credit" },
-  { hi: "Instant UPI crop payment", en: "Instant UPI crop payment" },
-  { hi: "Certified inputs at discount", en: "Certified inputs at discount" },
-  { hi: "Machinery / drone on rent", en: "Machinery / drone on rent" },
-  { hi: "Soil testing + Fasal Calendar", en: "Soil testing + Crop Calendar" },
-  { hi: "Storage & market access", en: "Storage & market access" }
+  { icon: "credit", hi: "Harvest-linked credit", en: "Harvest-linked credit" },
+  { icon: "phone", hi: "Instant UPI crop payment", en: "Instant UPI crop payment" },
+  { icon: "badge", hi: "Certified inputs at discount", en: "Certified inputs at discount" },
+  { icon: "hammer", hi: "Machinery / drone on rent", en: "Machinery / drone on rent" },
+  { icon: "seedling", hi: "Soil testing + Fasal Calendar", en: "Soil testing + Crop Calendar" },
+  { icon: "building", hi: "Storage & market access", en: "Storage & market access" }
+];
+
+// Icons for the "For Farmers" section's government-scheme chip row — kept
+// separate from SCHEMES since e-NAM/ODOP are shown as two chips here but one
+// combined card there.
+export const FARMER_GOVT_CHIPS = [
+  { name: "PM-KISAN", icon: "rupee" },
+  { name: "PMFBY", icon: "shield" },
+  { name: "KCC", icon: "credit" },
+  { name: "PM-KUSUM", icon: "sun" },
+  { name: "Soil Health Card", icon: "seedling" },
+  { name: "MGNREGA", icon: "users" },
+  { name: "PMAY-G", icon: "home" },
+  { name: "e-NAM", icon: "market" },
+  { name: "ODOP", icon: "briefcase" },
+];
+
+export const FARMER_IMPACT = [
+  { icon: "users", title_hi: "Trusted Link", title_en: "Trusted Link", sub_hi: "Kisano ko sahi support se jodna.", sub_en: "Connecting farmers to the right support." },
+  { icon: "shield", title_hi: "Stronger Impact", title_en: "Stronger Impact", sub_hi: "Yojanaon ko real benefits mein badalna.", sub_en: "Turning schemes into real benefits." },
+  { icon: "seedling", title_hi: "Rural Growth", title_en: "Rural Growth", sub_hi: "Self-reliant kisan communities banana.", sub_en: "Building self-reliant farmer communities." },
+  { icon: "award", title_hi: "Better Future", title_en: "Better Future", sub_hi: "Aaj sashakt banaana, kal samriddh banana.", sub_en: "Empowering today for a prosperous tomorrow." },
+];
+
+export const INTERVIEW_MEDIA_BADGES = [
+  { icon: "users", label_hi: "Dostana Panel", label_en: "Friendly Panel" },
+  { icon: "compass", label_hi: "Saarthak Charcha", label_en: "Meaningful Discussion" },
+  { icon: "award", label_hi: "Merit Based Selection", label_en: "Merit Based Selection" },
+];
+
+export const INTERVIEW_POINTS = [
+  { icon: "users", title_hi: "Aapki soch samajhna", title_en: "Understand your perspective", desc_hi: "Hum aapke experiences, values aur rural development ke vision ke baare mein jaante hain.", desc_en: "We learn about your experiences, values, and vision for rural development." },
+  { icon: "award", title_hi: "Suitability assess karna", title_en: "Assess your suitability", desc_hi: "Hum aapki clarity, problem-solving ability aur commitment evaluate karte hain.", desc_en: "We evaluate your clarity, problem-solving ability, and commitment." },
+  { icon: "shield", title_hi: "Ghabrane ki zaroorat nahi", title_en: "No need to worry", desc_hi: "Natural aur honest rahiye. Hum aapko samajhne ke liye yahan hain.", desc_en: "Be natural and honest. We are here to understand you better." },
+];
+
+export const INTERVIEW_Q_ICONS = ["seedling", "flask", "calendar", "users", "megaphone"];
+
+export const PREP_BENEFITS = [
+  { icon: "shield", label_hi: "Trusted Resources", label_en: "Trusted Resources" },
+  { icon: "award", label_hi: "Quality Preparation", label_en: "Quality Preparation" },
+  { icon: "clock", label_hi: "Save Time & Stay Focused", label_en: "Save Time & Stay Focused" },
+  { icon: "badge", label_hi: "Better Results", label_en: "Better Results" },
+];
+
+// Real Maharashtra district names (public geography, not a claim about the
+// company) — a finer-grained list than DIVISIONS (the 6 official revenue
+// divisions), used only for the footer's "Maharashtra Districts" showcase.
+export const MAHARASHTRA_DISTRICTS = [
+  "Nashik", "Pune", "Nagpur", "Amravati", "Aurangabad", "Kolhapur",
+  "Solapur", "Latur", "Satara", "Nanded", "Wardha", "Chandrapur",
+];
+
+export const FOOTER_ABOUT_STATS = [
+  { icon: "shield", label_hi: "Trusted Platform", label_en: "Trusted Platform" },
+  { icon: "users", label_hi: "Expert Guidance", label_en: "Expert Guidance" },
+  { icon: "fileText", label_hi: "Quality Content", label_en: "Quality Content" },
+  { icon: "award", label_hi: "Better Future", label_en: "Better Future" },
+];
+
+export const FOOTER_QUICK_LINKS = [
+  { label_hi: "Kisan Mitra ke baare mein", label_en: "About Kisan Mitra", href: "#mission" },
+  { label_hi: "Kaise kaam karta hai", label_en: "How It Works", href: "#process" },
+  { label_hi: "Exams", label_en: "Exams", href: "#exams" },
+  { label_hi: "Study Material", label_en: "Study Material", href: "#prep" },
+  { label_hi: "Coaching Centers", label_en: "Coaching Centers", href: "#prep" },
+  { label_hi: "FAQs", label_en: "FAQs", href: "#faq" },
+  { label_hi: "Sampark Karein", label_en: "Contact Us", href: "https://wa.me/910000000000" },
+];
+
+export const FOOTER_SOCIAL = [
+  { icon: "facebook", label: "Facebook" },
+  { icon: "youtube", label: "YouTube" },
+  { icon: "telegram", label: "Telegram" },
+  { icon: "whatsapp", label: "WhatsApp" },
+  { icon: "xLogo", label: "X" },
 ];
 
 export const FAQ = [
