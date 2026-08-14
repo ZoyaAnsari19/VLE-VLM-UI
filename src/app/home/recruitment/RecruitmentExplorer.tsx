@@ -64,7 +64,9 @@ export function RecruitmentExplorer({ lang }: RecruitmentExplorerProps) {
             <span dangerouslySetInnerHTML={{ __html: ICON.briefcase }} />
             {t.rec_explorer_eyebrow}
           </span>
-          <h2 className="h2">{t.rec_explorer_title}</h2>
+          <h2 className="h2">
+            {t.rec_explorer_title_pre} <span className="accent">{t.rec_explorer_title_accent}</span> {t.rec_explorer_title_post}
+          </h2>
           <p>{t.rec_explorer_sub}</p>
         </div>
 

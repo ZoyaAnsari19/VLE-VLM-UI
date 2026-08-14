@@ -121,33 +121,26 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
           {cards.map(({ department, all, matches }) => {
             const list = q ? matches : all;
             const isOpen = expanded.has(department.id) || !!q || activeDept === department.id;
-            const head = all[0];
+            const description = lang === "hi" ? department.description_hi : department.description_en;
 
             return (
-              <div key={department.id} className="dv-card" style={{ ["--v-accent" as string]: department.accent }}>
+              <div
+                key={department.id}
+                className="dv-card"
+                style={{ ["--v-accent" as string]: department.accent, ["--v-tint" as string]: `${department.accent}1A` }}
+              >
                 <button type="button" className="dv-card-head" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
-                  <span className="dv-badge" style={{ background: department.accent }}>
+                  <span className="dv-badge" style={{ background: `${department.accent}1F`, color: department.accent }}>
                     <span dangerouslySetInnerHTML={{ __html: ICON[department.icon as keyof typeof ICON] }} />
-                  </span>
-                  <span className="dv-card-title" style={{ color: department.accent }}>
-                    {lang === "hi" ? department.name_hi : department.name_en}
                   </span>
                   <span className="dv-count">
                     {all.length} {t.dv_roles}
                   </span>
-                  <span className={`dv-chevron${isOpen ? " open" : ""}`} dangerouslySetInnerHTML={{ __html: ICON.chev }} />
                 </button>
-
-                {!isOpen && head && (
-                  <div className="dv-timeline dv-timeline-peek">
-                    <div className="dv-timeline-item">
-                      <span className="dv-dot" style={{ background: department.accent }} />
-                      <div className="dv-node tier-head" style={{ background: department.accent }}>
-                        {head.title}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <span className="dv-card-title" style={{ color: department.accent }}>
+                  {lang === "hi" ? department.name_hi : department.name_en}
+                </span>
+                {!isOpen && description && <p className="dv-card-desc">{description}</p>}
 
                 {isOpen && (
                   <div className="dv-timeline">
@@ -170,6 +163,17 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
                     })}
                   </div>
                 )}
+
+                <button
+                  type="button"
+                  className="dv-view-roles"
+                  style={{ color: department.accent }}
+                  onClick={() => toggle(department.id)}
+                  aria-expanded={isOpen}
+                >
+                  {t.dv_view_roles}
+                  <span className={`dv-chevron${isOpen ? " open" : ""}`} dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
+                </button>
               </div>
             );
           })}

@@ -8,6 +8,10 @@ import { PHASE1_VACANCIES } from './recruitment/data';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+// Escapes text, then turns **word** markers into <b>word</b> — lets content
+// data highlight a phrase without allowing arbitrary HTML through.
+const boldMd = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+
 const SALARY_PERK_ICONS = [ICON.badge, ICON.scan, ICON.home, ICON.rupee, ICON.briefcase, ICON.shield];
 
 export function renderNav(t) {
@@ -165,17 +169,22 @@ export function renderWhy(t) {
 export function renderSalary(t) {
   const perks = t.salary_perks.map((p, i) => `
     <article class="card perk-card reveal">
+      <span class="perk-card-leaf" aria-hidden="true">${ICON.leaf}</span>
       <div class="perk-ico">${SALARY_PERK_ICONS[i]}</div>
       <h3 class="h3 perk-title">${esc(p.title)}</h3>
-      <p class="perk-desc">${esc(p.desc)}</p>
+      <span class="perk-title-underline"></span>
+      <p class="perk-desc">${boldMd(p.desc)}</p>
     </article>`).join('');
+  const evBenefits = t.ev_benefits.map(b => `
+    <span class="ev-benefit"><span class="ev-benefit-ico">${ICON[b.icon]}</span>${esc(b.label)}</span>`).join('');
   return `
   <section class="bg-paper salary-perks-section">
     <div class="container">
       <div class="section-head reveal">
         <span class="eyebrow">${ICON.rupee} Perks & Mobility</span>
-        <h2 class="h2">${esc(t.salary_title)}</h2>
+        <h2 class="h2">${esc(t.salary_title_pre)} <span class="accent">${esc(t.salary_title_accent)}</span> ${esc(t.salary_title_post)}</h2>
         <p>${esc(t.salary_sub)}</p>
+        <div class="section-divider"><span>${ICON.leaf}</span></div>
       </div>
       <div class="salary-perks bg-paper reveal">
         <div class="salary-perks-carousel">
@@ -190,16 +199,30 @@ export function renderSalary(t) {
         <div class="ev-vehicle-grid">
           <div class="ev-vehicle-media">
             <img src="/images/vehicles.png" alt="${esc(t.ev_img_alt)}" loading="lazy" width="900" height="520">
+            <span class="ev-vehicle-badge">${ICON.ev} ${esc(t.ev_badge)}</span>
           </div>
           <div class="ev-vehicle-copy">
-            <h3 class="h3 ev-vehicle-title">${esc(t.ev_title)}</h3>
+            <h3 class="h3 ev-vehicle-title"><span class="ev-vehicle-title-ico">${ICON.leaf}</span>${esc(t.ev_title)}</h3>
             <p class="ev-vehicle-sub">${esc(t.ev_sub)}</p>
-            <div class="ev-vehicle-chips">
-              <span class="chip"><span class="chip-ico">${ICON.ev}</span>${esc(t.ev_chip_vle)}</span>
-              <span class="chip"><span class="chip-ico">${ICON.ev}</span>${esc(t.ev_chip_tlo)}</span>
+            <div class="ev-vehicle-rows">
+              <div class="ev-vehicle-row">
+                <span class="ev-vehicle-row-ico">${ICON.ev}</span>
+                <div>
+                  <div class="ev-vehicle-row-label">${esc(t.ev_row1_label)}</div>
+                  <div class="ev-vehicle-row-desc">${esc(t.ev_row1_desc)}</div>
+                </div>
+              </div>
+              <div class="ev-vehicle-row">
+                <span class="ev-vehicle-row-ico">${ICON.ev}</span>
+                <div>
+                  <div class="ev-vehicle-row-label">${esc(t.ev_row2_label)}</div>
+                  <div class="ev-vehicle-row-desc">${esc(t.ev_row2_desc)}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="ev-benefits-strip">${evBenefits}</div>
       </div>
     </div>
   </section>`;

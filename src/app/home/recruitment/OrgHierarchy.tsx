@@ -35,12 +35,21 @@ export function OrgHierarchy({ lang }: OrgHierarchyProps) {
             <span dangerouslySetInnerHTML={{ __html: ICON.briefcase }} />
             Hierarchy
           </span>
-          <h2 className="h2">{t.hier_title}</h2>
+          <h2 className="h2 hier-title">
+            {t.hier_title_pre} <span className="accent">{t.hier_title_accent}</span>
+            <span className="hier-title-leaf" dangerouslySetInnerHTML={{ __html: ICON.leaf }} />
+          </h2>
           <p>{t.hier_sub}</p>
         </div>
 
         <div className={`hier ${mainClass}`} ref={mainRef}>
-          <div className="hier-node hq">{t.hier_hq}</div>
+          <div className="hier-node hq">
+            <span className="hier-node-ico" dangerouslySetInnerHTML={{ __html: ICON.building }} />
+            <span className="hier-node-body">
+              {t.hier_hq}
+              <span className="sub">{t.hier_hq_sub}</span>
+            </span>
+          </div>
           <div className="hier-arrow" />
           <div className="hier-node">
             {dd?.code}
@@ -68,8 +77,12 @@ export function OrgHierarchy({ lang }: OrgHierarchyProps) {
             </div>
           </div>
           <div className="hier-arrow" />
-          <div className="hier-node" style={{ background: "var(--green-soft)" }}>
-            {t.hier_villages}
+          <div className="hier-node hier-node-villages">
+            <span className="hier-node-ico" dangerouslySetInnerHTML={{ __html: ICON.home }} />
+            <span className="hier-node-body">
+              {t.hier_villages}
+              <span className="sub">{t.hier_villages_sub}</span>
+            </span>
           </div>
         </div>
 

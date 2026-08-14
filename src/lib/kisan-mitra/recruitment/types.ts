@@ -10,6 +10,8 @@ export interface Department {
   id: string;
   name_hi: string;
   name_en: string;
+  description_hi: string;
+  description_en: string;
   icon: string; // key into ICON map
   accent: string;
 }

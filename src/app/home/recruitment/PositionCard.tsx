@@ -41,9 +41,16 @@ export function PositionCard({ position, lang, onViewDetails, onApply }: Positio
         <div className="position-card-actions">
           <button type="button" className="btn btn-outline position-card-details" onClick={() => onViewDetails(position)}>
             {t.card_view_details}
+            <span dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
           </button>
-          <button type="button" className="btn btn-primary position-card-apply" onClick={() => onApply(position)}>
+          <button
+            type="button"
+            className="btn btn-primary position-card-apply"
+            style={{ background: position.accent }}
+            onClick={() => onApply(position)}
+          >
             {t.card_apply}
+            <span dangerouslySetInnerHTML={{ __html: ICON.check }} />
           </button>
         </div>
       </div>

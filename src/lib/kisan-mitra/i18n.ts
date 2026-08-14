@@ -41,7 +41,9 @@ export const I18N = {
 
     // ---------------- Recruitment Explorer ----------------
     rec_explorer_eyebrow: "04 · POSITIONS",
-    rec_explorer_title: "6 department, 21+ positions, ek Kisan Mitra ecosystem.",
+    rec_explorer_title_pre: "6 department, 21+ positions, ek",
+    rec_explorer_title_accent: "Kisan Mitra",
+    rec_explorer_title_post: "ecosystem.",
     rec_explorer_sub: "Field se corporate tak — apna department chuno, position dhoondo, aur seedha apply karo.",
     dept_all: "Sabhi Departments",
     search_placeholder: "Position ya department khoje...",
@@ -73,10 +75,13 @@ export const I18N = {
     stat_career_opportunities_sub: "Growth paths available",
 
     // ---------------- Org Hierarchy ----------------
-    hier_title: "Hierarchy & Reporting Chain",
+    hier_title_pre: "Hierarchy &",
+    hier_title_accent: "Reporting Chain",
     hier_sub: "Field Operations ki mool chain: VLE → VLM → TEO → Division Level Officer → Divisional Director — aur 5 department verticals alag se.",
     hier_hq: "Argus/RKF HQ (Mumbai)",
+    hier_hq_sub: "Head Office",
     hier_villages: "600 Villages",
+    hier_villages_sub: "Maharashtra bhar mein",
     hier_verticals_title: "Department Verticals",
     hier_verticals_sub: "Har department ka apna reporting ladder — chuno, search karein, ya sabhi ek saath dekhein.",
     dv_all: "Sabhi Verticals",
@@ -84,6 +89,7 @@ export const I18N = {
     dv_empty_title: "Koi role nahi mila",
     dv_empty_sub: "Apna search ya vertical badal kar dobara koshish karein.",
     dv_roles: "roles",
+    dv_view_roles: "Roles Dekhein",
 
     // ---------------- Recruitment Matrix ----------------
     matrix_eyebrow: "05 · RECRUITMENT MATRIX",
@@ -96,12 +102,14 @@ export const I18N = {
     matrix_sort_asc: "Ascending order mein sort karein",
     matrix_sort_desc: "Descending order mein sort karein",
 
-    salary_title: "Perks, Benefits & Mobility",
+    salary_title_pre: "Perks, Benefits",
+    salary_title_accent: "&",
+    salary_title_post: "Mobility",
     salary_sub: "Uniform se lekar EV tak — har officer ke liye.",
     salary_perks: [
-      { title: "Uniform + ID", desc: "Official uniform aur photo ID card." },
-      { title: "Field Tablet/Device", desc: "Kaam ke liye smart field device." },
-      { title: "Residential Training", desc: "Hostel + khana included." },
+      { title: "Uniform + ID", desc: "Official uniform aur **photo ID card** pradan kiya jayega." },
+      { title: "Field Tablet/Device", desc: "Kaam ko banaye smart, **hamare field devices** ke saath." },
+      { title: "Residential Training", desc: "Hostel + khana **included** rahega training dauran." },
       { title: "Bonuses", desc: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 after 2 saal · \"Gram Shakti Champion\" ₹25,000/saal." },
       { title: "Career Growth", desc: "VLE → Senior VLE → TLO → DLO." },
       { title: "Anti-corruption Support", desc: "Grievance support + transparent system." },
@@ -124,10 +132,19 @@ export const I18N = {
     vac_phase3_pre: "Poore Maharashtra me.",
     vac_phase3_big: "45,000+",
     vac_phase3_post: "naukriyan — har gaon ka apna officer.",
+    ev_badge: "Sustainable Future, Smarter Mobility",
     ev_title: "Branded Electric Vehicle",
     ev_sub: "VLE/VLM ko solar-roof e-scooter, TLO/DLO ko EV car — kaam ke liye, gaon-gaon ghoomne ke liye, bina kisi petrol kharch ke. Har officer ki pehchaan.",
-    ev_chip_vle: "VLE/VLM · Activa",
-    ev_chip_tlo: "TLO/DLO · Tata Tiago EV (base, modified)",
+    ev_row1_label: "VLE/VLM · Activa",
+    ev_row1_desc: "Solar-roof e-scooter, aasan field mobility ke liye.",
+    ev_row2_label: "TLO/DLO · Tata Tiago EV (base, modified)",
+    ev_row2_desc: "Aaramdayak, bharosemand aur cost-effective EV car.",
+    ev_benefits: [
+      { icon: "check", label: "Low Running Cost" },
+      { icon: "leaf", label: "Eco Friendly" },
+      { icon: "hammer", label: "Low Maintenance" },
+      { icon: "trendingUp", label: "Better Productivity" },
+    ],
     ev_img_alt: "Branded electric scooter and Tata Tiago EV for Kisan Mitra officers",
 
     exams_title: "10 parikshayein — apni post chuno.",
@@ -273,7 +290,9 @@ export const I18N = {
 
     // ---------------- Recruitment Explorer ----------------
     rec_explorer_eyebrow: "04 · POSITIONS",
-    rec_explorer_title: "6 departments, 21+ positions, one Kisan Mitra ecosystem.",
+    rec_explorer_title_pre: "6 departments, 21+ positions, one",
+    rec_explorer_title_accent: "Kisan Mitra",
+    rec_explorer_title_post: "ecosystem.",
     rec_explorer_sub: "From the field to the corporate office — pick a department, find a position, and apply directly.",
     dept_all: "All Departments",
     search_placeholder: "Search a position or department...",
@@ -305,10 +324,13 @@ export const I18N = {
     stat_career_opportunities_sub: "Growth paths available",
 
     // ---------------- Org Hierarchy ----------------
-    hier_title: "Hierarchy & Reporting Chain",
+    hier_title_pre: "Hierarchy &",
+    hier_title_accent: "Reporting Chain",
     hier_sub: "Field Operations' core chain: VLE → VLM → TEO → Division Level Officer → Divisional Director — plus 5 department verticals.",
     hier_hq: "Argus/RKF HQ (Mumbai)",
+    hier_hq_sub: "Head Office",
     hier_villages: "600 Villages",
+    hier_villages_sub: "Across Maharashtra",
     hier_verticals_title: "Department Verticals",
     hier_verticals_sub: "Every department's own reporting ladder — pick one, search, or view them all at once.",
     dv_all: "All Verticals",
@@ -316,6 +338,7 @@ export const I18N = {
     dv_empty_title: "No roles found",
     dv_empty_sub: "Try a different search or vertical.",
     dv_roles: "roles",
+    dv_view_roles: "View Roles",
 
     // ---------------- Recruitment Matrix ----------------
     matrix_eyebrow: "05 · RECRUITMENT MATRIX",
@@ -328,12 +351,14 @@ export const I18N = {
     matrix_sort_asc: "Sort ascending",
     matrix_sort_desc: "Sort descending",
 
-    salary_title: "Perks, Benefits & Mobility",
+    salary_title_pre: "Perks, Benefits",
+    salary_title_accent: "&",
+    salary_title_post: "Mobility",
     salary_sub: "From uniform to EV — for every officer.",
     salary_perks: [
-      { title: "Uniform + ID", desc: "Official uniform and photo ID card." },
-      { title: "Field Tablet/Device", desc: "Smart field device for daily work." },
-      { title: "Residential Training", desc: "Hostel and meals included." },
+      { title: "Uniform + ID", desc: "Official uniform and **photo ID card** will be provided." },
+      { title: "Field Tablet/Device", desc: "Smart field device to power **your everyday work**." },
+      { title: "Residential Training", desc: "Hostel and meals **included** during training." },
       { title: "Bonuses", desc: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 after 2 years · \"Gram Shakti Champion\" ₹25,000/year." },
       { title: "Career Growth", desc: "VLE → Senior VLE → TLO → DLO." },
       { title: "Anti-corruption Support", desc: "Grievance support and a transparent system." },
@@ -356,10 +381,19 @@ export const I18N = {
     vac_phase3_pre: "Across Maharashtra.",
     vac_phase3_big: "45,000+",
     vac_phase3_post: "jobs — an officer for every village.",
+    ev_badge: "Sustainable Future, Smarter Mobility",
     ev_title: "Branded Electric Vehicle",
     ev_sub: "VLE/VLM get a solar-roof e-scooter, TLO/DLO get an EV car — for work, village-to-village travel, with zero petrol cost. Every officer's identity.",
-    ev_chip_vle: "VLE/VLM · Activa",
-    ev_chip_tlo: "TLO/DLO · Tata Tiago EV (base, modified)",
+    ev_row1_label: "VLE/VLM · Activa",
+    ev_row1_desc: "Solar-roof e-scooter for easy field mobility.",
+    ev_row2_label: "TLO/DLO · Tata Tiago EV (base, modified)",
+    ev_row2_desc: "Comfortable, reliable and cost-effective EV car.",
+    ev_benefits: [
+      { icon: "check", label: "Low Running Cost" },
+      { icon: "leaf", label: "Eco Friendly" },
+      { icon: "hammer", label: "Low Maintenance" },
+      { icon: "trendingUp", label: "Better Productivity" },
+    ],
     ev_img_alt: "Branded electric scooter and Tata Tiago EV for Kisan Mitra officers",
 
     exams_title: "10 exams — choose your post.",

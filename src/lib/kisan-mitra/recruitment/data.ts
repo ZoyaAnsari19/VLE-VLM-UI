@@ -19,15 +19,100 @@
 import type { Department, Position, RecruitmentStats, Lang } from "./types";
 
 export const DEPARTMENTS: Department[] = [
-  { id: "field-operations", name_hi: "Field Operations", name_en: "Field Operations", icon: "leaf", accent: "#1B4D3E" },
-  { id: "sales-marketing", name_hi: "Sales & Marketing", name_en: "Sales & Marketing", icon: "market", accent: "#C99A3B" },
-  { id: "business-development", name_hi: "Business Development", name_en: "Business Development", icon: "briefcase", accent: "#8B5E34" },
-  { id: "export-import", name_hi: "Export-Import", name_en: "Export-Import", icon: "globe", accent: "#1A2A4A" },
-  { id: "processing", name_hi: "Processing Division", name_en: "Processing Division", icon: "factory", accent: "#4A5D23" },
-  { id: "corporate", name_hi: "Corporate", name_en: "Corporate", icon: "building", accent: "#7A4869" },
+  {
+    id: "field-operations", name_hi: "Field Operations", name_en: "Field Operations",
+    description_hi: "Village-level farmer connect — VLE se Divisional Director tak.",
+    description_en: "Village-level farmer connect — from VLE to Divisional Director.",
+    icon: "leaf", accent: "#1B4D3E",
+  },
+  {
+    id: "sales-marketing", name_hi: "Sales & Marketing", name_en: "Sales & Marketing",
+    description_hi: "Market expansion, sales strategy aur promotion.",
+    description_en: "Market expansion, sales strategy and promotion.",
+    icon: "market", accent: "#C99A3B",
+  },
+  {
+    id: "business-development", name_hi: "Business Development", name_en: "Business Development",
+    description_hi: "Naye business opportunities, partnerships aur vertical growth.",
+    description_en: "New business opportunities, partnerships and vertical growth.",
+    icon: "briefcase", accent: "#8B5E34",
+  },
+  {
+    id: "export-import", name_hi: "Export-Import", name_en: "Export-Import",
+    description_hi: "Import sourcing, export shipments aur compliance.",
+    description_en: "Import sourcing, export shipments and compliance.",
+    icon: "globe", accent: "#1A2A4A",
+  },
+  {
+    id: "processing", name_hi: "Processing Division", name_en: "Processing Division",
+    description_hi: "Primary processing se storage tak ki operations.",
+    description_en: "In charge of operations from primary processing to storage.",
+    icon: "factory", accent: "#4A5D23",
+  },
+  {
+    id: "corporate", name_hi: "Corporate", name_en: "Corporate",
+    description_hi: "CSR, estates, events aur corporate support functions.",
+    description_en: "CSR, estates, events and corporate support functions.",
+    icon: "building", accent: "#7A4869",
+  },
 ];
 
 const accentOf = (deptId: string) => DEPARTMENTS.find((d) => d.id === deptId)!.accent;
+
+function hexToHsl(hex: string): [number, number, number] {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const r = ((num >> 16) & 0xff) / 255;
+  const g = ((num >> 8) & 0xff) / 255;
+  const b = (num & 0xff) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0, s = 0;
+  const d = max - min;
+  if (d !== 0) {
+    s = d / (1 - Math.abs(2 * l - 1));
+    switch (max) {
+      case r: h = ((g - b) / d) % 6; break;
+      case g: h = (b - r) / d + 2; break;
+      default: h = (r - g) / d + 4;
+    }
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+  return [h, s * 100, l * 100];
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const sf = s / 100, lf = l / 100;
+  const c = (1 - Math.abs(2 * lf - 1)) * sf;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = lf - c / 2;
+  let r = 0, g = 0, b = 0;
+  if (h < 60) [r, g, b] = [c, x, 0];
+  else if (h < 120) [r, g, b] = [x, c, 0];
+  else if (h < 180) [r, g, b] = [0, c, x];
+  else if (h < 240) [r, g, b] = [0, x, c];
+  else if (h < 300) [r, g, b] = [x, 0, c];
+  else [r, g, b] = [c, 0, x];
+  const toHex = (v: number) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+// Each position within a department gets its own distinct-but-dark color —
+// rotating hue and varying saturation/lightness in a fixed dark band per
+// seniority rank (instead of just lightening/darkening the base color,
+// which made senior ranks collapse toward near-black and look identical).
+// This keeps cards visually distinguishable within the Positions Explorer
+// while staying loosely tied to the department's base hue.
+const RANK_HUE_SHIFT: Record<number, number> = { 1: -18, 2: 0, 3: 16, 4: 32, 5: 48 };
+const RANK_SAT_DELTA: Record<number, number> = { 1: 5, 2: 0, 3: -5, 4: 8, 5: -8 };
+const RANK_LIGHTNESS: Record<number, number> = { 1: 34, 2: 27, 3: 30, 4: 23, 5: 29 };
+const accentFor = (deptId: string, rank: number) => {
+  const [h, s] = hexToHsl(accentOf(deptId));
+  const hue = (h + (RANK_HUE_SHIFT[rank] ?? 0) + 360) % 360;
+  const sat = Math.min(90, Math.max(30, s + (RANK_SAT_DELTA[rank] ?? 0)));
+  const light = RANK_LIGHTNESS[rank] ?? 28;
+  return hslToHex(hue, sat, light);
+};
 
 export const POSITIONS: Position[] = [
   // ---------------- FIELD OPERATIONS ----------------
@@ -63,7 +148,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · dark green trousers · sling bag · tablet · green lanyard + ID",
     monthlyTargets_hi: ["100+ kisan registration/mahina", "3-gaon cluster ka poora coverage"],
     monthlyTargets_en: ["100+ farmer registrations/month", "full coverage of the 3-village cluster"],
-    seniorityRank: 1, accent: accentOf("field-operations"), applicationTrack: "exam", examId: "gram-sevak",
+    seniorityRank: 1, accent: accentFor("field-operations", 1), applicationTrack: "exam", examId: "gram-sevak",
   },
   {
     id: "vlm", code: "VLM", departmentId: "field-operations",
@@ -96,7 +181,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · dark green trousers · green tie · sling bag · tablet · green lanyard + ID",
     monthlyTargets_hi: ["Sabhi VLE data ki weekly verification", "Cluster dashboard 100% accuracy"],
     monthlyTargets_en: ["Weekly verification of all VLE data", "100% cluster-dashboard accuracy"],
-    seniorityRank: 2, accent: accentOf("field-operations"), applicationTrack: "exam", examId: "gram-sevak",
+    seniorityRank: 2, accent: accentFor("field-operations", 2), applicationTrack: "exam", examId: "gram-sevak",
   },
   {
     id: "teo", code: "TEO", departmentId: "field-operations",
@@ -129,7 +214,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · dark green blazer · green tie · formal trousers · green lanyard + ID",
     monthlyTargets_hi: ["200+ KCC facilitation/mahina bank camps se", "Taluka-level P&L review"],
     monthlyTargets_en: ["200+ KCC facilitations/month via bank camps", "monthly taluka-level P&L review"],
-    seniorityRank: 3, accent: accentOf("field-operations"), applicationTrack: "exam", examId: "krishi-adhikari",
+    seniorityRank: 3, accent: accentFor("field-operations", 3), applicationTrack: "exam", examId: "krishi-adhikari",
   },
   {
     id: "division-level-officer", code: "DLO", departmentId: "field-operations",
@@ -162,7 +247,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · dark green blazer · green tie · pocket square · green lanyard + ID",
     monthlyTargets_hi: ["Division P&L consolidation", "State-level partnership review (quarterly)"],
     monthlyTargets_en: ["Division P&L consolidation", "quarterly state-level partnership review"],
-    seniorityRank: 4, accent: accentOf("field-operations"), applicationTrack: "exam", examId: "krishi-adhikari",
+    seniorityRank: 4, accent: accentFor("field-operations", 4), applicationTrack: "exam", examId: "krishi-adhikari",
   },
   {
     id: "divisional-director", code: "DD", departmentId: "field-operations",
@@ -193,7 +278,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · dark green blazer · green tie · pocket square · cufflinks · green lanyard + ID",
     monthlyTargets_hi: ["Multi-division zonal strategy review", "HQ ko monthly performance briefing"],
     monthlyTargets_en: ["Multi-division zonal strategy review", "monthly performance briefing to HQ"],
-    seniorityRank: 5, accent: accentOf("field-operations"), applicationTrack: "exam", examId: "krishi-adhikari",
+    seniorityRank: 5, accent: accentFor("field-operations", 5), applicationTrack: "exam", examId: "krishi-adhikari",
   },
 
   // ---------------- SALES & MARKETING ----------------
@@ -228,7 +313,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · gold-trim tie · charcoal trousers · gold lanyard + ID",
     monthlyTargets_hi: ["Mandi/retail sales target monthly meet karna", "5+ naye distributor onboard/quarter"],
     monthlyTargets_en: ["Meet monthly mandi/retail sales target", "5+ new distributors onboarded/quarter"],
-    seniorityRank: 1, accent: accentOf("sales-marketing"), applicationTrack: "exam", examId: "vipnan",
+    seniorityRank: 1, accent: accentFor("sales-marketing", 1), applicationTrack: "exam", examId: "vipnan",
   },
   {
     id: "sales-marketing-international", code: "SME-I", departmentId: "sales-marketing",
@@ -261,7 +346,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · gold-trim tie · navy blazer · charcoal trousers · gold lanyard + ID",
     monthlyTargets_hi: ["International buyer leads pipeline maintain karna", "2+ trade fairs/quarter represent karna"],
     monthlyTargets_en: ["Maintain international buyer lead pipeline", "represent at 2+ trade fairs/quarter"],
-    seniorityRank: 2, accent: accentOf("sales-marketing"), applicationTrack: "exam", examId: "vipnan",
+    seniorityRank: 2, accent: accentFor("sales-marketing", 2), applicationTrack: "exam", examId: "vipnan",
   },
 
   // ---------------- BUSINESS DEVELOPMENT ----------------
@@ -296,7 +381,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige shirt · brown tie · bronze lanyard + ID",
     monthlyTargets_hi: ["10+ naye leads/mahina", "Weekly pipeline report submission"],
     monthlyTargets_en: ["10+ new leads/month", "weekly pipeline report submission"],
-    seniorityRank: 1, accent: accentOf("business-development"), applicationTrack: "exam", examId: "vyavsaya-vikas",
+    seniorityRank: 1, accent: accentFor("business-development", 1), applicationTrack: "exam", examId: "vyavsaya-vikas",
   },
   {
     id: "bd-manager", code: "BDM", departmentId: "business-development",
@@ -329,7 +414,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige shirt · brown blazer · brown tie · bronze lanyard + ID",
     monthlyTargets_hi: ["Revenue target ownership (quarterly)", "Team ki 10+ leads/mahina pipeline review"],
     monthlyTargets_en: ["Quarterly revenue-target ownership", "review team's 10+ leads/month pipeline"],
-    seniorityRank: 2, accent: accentOf("business-development"), applicationTrack: "exam", examId: "vyavsaya-vikas",
+    seniorityRank: 2, accent: accentFor("business-development", 2), applicationTrack: "exam", examId: "vyavsaya-vikas",
   },
 
   // ---------------- EXPORT-IMPORT ----------------
@@ -364,7 +449,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · navy tie · navy trousers · navy lanyard + ID",
     monthlyTargets_hi: ["Import shipment timelines 95%+ on-time", "Vendor compliance audit monthly"],
     monthlyTargets_en: ["95%+ on-time import shipments", "monthly vendor compliance audit"],
-    seniorityRank: 1, accent: accentOf("export-import"), applicationTrack: "exam", examId: "vyapar",
+    seniorityRank: 1, accent: accentFor("export-import", 1), applicationTrack: "exam", examId: "vyapar",
   },
   {
     id: "export-manager", code: "EM", departmentId: "export-import",
@@ -397,7 +482,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · navy tie · navy trousers · navy lanyard + ID",
     monthlyTargets_hi: ["Export shipment quality-compliance 100%", "Payment collection cycle track karna"],
     monthlyTargets_en: ["100% export shipment quality compliance", "track payment-collection cycle"],
-    seniorityRank: 2, accent: accentOf("export-import"), applicationTrack: "exam", examId: "vyapar",
+    seniorityRank: 2, accent: accentFor("export-import", 2), applicationTrack: "exam", examId: "vyapar",
   },
   {
     id: "export-import-director", code: "EID", departmentId: "export-import",
@@ -428,7 +513,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "White shirt · navy blazer · navy tie · pocket square · navy lanyard + ID",
     monthlyTargets_hi: ["Vertical P&L review (monthly)", "Strategic partnership pipeline (quarterly)"],
     monthlyTargets_en: ["Monthly vertical P&L review", "quarterly strategic-partnership pipeline"],
-    seniorityRank: 3, accent: accentOf("export-import"), applicationTrack: "exam", examId: "vyapar-nideshak",
+    seniorityRank: 3, accent: accentFor("export-import", 3), applicationTrack: "exam", examId: "vyapar-nideshak",
   },
 
   // ---------------- PROCESSING DIVISION ----------------
@@ -461,7 +546,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Olive-green shirt · apron · hairnet/cap · olive lanyard + ID",
     monthlyTargets_hi: ["Daily throughput log 100% completion", "Wastage under 5%"],
     monthlyTargets_en: ["100% daily throughput logging", "wastage kept under 5%"],
-    seniorityRank: 1, accent: accentOf("processing"), applicationTrack: "exam", examId: "prakriya",
+    seniorityRank: 1, accent: accentFor("processing", 1), applicationTrack: "exam", examId: "prakriya",
   },
   {
     id: "district-processing-centre", code: "DPC", departmentId: "processing",
@@ -492,7 +577,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Olive-green shirt · olive tie · apron (except audits) · olive lanyard + ID",
     monthlyTargets_hi: ["PPC audit coverage 100%", "Dispatch SLA 95%+ on-time"],
     monthlyTargets_en: ["100% PPC audit coverage", "95%+ on-time dispatch SLA"],
-    seniorityRank: 2, accent: accentOf("processing"), applicationTrack: "exam", examId: "prakriya",
+    seniorityRank: 2, accent: accentFor("processing", 2), applicationTrack: "exam", examId: "prakriya",
   },
   {
     id: "warehouse-manager", code: "WM", departmentId: "processing",
@@ -523,7 +608,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Olive-green shirt · high-vis vest · safety shoes · olive lanyard + ID",
     monthlyTargets_hi: ["Inventory accuracy 98%+", "Dispatch scheduling SLA compliance"],
     monthlyTargets_en: ["98%+ inventory accuracy", "dispatch-scheduling SLA compliance"],
-    seniorityRank: 3, accent: accentOf("processing"), applicationTrack: "exam", examId: "prakriya",
+    seniorityRank: 3, accent: accentFor("processing", 3), applicationTrack: "exam", examId: "prakriya",
   },
   {
     id: "food-processing-unit-manager", code: "FPUM", departmentId: "processing",
@@ -554,7 +639,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Olive-green shirt · olive tie · lab coat (on floor visits) · olive lanyard + ID",
     monthlyTargets_hi: ["Production output target meet karna", "HACCP compliance audit 100%"],
     monthlyTargets_en: ["Meet production-output target", "100% HACCP compliance audit"],
-    seniorityRank: 4, accent: accentOf("processing"), applicationTrack: "exam", examId: "prakriya-prabandhak",
+    seniorityRank: 4, accent: accentFor("processing", 4), applicationTrack: "exam", examId: "prakriya-prabandhak",
   },
   {
     id: "storage-manager", code: "SM", departmentId: "processing",
@@ -585,7 +670,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Olive-green shirt · olive blazer · olive tie · olive lanyard + ID",
     monthlyTargets_hi: ["Network-wide loss-prevention review", "Quarterly capex plan submission"],
     monthlyTargets_en: ["Network-wide loss-prevention review", "quarterly capex plan submission"],
-    seniorityRank: 5, accent: accentOf("processing"), applicationTrack: "exam", examId: "prakriya-prabandhak",
+    seniorityRank: 5, accent: accentFor("processing", 5), applicationTrack: "exam", examId: "prakriya-prabandhak",
   },
 
   // ---------------- CORPORATE ----------------
@@ -618,7 +703,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige shirt · plum-accent scarf/stole · plum lanyard + ID",
     monthlyTargets_hi: ["CSR impact data monthly reporting", "1+ naya community partner/quarter"],
     monthlyTargets_en: ["Monthly CSR impact-data reporting", "1+ new community partner/quarter"],
-    seniorityRank: 1, accent: accentOf("corporate"), applicationTrack: "exam", examId: "samuday-vikas",
+    seniorityRank: 1, accent: accentFor("corporate", 1), applicationTrack: "exam", examId: "samuday-vikas",
   },
   {
     id: "agro-estate-manager", code: "AEM", departmentId: "corporate",
@@ -649,7 +734,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige field shirt · sun hat · plum lanyard + ID",
     monthlyTargets_hi: ["Estate yield aur cost tracking monthly", "Vendor/labour coordination review"],
     monthlyTargets_en: ["Monthly estate yield/cost tracking", "vendor/labour coordination review"],
-    seniorityRank: 2, accent: accentOf("corporate"), applicationTrack: "exam", examId: "samuday-vikas",
+    seniorityRank: 2, accent: accentFor("corporate", 2), applicationTrack: "exam", examId: "samuday-vikas",
   },
   {
     id: "events-team-mid", code: "ETM", departmentId: "corporate",
@@ -680,7 +765,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige shirt · plum tie · event ID badge · plum lanyard",
     monthlyTargets_hi: ["Events budget/timeline on-track", "Vendor coordination SLA meet karna"],
     monthlyTargets_en: ["Events budget/timeline on-track", "meet vendor coordination SLA"],
-    seniorityRank: 3, accent: accentOf("corporate"), applicationTrack: "exam", examId: "samuday-vikas",
+    seniorityRank: 3, accent: accentFor("corporate", 3), applicationTrack: "exam", examId: "samuday-vikas",
   },
   {
     id: "events-team-senior", code: "ETS", departmentId: "corporate",
@@ -711,7 +796,7 @@ export const POSITIONS: Position[] = [
     uniform_en: "Beige shirt · plum blazer · plum tie · plum lanyard + ID",
     monthlyTargets_hi: ["Annual events calendar on-track", "Sponsor renewal rate target"],
     monthlyTargets_en: ["Annual events calendar on-track", "sponsor-renewal-rate target"],
-    seniorityRank: 4, accent: accentOf("corporate"), applicationTrack: "exam", examId: "netritva",
+    seniorityRank: 4, accent: accentFor("corporate", 4), applicationTrack: "exam", examId: "netritva",
   },
 ];
 
