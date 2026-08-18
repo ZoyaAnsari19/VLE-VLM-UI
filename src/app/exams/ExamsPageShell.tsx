@@ -1,20 +1,25 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useLang } from "@/components/LangProvider";
+import { SiteShell } from "@/components/SiteShell";
+import { PageHead } from "@/components/PageHead";
+import { Exams } from "@/components/sections/Exams";
 
-export function ExamsPageShell() {
-  const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    void import("@/lib/kisan-mitra/app").then((mod) => mod.initExamsPage(rootRef.current));
-  }, []);
-
+function ExamsBody() {
+  const { t } = useLang();
   return (
     <>
-      <a href="#exams" className="skip-link">
-        Skip to exams
-      </a>
-      <main id="app" ref={rootRef} />
+      <PageHead icon="cap" eyebrow={t.nav_exams} titlePre={t.exams_title} sub={t.exams_sub} />
+      <Exams showAll heading={false} />
     </>
+  );
+}
+
+/** Standalone "all exams" page — same chrome as the home page, one section. */
+export function ExamsPageShell() {
+  return (
+    <SiteShell skipHref="#exams" skipLabel="Skip to exams">
+      <ExamsBody />
+    </SiteShell>
   );
 }

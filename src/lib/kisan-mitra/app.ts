@@ -1,338 +1,63 @@
-// @ts-nocheck
 // ============================================================
-// MAIN ORCHESTRATOR — assembles all sections, handles nav,
-// language toggle, accordions, scroll reveal, count-up.
+// APPLY-SECTION HOST
+//
+// All page chrome and content sections are React components now. What remains
+// here is the mount point for the multi-step apply form in apply.ts, which
+// still renders itself as an HTML string into #applyRoot.
 // ============================================================
-import { I18N } from './i18n';
+import { I18N, type Dict } from './i18n';
 import { ICON } from './icons';
-import {
-  renderNav, renderHero, renderMission, renderWhy, renderSalary, renderVacancies,
-  renderExams, renderSecurity, renderRoadmap, renderFarmers, renderSchemes,
-    renderPartnerships, renderTraining, renderInterview, renderPrep, renderEligibility, renderFAQ, renderFooter
-} from './sections';
-import { initApply, setApplyLang } from './apply';
+import { initApply, applyToPosition } from './apply';
+import type { Lang } from './recruitment/types';
 
-let lang = 'hi';
-let topEl = null;
-let bottomEl = null;
-let examsPageEl = null;
-// whichever init*() ran last decides what a language switch re-renders —
-// the home page renders all sections, the /exams page renders just itself.
-let currentRenderer = null;
+let lang: Lang = 'hi';
+let applyEl: HTMLElement | null = null;
+let withHeading = true;
 
-function releaseBodyScroll() {
-  document.body.style.overflow = '';
-}
-
-function renderApplySection(t) {
-  return `
-  <section id="apply" class="bg-paper">
-    <div class="container">
-      <div class="section-head reveal">
+function applySectionHTML(t: Dict) {
+  // The standalone /apply page renders its own <h1> above this, so the section
+  // head is skipped there rather than emitting a second heading for the form.
+  const head = withHeading
+    ? `<div class="section-head reveal in">
         <span class="eyebrow">${ICON.fileText} Apply</span>
         <h2 class="h2">${t.apply_title_pre} <span class="accent">${t.apply_title_accent}</span> ${t.apply_title_post}</h2>
         <p>${t.apply_sub}</p>
         <div class="section-divider"><span>${ICON.leaf}</span></div>
-      </div>
+      </div>`
+    : "";
+  return `
+  <section id="apply" class="bg-paper">
+    <div class="container">
+      ${head}
       <div id="applyRoot"></div>
     </div>
   </section>`;
 }
 
-function renderAll() {
-  releaseBodyScroll();
-  const t = I18N[lang];
-  if (!topEl || !bottomEl) return;
-  topEl.innerHTML =
-    renderNav(t) +
-    renderHero(t, lang) +
-    renderMission(t, lang) +
-    renderSchemes(t, lang) +
-    renderWhy(t);
-  bottomEl.innerHTML =
-    renderSalary(t) +
-    renderVacancies(t, lang) +
-    renderExams(t, lang) +
-    renderSecurity(t, lang) +
-    renderRoadmap(t, lang) +
-    renderFarmers(t, lang) +
-    renderPartnerships(t) +
-    renderTraining(t, lang) +
-    renderInterview(t, lang) +
-    renderPrep(t, lang) +
-    renderEligibility(t) +
-    renderApplySection(t) +
-    renderFAQ(t, lang) +
-    renderFooter(t, lang);
-  bindGlobal();
+function render() {
+  if (!applyEl) return;
+  document.body.style.overflow = '';
+  applyEl.innerHTML = applySectionHTML(I18N[lang]);
   initApply(lang);
-  setupReveal();
-  setActiveLangButtons();
 }
 
-function setActiveLangButtons() {
-  document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+export function initApplySection(
+  container: HTMLElement | null,
+  preselectPositionId?: string | null,
+  showHeading = true
+) {
+  applyEl = container;
+  withHeading = showHeading;
+  const saved = localStorage.getItem('km_lang');
+  lang = saved === 'en' || saved === 'hi' ? saved : 'hi';
+  render();
+  // Deep link from a role card / role page: start on step 1 with the role chosen.
+  if (preselectPositionId) applyToPosition(preselectPositionId);
 }
 
-function switchLang(l) {
-  if (l === lang) return;
-  lang = l;
-  localStorage.setItem('km_lang', l);
-  document.documentElement.lang = l;
-  releaseBodyScroll();
-  if (currentRenderer) currentRenderer();
-  window.scrollTo(0, 0); // re-render resets; go to top for clarity
-  window.dispatchEvent(new CustomEvent('km:lang-change', { detail: l }));
-}
-
-function bindGlobal() {
-  // nav scroll state
-  const nav = document.getElementById('nav');
-  const onScroll = () => { nav.classList.toggle('scrolled', window.scrollY > 30); };
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  // language toggles
-  document.querySelectorAll('.lang-toggle button').forEach(b => {
-    b.addEventListener('click', () => switchLang(b.dataset.lang));
-  });
-
-  // mobile drawer
-  const drawer = document.getElementById('drawer');
-  const openD = () => { drawer.classList.add('open'); document.body.style.overflow = 'hidden'; };
-  const closeD = () => { drawer.classList.remove('open'); releaseBodyScroll(); };
-  document.getElementById('hamburger').addEventListener('click', openD);
-  document.getElementById('drawerClose').addEventListener('click', closeD);
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeD));
-
-  // exam sample modal
-  document.querySelectorAll('[data-sample-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => openExamSamplesModal(btn.dataset.sampleToggle, btn));
-  });
-
-  // FAQ accordions
-  document.querySelectorAll('[data-faq-toggle]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = btn.dataset.faqToggle;
-      const item = document.querySelector(`.faq-item[data-faq="${i}"]`);
-      const ans = document.getElementById('faq-a-' + i);
-      const open = item.classList.toggle('open');
-      ans.style.maxHeight = open ? ans.scrollHeight + 'px' : '0';
-    });
-  });
-
-  bindPerksCarousel();
-  bindExamSamplesModal();
-
-  // footer newsletter — no backend yet, so just acknowledge locally instead
-  // of pretending the address was stored anywhere.
-  const newsletterForm = document.getElementById('newsletterForm');
-  if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const thanks = document.getElementById('newsletterThanks');
-      if (thanks) thanks.hidden = false;
-      newsletterForm.reset();
-    });
-  }
-}
-
-function bindExamSamplesModal() {
-  const modal = document.getElementById('examSamplesModal');
-  if (!modal) return;
-
-  const close = () => {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    releaseBodyScroll();
-    if (modal._kmReturnFocus) {
-      try { modal._kmReturnFocus.focus(); } catch {}
-      modal._kmReturnFocus = null;
-    }
-  };
-
-  const closeBtn = modal.querySelector('[data-modal-close]');
-  if (closeBtn) closeBtn.addEventListener('click', close);
-
-  const applyBtn = modal.querySelector('[data-modal-apply]');
-  if (applyBtn) {
-    applyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      close();
-      document.getElementById('apply')?.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) close();
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) close();
-  });
-
-  modal._kmClose = close;
-}
-
-function openExamSamplesModal(id, triggerBtn) {
-  const modal = document.getElementById('examSamplesModal');
-  const source = document.getElementById('samples-' + id);
-  const card = triggerBtn.closest('.exam-card');
-  if (!modal || !source || !card) return;
-
-  const titleEl = card.querySelector('h3');
-  const forEl = card.querySelector('.exam-for');
-  const pillEl = card.querySelector('.exam-head .eyebrow');
-
-  const modalTitle = document.getElementById('examSamplesTitle');
-  const modalPill = document.getElementById('examSamplesPill');
-  const modalSub = document.getElementById('examSamplesSub');
-  const modalBody = document.getElementById('examSamplesBody');
-
-  if (modalTitle) modalTitle.textContent = titleEl ? titleEl.textContent : '';
-  if (modalPill) modalPill.textContent = pillEl ? pillEl.textContent : '';
-  if (modalSub) modalSub.textContent = forEl ? forEl.textContent : '';
-  if (modalBody) modalBody.innerHTML = source.innerHTML;
-
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden', 'false');
-  modal._kmReturnFocus = triggerBtn;
-  document.body.style.overflow = 'hidden';
-
-  const closeBtn = modal.querySelector('[data-modal-close]');
-  if (closeBtn) closeBtn.focus();
-}
-
-function bindCarousel({ viewportId, prevId, nextId, cardSelector, trackSelector, fullWidthCardsOnMobile }) {
-  const viewport = document.getElementById(viewportId);
-  const prev = document.getElementById(prevId);
-  const next = document.getElementById(nextId);
-  if (!viewport || !prev || !next) return;
-
-  const syncCardWidths = () => {
-    if (!fullWidthCardsOnMobile) return;
-    const mobile = window.matchMedia('(max-width: 640px)').matches;
-    viewport.querySelectorAll(cardSelector).forEach(card => {
-      if (mobile) {
-        const w = viewport.clientWidth;
-        card.style.flexBasis = `${w}px`;
-        card.style.width = `${w}px`;
-        card.style.maxWidth = `${w}px`;
-      } else {
-        card.style.flexBasis = '';
-        card.style.width = '';
-        card.style.maxWidth = '';
-      }
-    });
-  };
-
-  const scrollStep = () => {
-    const card = viewport.querySelector(cardSelector);
-    if (!card) return viewport.clientWidth * 0.85;
-    const track = viewport.querySelector(trackSelector);
-    const gap = track ? parseFloat(getComputedStyle(track).gap) || 18 : 18;
-    return card.offsetWidth + gap;
-  };
-
-  const updateButtons = () => {
-    const max = viewport.scrollWidth - viewport.clientWidth;
-    prev.disabled = viewport.scrollLeft <= 4;
-    next.disabled = viewport.scrollLeft >= max - 4;
-  };
-
-  prev.addEventListener('click', () => {
-    viewport.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
-  });
-  next.addEventListener('click', () => {
-    viewport.scrollBy({ left: scrollStep(), behavior: 'smooth' });
-  });
-  viewport.addEventListener('scroll', updateButtons, { passive: true });
-  window.addEventListener('resize', () => {
-    syncCardWidths();
-    updateButtons();
-  });
-  syncCardWidths();
-  updateButtons();
-}
-
-function bindPerksCarousel() {
-  bindCarousel({
-    viewportId: 'perksViewport', prevId: 'perksPrev', nextId: 'perksNext',
-    cardSelector: '.perk-card', trackSelector: '.salary-perks-track', fullWidthCardsOnMobile: true,
-  });
-  bindCarousel({
-    viewportId: 'roadmapViewport', prevId: 'roadmapPrev', nextId: 'roadmapNext',
-    cardSelector: '.step', trackSelector: '#roadmapTrack', fullWidthCardsOnMobile: false,
-  });
-  bindCarousel({
-    viewportId: 'intPanelsViewport', prevId: 'intPanelsPrev', nextId: 'intPanelsNext',
-    cardSelector: '.int-panel', trackSelector: '#intPanelsTrack', fullWidthCardsOnMobile: false,
-  });
-}
-
-// scroll reveal + count-up
-function setupReveal() {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const reveals = document.querySelectorAll('.reveal');
-  if (reduce || !('IntersectionObserver' in window)) {
-    reveals.forEach(r => r.classList.add('in'));
-    runCountUp();
-    return;
-  }
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  reveals.forEach(r => io.observe(r));
-
-  // count-up when stats visible
-  const stats = document.querySelectorAll('[data-count]');
-  const cio = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { animateCount(e.target); cio.unobserve(e.target); } });
-  }, { threshold: 0.5 });
-  stats.forEach(s => cio.observe(s));
-}
-
-function runCountUp() { document.querySelectorAll('[data-count]').forEach(animateCount); }
-
-function animateCount(el) {
-  const target = parseInt(el.dataset.count, 10);
-  if (!target) { el.textContent = el.dataset.count; return; }
-  const dur = 1400; const start = performance.now();
-  const step = (now) => {
-    const p = Math.min((now - start) / dur, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
-    el.textContent = Math.round(target * eased).toLocaleString('en-IN');
-    if (p < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
-}
-
-export function initKisanMitra(top, bottom) {
-  topEl = top;
-  bottomEl = bottom;
-  lang = localStorage.getItem('km_lang') || 'hi';
-  document.documentElement.lang = lang;
-  currentRenderer = renderAll;
-  renderAll();
-}
-
-function renderExamsPage() {
-  releaseBodyScroll();
-  const t = I18N[lang];
-  if (!examsPageEl) return;
-  examsPageEl.innerHTML =
-    renderNav(t, '/') +
-    renderExams(t, lang, true) +
-    renderFooter(t, lang, '/');
-  bindGlobal();
-  setupReveal();
-  setActiveLangButtons();
-}
-
-export function initExamsPage(container) {
-  examsPageEl = container;
-  lang = localStorage.getItem('km_lang') || 'hi';
-  document.documentElement.lang = lang;
-  currentRenderer = renderExamsPage;
-  renderExamsPage();
+/** Re-renders the form in `next` — called by React when the language changes. */
+export function renderApplySectionFor(next: Lang) {
+  if (!applyEl || next === lang) return;
+  lang = next;
+  render();
 }

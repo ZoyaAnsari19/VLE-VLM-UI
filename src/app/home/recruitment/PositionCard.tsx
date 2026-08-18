@@ -3,17 +3,16 @@
 import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartment } from "@/lib/kisan-mitra/recruitment/data";
+import { routes } from "@/lib/kisan-mitra/routes";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
 import { useReveal } from "@/components/useReveal";
 
 interface PositionCardProps {
   position: Position;
   lang: Lang;
-  onViewDetails: (position: Position) => void;
-  onApply: (position: Position) => void;
 }
 
-export function PositionCard({ position, lang, onViewDetails, onApply }: PositionCardProps) {
+export function PositionCard({ position, lang }: PositionCardProps) {
   const t = I18N[lang];
   const { ref, className } = useReveal<HTMLElement>();
   const dept = getDepartment(position.departmentId);
@@ -39,19 +38,19 @@ export function PositionCard({ position, lang, onViewDetails, onApply }: Positio
           <span className="v">{position.salaryDisplay}/mo</span>
         </div>
         <div className="position-card-actions">
-          <button type="button" className="btn btn-outline position-card-details" onClick={() => onViewDetails(position)}>
+          {/* A real link, not a modal: each role has its own indexable, shareable URL. */}
+          <a href={routes.role(position.id)} className="btn btn-outline position-card-details">
             {t.card_view_details}
             <span dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
-          </button>
-          <button
-            type="button"
+          </a>
+          <a
+            href={routes.applyTo(position.id)}
             className="btn btn-primary position-card-apply"
             style={{ background: position.accent }}
-            onClick={() => onApply(position)}
           >
             {t.card_apply}
             <span dangerouslySetInnerHTML={{ __html: ICON.check }} />
-          </button>
+          </a>
         </div>
       </div>
     </article>

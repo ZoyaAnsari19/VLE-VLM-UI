@@ -1,4 +1,3 @@
-// @ts-nocheck
 // ============================================================
 // KISAN MITRA BHARTI PARIKSHA 2026 — DATA LAYER
 // All content embedded. No external dependency.
@@ -623,11 +622,15 @@ export const FOOTER_ABOUT_STATS = [
 
 export const FOOTER_QUICK_LINKS = [
   { label_hi: "Kisan Mitra ke baare mein", label_en: "About Kisan Mitra", href: "#mission" },
-  { label_hi: "Kaise kaam karta hai", label_en: "How It Works", href: "#process" },
-  { label_hi: "Exams", label_en: "Exams", href: "#exams" },
-  { label_hi: "Study Material", label_en: "Study Material", href: "#prep" },
-  { label_hi: "Coaching Centers", label_en: "Coaching Centers", href: "#prep" },
-  { label_hi: "FAQs", label_en: "FAQs", href: "#faq" },
+  { label_hi: "Kaise kaam karta hai", label_en: "How It Works", href: "/process" },
+  { label_hi: "Saare Roles", label_en: "All Roles", href: "/roles" },
+  { label_hi: "Departments", label_en: "Departments", href: "/departments" },
+  { label_hi: "Kya Milega (Fayde)", label_en: "What You Get", href: "/benefits" },
+  { label_hi: "Exams", label_en: "Exams", href: "/exams" },
+  { label_hi: "Study Material", label_en: "Study Material", href: "/prepare" },
+  { label_hi: "Coaching Centers", label_en: "Coaching Centers", href: "/prepare" },
+  { label_hi: "Eligibility", label_en: "Eligibility", href: "/eligibility" },
+  { label_hi: "FAQs", label_en: "FAQs", href: "/faq" },
   { label_hi: "Sampark Karein", label_en: "Contact Us", href: "https://wa.me/910000000000" },
 ];
 
@@ -657,3 +660,17 @@ export const SECURITY = [
   { icon: "shield", title_hi: "Encrypted & Audited", title_en: "Encrypted & Audited", desc_hi: "AES-256 answers, 12-month audit trail.", desc_en: "AES-256 answers, 12-month audit trail." },
   { icon: "pin", title_hi: "Aapke paas hi", title_en: "Near You", desc_hi: "Existing schools/colleges/panchayat halls mein, multi-shift (5/day), 10 rounds.", desc_en: "At existing schools/colleges/panchayat halls, multi-shift (5/day), 10 rounds." }
 ];
+
+export type Exam = (typeof EXAMS)[number];
+/** Every exam id, as a union — an unknown id is a compile error, not a 404. */
+export type ExamId = Exam["id"];
+
+/** Looks up an exam by id — used by role pages and /exams/[slug]. */
+export function getExam(id: string): Exam | undefined {
+  return EXAMS.find((e) => e.id === id);
+}
+
+/** Every exam id — feeds generateStaticParams for /exams/[slug]. */
+export function getAllExamIds(): ExamId[] {
+  return EXAMS.map((e) => e.id);
+}

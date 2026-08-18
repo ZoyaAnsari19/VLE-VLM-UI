@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "@/styles/kisan-mitra.css";
+import { SITE_URL } from "@/lib/kisan-mitra/site";
 
-const siteUrl = "https://exam.kalakar.tv";
+const siteUrl = SITE_URL;
 const ogImagePath = "/images/og-share.jpg";
 const ogImageUrl = `${siteUrl}${ogImagePath}`;
 
@@ -9,12 +10,12 @@ const ogImage = {
   url: ogImagePath,
   width: 1200,
   height: 948,
-  alt: "किसान मित्र इकोसिस्टम — VLE, VLM, DLO, TLO, CSE अधिकारी",
+  alt: "किसान मित्र इकोसिस्टम — महाराष्ट्र में 21 अधिकारी पद",
   type: "image/jpeg",
 };
 
 const siteDescription =
-  "यूपी के 12 मंडलों में 452 अधिकारी पद। अपने गाँव का अधिकारी बनें — शहर भागने की ज़रूरत नहीं।";
+  "महाराष्ट्र के 6 राजस्व मंडलों में 452 अधिकारी पद — 6 विभाग, 21 पद। अपने गाँव का अधिकारी बनें, शहर भागने की ज़रूरत नहीं।";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

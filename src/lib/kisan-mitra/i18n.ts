@@ -1,9 +1,12 @@
-// @ts-nocheck
 // ============================================================
 // i18n — Hindi/Hinglish (default) + English strings
+//
+// `hi` is the source of truth for the key set: `Dict` is derived from it and
+// `en` is checked against that type, so a key added to one dictionary and
+// forgotten in the other is now a compile error rather than an `undefined`
+// leaking into the page.
 // ============================================================
-export const I18N = {
-  hi: {
+const hi = {
     nav_roles: "Roles",
     nav_exams: "Pariksha",
     nav_process: "Process",
@@ -64,6 +67,131 @@ export const I18N = {
     rec_empty_sub: "Apna search ya filter badal kar dobara koshish karein.",
     rec_view_all: "Sabhi Positions Dekhein",
 
+    // ---------------- Role pages ----------------
+    nav_home: "Home",
+    roles_page_title_pre: "Saare",
+    roles_page_title_accent: "21 positions",
+    roles_page_title_post: "— apna role chuno.",
+    roles_page_sub: "6 departments, entry-level se leadership tak. Har role ka poora detail, exam aur salary dekho.",
+    role_track_exam: "Exam ke through selection",
+    role_track_direct: "Direct application",
+    role_quick_facts: "Ek Nazar Mein",
+    role_fact_salary: "Monthly Salary",
+    role_fact_exam: "Selection Exam",
+    role_fact_reporting: "Reporting Officer",
+    role_fact_department: "Department",
+    role_view_exam: "Exam Pattern Dekhein",
+    role_apply_cta: "Iss Role Ke Liye Apply Karein",
+    role_next_step: "Agla Step",
+    role_next_step_sub: "Iss role se aap yahan tak pahunch sakte hain",
+    role_related_title: "Isi Department Ke Doosre Roles",
+    role_not_found: "Ye position nahi mili",
+    role_back_to_roles: "Sabhi positions dekhein",
+
+    // ---------------- Exam pages ----------------
+    exam_page_eyebrow: "Selection Exam",
+    exam_pattern_title: "Paper Pattern",
+    exam_marks_title: "Syllabus aur Weightage",
+    exam_marks_col_section: "Section",
+    exam_marks_col_marks: "Marks",
+    exam_note: "Dhyan Dein",
+    exam_roles_title: "Iss Exam Se Milne Wale Roles",
+    exam_roles_sub: "Ek hi paper, ye saare positions — score ke hisaab se level decide hota hai.",
+    exam_samples_title: "Sample Questions",
+    exam_samples_sub: "Actual paper ka level samajhne ke liye — ye sirf practice ke liye hain.",
+    exam_answer_label: "Sahi jawab",
+    exam_apply_cta: "Iss Exam Ke Liye Apply Karein",
+    exam_not_found: "Ye exam nahi mila",
+    exam_back_to_exams: "Sabhi exams dekhein",
+    exam_fact_total_marks: "Total Marks",
+    exam_fact_roles: "Roles Covered",
+
+    // ---------------- Department pages ----------------
+    nav_departments: "Departments",
+    depts_page_title_pre: "6 departments —",
+    depts_page_title_accent: "apna raasta",
+    depts_page_title_post: "chuno.",
+    depts_page_sub: "Har department ka apna kaam, apna ladder aur apni growth. Andar jaake poora career path dekho.",
+    dept_explore: "Iss Department Ko Dekhein",
+    dept_ladder_title: "Career Ladder",
+    dept_ladder_sub: "Entry-level se leadership tak — har rung par salary aur zimmedari badhti hai.",
+    dept_exams_title: "Iss Department Ke Exams",
+    dept_fact_positions: "Positions",
+    dept_fact_salary_range: "Salary Range",
+    dept_fact_entry: "Entry Role",
+    dept_fact_top: "Top Role",
+    dept_not_found: "Ye department nahi mila",
+    dept_back_to_depts: "Sabhi departments dekhein",
+    dept_positions_title: "Iss Department Ke Roles",
+    dept_apply_entry: "Entry Role Se Shuruaat Karein",
+
+    // ---------------- Benefits page ----------------
+    nav_benefits: "Fayde",
+    ben_eyebrow: "EXAM CRACK KIYA — PHIR KYA?",
+    ben_title_pre: "Ek pariksha, aur",
+    ben_title_accent: "poori zindagi",
+    ben_title_post: "set.",
+    ben_sub: "Kisan Mitra Bharti Pariksha sirf ek naukri nahi deti — pakki salary, officer ki pehchaan, apne gaon mein posting aur leadership tak ka saaf raasta deti hai. Neeche dekho exactly kya milta hai.",
+    ben_cta: "Abhi Form Bharein",
+    ben_cta_sub: "Registration free hai — exam fee sirf form final karte waqt.",
+
+    ben_pillars_title: "Selection ke baad aapko kya milta hai",
+    ben_pillars_sub: "Har point official recruitment terms se hai — koi chhupi shart nahi.",
+    ben_p1_t: "Pakki monthly salary",
+    ben_p1_d: "Entry level se hi fixed monthly salary — fasal, mausam ya mandi par nirbhar nahi.",
+    ben_p2_t: "Officer ki pehchaan",
+    ben_p2_d: "Official uniform, photo ID card aur branded EV — apne hi gaon mein sammaan ke saath kaam.",
+    ben_p3_t: "Apne gaon mein posting",
+    ben_p3_d: "Local-first posting policy. Sheher migration ki zaroorat nahi — parivaar ke paas rehkar kamaai.",
+    ben_p4_t: "Free residential training",
+    ben_p4_d: "Selection ke baad training — hostel aur khana included, apni jeb se kuch nahi.",
+    ben_p5_t: "Performance bonus",
+    ben_p5_d: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 (2 saal) · Gram Shakti Champion ₹25,000/saal.",
+    ben_p6_t: "Saaf promotion ladder",
+    ben_p6_d: "Har department mein entry se leadership tak ka defined raasta — andaaza nahi, likha hua system.",
+
+    ben_growth_title: "Kahan se kahan tak — apna department chuno",
+    ben_growth_sub: "Yahi wo ladder hai jo aapke saamne khulta hai. Har rung ek real position hai, apne page ke saath.",
+    ben_growth_entry: "Yahan se shuru",
+    ben_growth_top: "Yahan tak",
+    ben_growth_multiplier: "guna badhotri",
+    ben_growth_rungs: "promotion levels",
+
+    ben_perks_title: "Salary ke alawa bhi",
+    ben_perks_sub: "Officer package mein ye sab shaamil hai.",
+
+    ben_who_title: "Ye kiske liye hai?",
+    ben_who_sub: "Agar in mein se ek bhi aap ho — ye exam aapke liye hai.",
+    ben_who_1: "12th ya graduate, gaon ya taluka mein rehne wale",
+    ben_who_2: "Job ke liye sheher jaane ka mann nahi",
+    ben_who_3: "Kheti-kisani samajhte ho ya seekhna chahte ho",
+    ben_who_4: "Sarkari-style officer role aur pakki salary chahiye",
+
+    ben_final_title: "Agla officer aap ho sakte hain.",
+    ben_final_sub: "Form bharne mein 10 minute lagte hain. Apna role chuno aur shuruaat karo.",
+
+    // ---------------- Standalone content pages ----------------
+    page_process_title_pre: "Form se joining tak —",
+    page_process_title_accent: "poora process",
+    page_process_title_post: "ek jagah.",
+    page_process_sub: "Registration, exam, interview aur training — har step kya hai, kab hai aur kaise clear hota hai.",
+    page_elig_title_pre: "Kaun apply kar sakta hai —",
+    page_elig_title_accent: "eligibility",
+    page_elig_title_post: "poori tarah saaf.",
+    page_elig_sub: "General rules neeche hain, aur uske baad har position ki apni eligibility alag se di gayi hai.",
+    page_elig_roles_title: "Har Position Ki Eligibility",
+    page_elig_roles_sub: "Apna role dhoondo aur uski exact requirement dekho.",
+    page_prep_title_pre: "Tayyari kaise karein —",
+    page_prep_title_accent: "study material",
+    page_prep_title_post: "aur training.",
+    page_prep_sub: "Free syllabus, mock tests aur selection ke baad milne wali training — sab kuch yahan.",
+    page_faq_title_pre: "Aapke sawaal,",
+    page_faq_title_accent: "seedhe jawaab",
+    page_faq_title_post: "— bina ghumaaye.",
+    page_faq_sub: "Jo sabse zyada poocha jaata hai. Aur bhi sawaal ho to WhatsApp par poochein.",
+
+
+
     // ---------------- Recruitment Stats ----------------
     stat_total_positions: "Total Positions",
     stat_total_positions_sub: "6 departments mein",
@@ -111,7 +239,7 @@ export const I18N = {
       { title: "Field Tablet/Device", desc: "Kaam ko banaye smart, **hamare field devices** ke saath." },
       { title: "Residential Training", desc: "Hostel + khana **included** rahega training dauran." },
       { title: "Bonuses", desc: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 after 2 saal · \"Gram Shakti Champion\" ₹25,000/saal." },
-      { title: "Career Growth", desc: "VLE → Senior VLE → TLO → DLO." },
+      { title: "Career Growth", desc: "Har department mein **entry se leadership tak** defined promotion ladder — jaise VLE → VLM → TEO → Division Level Officer → Divisional Director." },
       { title: "Anti-corruption Support", desc: "Grievance support + transparent system." },
     ],
     perks_prev: "Pichle cards",
@@ -225,7 +353,7 @@ export const I18N = {
     int_th_weightage: "Weightage",
     int_th_interview: "Interview",
     int_samples_title: "Sample interview prashn",
-    int_qs_hi: [
+    int_qs: [
       "\"Achhi fasal ke baad bhi kisaan membership fee na de to kaise samjhaoge?\"",
       "\"Soil sampling ka process batao.\"",
       "\"Pehle 30 din ka plan?\"",
@@ -267,7 +395,7 @@ export const I18N = {
     elig_sub: "Kaun apply kar sakta hai aur kab.",
     elig_gs_t: "VLE / VLM (Gram Sevak Pariksha)",
     elig_gs_d: "Minimum 12th pass / Graduate preferred (confirm); Maharashtra domicile; age 18–35 (TBD); agri background a plus.",
-    elig_ka_t: "TLO / DLO (Krishi Adhikari Pariksha)",
+    elig_ka_t: "TEO / Division Level Officer / Divisional Director (Krishi Adhikari Pariksha)",
     elig_ka_d: "Graduate (agri/management preferred); Maharashtra domicile; age 21–40 (TBD); leadership/management aptitude.",
     elig_res_t: "Reservation & Scholarships",
     elig_res_d: "SC/ST, rural girls, BPL families — fee waiver / reduced fee (auto-applied in form).",
@@ -302,9 +430,12 @@ export const I18N = {
     footer_newsletter_btn: "Subscribe",
     footer_newsletter_thanks: "Dhanyavaad! Updates jaldi aapke inbox mein aayenge.",
     footer_social_title: "Hume Follow Karein",
-  },
+};
 
-  en: {
+/** The full translation key set, derived from the Hindi dictionary. */
+export type Dict = typeof hi;
+
+const en: Dict = {
     nav_roles: "Roles",
     nav_exams: "Exams",
     nav_process: "Process",
@@ -365,6 +496,131 @@ export const I18N = {
     rec_empty_sub: "Try changing your search or filters.",
     rec_view_all: "View All Positions",
 
+    // ---------------- Role pages ----------------
+    nav_home: "Home",
+    roles_page_title_pre: "All",
+    roles_page_title_accent: "21 positions",
+    roles_page_title_post: "— choose your role.",
+    roles_page_sub: "6 departments, from entry level to leadership. See every role's details, exam and salary.",
+    role_track_exam: "Selected through an exam",
+    role_track_direct: "Direct application",
+    role_quick_facts: "At a Glance",
+    role_fact_salary: "Monthly Salary",
+    role_fact_exam: "Selection Exam",
+    role_fact_reporting: "Reporting Officer",
+    role_fact_department: "Department",
+    role_view_exam: "See Exam Pattern",
+    role_apply_cta: "Apply For This Role",
+    role_next_step: "Next Step",
+    role_next_step_sub: "Where this role can take you",
+    role_related_title: "Other Roles In This Department",
+    role_not_found: "Position not found",
+    role_back_to_roles: "See all positions",
+
+    // ---------------- Exam pages ----------------
+    exam_page_eyebrow: "Selection Exam",
+    exam_pattern_title: "Paper Pattern",
+    exam_marks_title: "Syllabus & Weightage",
+    exam_marks_col_section: "Section",
+    exam_marks_col_marks: "Marks",
+    exam_note: "Please Note",
+    exam_roles_title: "Roles This Exam Leads To",
+    exam_roles_sub: "One paper, all these positions — your score decides the level you are offered.",
+    exam_samples_title: "Sample Questions",
+    exam_samples_sub: "To gauge the level of the actual paper — these are for practice only.",
+    exam_answer_label: "Correct answer",
+    exam_apply_cta: "Apply For This Exam",
+    exam_not_found: "Exam not found",
+    exam_back_to_exams: "See all exams",
+    exam_fact_total_marks: "Total Marks",
+    exam_fact_roles: "Roles Covered",
+
+    // ---------------- Department pages ----------------
+    nav_departments: "Departments",
+    depts_page_title_pre: "6 departments —",
+    depts_page_title_accent: "pick your path",
+    depts_page_title_post: "into the ecosystem.",
+    depts_page_sub: "Each department has its own work, its own ladder and its own growth. Step inside to see the full career path.",
+    dept_explore: "Explore This Department",
+    dept_ladder_title: "Career Ladder",
+    dept_ladder_sub: "Entry level to leadership — salary and responsibility rise with every rung.",
+    dept_exams_title: "Exams In This Department",
+    dept_fact_positions: "Positions",
+    dept_fact_salary_range: "Salary Range",
+    dept_fact_entry: "Entry Role",
+    dept_fact_top: "Top Role",
+    dept_not_found: "Department not found",
+    dept_back_to_depts: "See all departments",
+    dept_positions_title: "Roles In This Department",
+    dept_apply_entry: "Start With The Entry Role",
+
+    // ---------------- Benefits page ----------------
+    nav_benefits: "Benefits",
+    ben_eyebrow: "YOU CRACKED THE EXAM — WHAT NEXT?",
+    ben_title_pre: "One exam, and",
+    ben_title_accent: "your life",
+    ben_title_post: "is set.",
+    ben_sub: "The Kisan Mitra Bharti Pariksha is not just a job — it is a fixed salary, an officer’s identity, a posting in your own village and a clear path up to leadership. Here is exactly what you get.",
+    ben_cta: "Fill The Form Now",
+    ben_cta_sub: "Registration is free — the exam fee applies only when you finalise the form.",
+
+    ben_pillars_title: "What you get after selection",
+    ben_pillars_sub: "Every point below comes from the official recruitment terms — no hidden conditions.",
+    ben_p1_t: "A fixed monthly salary",
+    ben_p1_d: "A fixed salary from the entry level itself — not dependent on the crop, the weather or the mandi.",
+    ben_p2_t: "An officer’s identity",
+    ben_p2_d: "Official uniform, photo ID card and a branded EV — work with respect in your own village.",
+    ben_p3_t: "Posting in your own village",
+    ben_p3_d: "Local-first posting policy. No need to migrate to a city — earn while staying with your family.",
+    ben_p4_t: "Free residential training",
+    ben_p4_d: "Training after selection — hostel and meals included, nothing out of your own pocket.",
+    ben_p5_t: "Performance bonuses",
+    ben_p5_d: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 (2 years) · Gram Shakti Champion ₹25,000/year.",
+    ben_p6_t: "A clear promotion ladder",
+    ben_p6_d: "A defined path from entry to leadership in every department — not guesswork, a written system.",
+
+    ben_growth_title: "From where to where — pick your department",
+    ben_growth_sub: "This is the ladder that opens up in front of you. Every rung is a real position with its own page.",
+    ben_growth_entry: "Start here",
+    ben_growth_top: "Reach here",
+    ben_growth_multiplier: "times higher",
+    ben_growth_rungs: "promotion levels",
+
+    ben_perks_title: "Beyond the salary",
+    ben_perks_sub: "All of this is part of the officer package.",
+
+    ben_who_title: "Who is this for?",
+    ben_who_sub: "If even one of these is you — this exam is for you.",
+    ben_who_1: "12th pass or a graduate, living in a village or taluka",
+    ben_who_2: "You do not want to move to a city for work",
+    ben_who_3: "You understand farming, or want to learn it",
+    ben_who_4: "You want a government-style officer role and a steady salary",
+
+    ben_final_title: "The next officer could be you.",
+    ben_final_sub: "The form takes 10 minutes. Pick your role and get started.",
+
+    // ---------------- Standalone content pages ----------------
+    page_process_title_pre: "From form to joining —",
+    page_process_title_accent: "the whole process",
+    page_process_title_post: "in one place.",
+    page_process_sub: "Registration, exam, interview and training — what each step is, when it happens and how you clear it.",
+    page_elig_title_pre: "Who can apply —",
+    page_elig_title_accent: "eligibility",
+    page_elig_title_post: "spelled out.",
+    page_elig_sub: "The general rules are below, followed by the specific eligibility for every single position.",
+    page_elig_roles_title: "Eligibility For Each Position",
+    page_elig_roles_sub: "Find your role and check its exact requirement.",
+    page_prep_title_pre: "How to prepare —",
+    page_prep_title_accent: "study material",
+    page_prep_title_post: "and training.",
+    page_prep_sub: "Free syllabus, mock tests and the training you get after selection — all of it here.",
+    page_faq_title_pre: "Your questions,",
+    page_faq_title_accent: "straight answers",
+    page_faq_title_post: "— no run-around.",
+    page_faq_sub: "The ones we get asked most. Anything else, ask us on WhatsApp.",
+
+
+
     // ---------------- Recruitment Stats ----------------
     stat_total_positions: "Total Positions",
     stat_total_positions_sub: "Across 6 departments",
@@ -412,7 +668,7 @@ export const I18N = {
       { title: "Field Tablet/Device", desc: "Smart field device to power **your everyday work**." },
       { title: "Residential Training", desc: "Hostel and meals **included** during training." },
       { title: "Bonuses", desc: "Attendance ₹2,000/quarter · enrollment ₹500 per 10 members · retention ₹10,000 after 2 years · \"Gram Shakti Champion\" ₹25,000/year." },
-      { title: "Career Growth", desc: "VLE → Senior VLE → TLO → DLO." },
+      { title: "Career Growth", desc: "A defined promotion ladder **from entry to leadership** in every department — for example VLE → VLM → TEO → Division Level Officer → Divisional Director." },
       { title: "Anti-corruption Support", desc: "Grievance support and a transparent system." },
     ],
     perks_prev: "Previous cards",
@@ -526,7 +782,7 @@ export const I18N = {
     int_th_weightage: "Weightage",
     int_th_interview: "Interview",
     int_samples_title: "Sample interview questions",
-    int_qs_en: [
+    int_qs: [
       "\"If a farmer refuses to pay the membership fee even after a good harvest, how would you convince them?\"",
       "\"Explain the soil sampling process.\"",
       "\"What is your first 30-day plan?\"",
@@ -568,7 +824,7 @@ export const I18N = {
     elig_sub: "Who can apply and when.",
     elig_gs_t: "VLE / VLM (Gram Sevak Pariksha)",
     elig_gs_d: "Minimum 12th pass / Graduate preferred (confirm); Maharashtra domicile; age 18–35 (TBD); agri background a plus.",
-    elig_ka_t: "TLO / DLO (Krishi Adhikari Pariksha)",
+    elig_ka_t: "TEO / Division Level Officer / Divisional Director (Krishi Adhikari Pariksha)",
     elig_ka_d: "Graduate (agri/management preferred); Maharashtra domicile; age 21–40 (TBD); leadership/management aptitude.",
     elig_res_t: "Reservation & Scholarships",
     elig_res_d: "SC/ST, rural girls, BPL families — fee waiver / reduced fee (auto-applied in form).",
@@ -603,5 +859,6 @@ export const I18N = {
     footer_newsletter_btn: "Subscribe",
     footer_newsletter_thanks: "Thank you! Updates will reach your inbox soon.",
     footer_social_title: "Follow Us",
-  }
 };
+
+export const I18N = { hi, en };

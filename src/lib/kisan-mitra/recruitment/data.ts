@@ -878,3 +878,36 @@ export function getDepartmentVerticals(): { department: Department; positions: P
     positions: getPositionsByDepartment(department.id),
   }));
 }
+
+/** Other roles in the same department, for the "related roles" rail. */
+export function getSiblingPositions(positionId: string): Position[] {
+  const position = getPosition(positionId);
+  if (!position) return [];
+  return getPositionsByDepartment(position.departmentId).filter((p) => p.id !== positionId);
+}
+
+/** The role one rung up the same department ladder, if there is one. */
+export function getNextPosition(positionId: string): Position | undefined {
+  const position = getPosition(positionId);
+  if (!position) return undefined;
+  return getPositionsByDepartment(position.departmentId).find(
+    (p) => p.seniorityRank === position.seniorityRank + 1
+  );
+}
+
+/** Every role that is recruited through a given exam, junior rung first. */
+export function getPositionsByExam(examId: string): Position[] {
+  return POSITIONS.filter((p) => p.examId === examId).sort(
+    (a, b) => a.seniorityRank - b.seniorityRank
+  );
+}
+
+/** Every position id — feeds generateStaticParams for /roles/[slug]. */
+export function getAllPositionIds(): string[] {
+  return POSITIONS.map((p) => p.id);
+}
+
+/** Every department id — feeds generateStaticParams for /departments/[slug]. */
+export function getAllDepartmentIds(): string[] {
+  return DEPARTMENTS.map((d) => d.id);
+}
