@@ -10,6 +10,8 @@ export interface Department {
   id: string;
   name_hi: string;
   name_en: string;
+  description_hi: string;
+  description_en: string;
   icon: string; // key into ICON map
   accent: string;
 }
@@ -40,6 +42,13 @@ export interface Position {
   careerPath_hi: string[];
   careerPath_en: string[];
 
+  uniform_hi: string;
+  uniform_en: string;
+
+  /** Concrete monthly/recurring targets called out in the official JD, e.g. "100 farmers/month". Optional — not every role has one. */
+  monthlyTargets_hi?: string[];
+  monthlyTargets_en?: string[];
+
   /** Orders each department's vertical ladder — lower is more junior. */
   seniorityRank: number;
 
@@ -47,7 +56,17 @@ export interface Position {
 
   applicationTrack: ApplicationTrack;
   /** Only set when applicationTrack === 'exam'. Maps to EXAMS in ../data. */
-  examId?: "gram-sevak" | "krishi-adhikari";
+  examId?:
+    | "gram-sevak"
+    | "krishi-adhikari"
+    | "vipnan"
+    | "vyavsaya-vikas"
+    | "vyapar"
+    | "vyapar-nideshak"
+    | "prakriya"
+    | "prakriya-prabandhak"
+    | "samuday-vikas"
+    | "netritva";
 }
 
 export interface RecruitmentStats {

@@ -4,30 +4,31 @@ import { useMemo, useState } from "react";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { ICON } from "@/lib/kisan-mitra/icons";
 import { getPositionsByDepartment, searchPositions, filterBySalaryBand } from "@/lib/kisan-mitra/recruitment/data";
-import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
-import { applyToPosition } from "@/lib/kisan-mitra/apply";
+import { routes } from "@/lib/kisan-mitra/routes";
+import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 import { DepartmentTabs } from "./DepartmentTabs";
 import { SearchBar } from "./SearchBar";
 import { SalaryRangeFilter } from "./SalaryRangeFilter";
 import { PositionCard } from "./PositionCard";
-import { PositionDetailModal } from "./PositionDetailModal";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 const PAGE_SIZE = 6;
 
 interface RecruitmentExplorerProps {
   lang: Lang;
+  /** /roles lists everything; the home page teases a few and links out. */
+  showAll?: boolean;
+  /** Home uses the section heading; /roles supplies its own page heading. */
+  heading?: boolean;
 }
 
-export function RecruitmentExplorer({ lang }: RecruitmentExplorerProps) {
+export function RecruitmentExplorer({ lang, showAll = false, heading = true }: RecruitmentExplorerProps) {
   const t = I18N[lang];
   const { ref: headRef, className: headClass } = useReveal<HTMLDivElement>();
   const { ref: toolsRef, className: toolsClass } = useReveal<HTMLDivElement>();
   const [activeDept, setActiveDept] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [bandId, setBandId] = useState("all");
-  const [selected, setSelected] = useState<Position | null>(null);
-  const [showAll, setShowAll] = useState(false);
 
   const positions = useMemo(() => {
     const byDept = getPositionsByDepartment(activeDept);
@@ -35,38 +36,24 @@ export function RecruitmentExplorer({ lang }: RecruitmentExplorerProps) {
     return filterBySalaryBand(bySearch, bandId);
   }, [activeDept, query, bandId, lang]);
 
-  // Collapse back to the first page whenever the filter criteria change, instead of
-  // carrying "showAll" over to a completely different result set. This adjusts state
-  // during render (React's documented pattern for this), not in an effect.
-  const filterKey = `${activeDept}|${query}|${bandId}`;
-  const [prevFilterKey, setPrevFilterKey] = useState(filterKey);
-  if (filterKey !== prevFilterKey) {
-    setPrevFilterKey(filterKey);
-    setShowAll(false);
-  }
-
   const visiblePositions = showAll ? positions : positions.slice(0, PAGE_SIZE);
-
-  const goToApplyForm = () => {
-    document.getElementById("apply")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleApply = (position: Position) => {
-    applyToPosition(position.id);
-    goToApplyForm();
-  };
 
   return (
     <section id="roles" className="bg-paper">
       <div className="container">
-        <div className={`section-head ${headClass}`} ref={headRef}>
-          <span className="eyebrow">
-            <span dangerouslySetInnerHTML={{ __html: ICON.briefcase }} />
-            {t.rec_explorer_eyebrow}
-          </span>
-          <h2 className="h2">{t.rec_explorer_title}</h2>
-          <p>{t.rec_explorer_sub}</p>
-        </div>
+        {heading && (
+          <div className={`section-head ${headClass}`} ref={headRef}>
+            <span className="eyebrow">
+              <span dangerouslySetInnerHTML={{ __html: ICON.briefcase }} />
+              {t.rec_explorer_eyebrow}
+            </span>
+            <h2 className="h2">
+              {t.rec_explorer_title_pre} <span className="accent">{t.rec_explorer_title_accent}</span>{" "}
+              {t.rec_explorer_title_post}
+            </h2>
+            <p>{t.rec_explorer_sub}</p>
+          </div>
+        )}
 
         <div className={`rec-tools ${toolsClass}`} ref={toolsRef}>
           <DepartmentTabs lang={lang} activeId={activeDept} onChange={setActiveDept} />
@@ -80,20 +67,14 @@ export function RecruitmentExplorer({ lang }: RecruitmentExplorerProps) {
           <>
             <div className="positions-grid">
               {visiblePositions.map((position) => (
-                <PositionCard
-                  key={position.id}
-                  position={position}
-                  lang={lang}
-                  onViewDetails={setSelected}
-                  onApply={handleApply}
-                />
+                <PositionCard key={position.id} position={position} lang={lang} />
               ))}
             </div>
             {!showAll && positions.length > PAGE_SIZE && (
               <div className="rec-view-all">
-                <button type="button" className="btn btn-outline" onClick={() => setShowAll(true)}>
+                <a href={routes.roles()} className="btn btn-outline">
                   {t.rec_view_all} ({positions.length})
-                </button>
+                </a>
               </div>
             )}
           </>
@@ -104,8 +85,6 @@ export function RecruitmentExplorer({ lang }: RecruitmentExplorerProps) {
           </div>
         )}
       </div>
-
-      <PositionDetailModal position={selected} lang={lang} onClose={() => setSelected(null)} onApply={handleApply} />
     </section>
   );
 }

@@ -1,5 +1,5 @@
-import { KisanMitraShell } from "@/components/kisan-mitra/KisanMitraShell";
+import { HomeShell } from "@/app/home/HomeShell";
 
 export default function Home() {
-  return <KisanMitraShell />;
+  return <HomeShell />;
 }

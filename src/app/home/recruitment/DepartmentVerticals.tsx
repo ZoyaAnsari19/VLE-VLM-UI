@@ -5,7 +5,7 @@ import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartmentVerticals } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
-import { useReveal } from "./useReveal";
+import { useReveal } from "@/components/useReveal";
 
 interface DepartmentVerticalsProps {
   lang: Lang;
@@ -121,33 +121,33 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
           {cards.map(({ department, all, matches }) => {
             const list = q ? matches : all;
             const isOpen = expanded.has(department.id) || !!q || activeDept === department.id;
-            const head = all[0];
+            const description = lang === "hi" ? department.description_hi : department.description_en;
 
             return (
-              <div key={department.id} className="dv-card" style={{ ["--v-accent" as string]: department.accent }}>
-                <button type="button" className="dv-card-head" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
-                  <span className="dv-badge" style={{ background: department.accent }}>
-                    <span dangerouslySetInnerHTML={{ __html: ICON[department.icon as keyof typeof ICON] }} />
-                  </span>
-                  <span className="dv-card-title" style={{ color: department.accent }}>
-                    {lang === "hi" ? department.name_hi : department.name_en}
-                  </span>
-                  <span className="dv-count">
-                    {all.length} {t.dv_roles}
-                  </span>
-                  <span className={`dv-chevron${isOpen ? " open" : ""}`} dangerouslySetInnerHTML={{ __html: ICON.chev }} />
-                </button>
+              <div
+                key={department.id}
+                className="dv-card"
+                style={{
+                  ["--v-accent" as string]: department.accent,
+                  ["--v-tint" as string]: `${department.accent}1A`,
+                  ["--v-badge-bg" as string]: `${department.accent}29`,
+                }}
+              >
+                <span className="dv-card-count">
+                  <span className="dv-card-count-ico" dangerouslySetInnerHTML={{ __html: ICON.users }} />
+                  {all.length} {t.dv_roles}
+                </span>
 
-                {!isOpen && head && (
-                  <div className="dv-timeline dv-timeline-peek">
-                    <div className="dv-timeline-item">
-                      <span className="dv-dot" style={{ background: department.accent }} />
-                      <div className="dv-node tier-head" style={{ background: department.accent }}>
-                        {head.title}
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <button type="button" className="dv-card-head" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
+                  <span className="dv-ico-ring">
+                    <span className="dv-badge" dangerouslySetInnerHTML={{ __html: ICON[department.icon as keyof typeof ICON] }} />
+                  </span>
+                </button>
+                <span className="dv-card-title" style={{ color: department.accent }}>
+                  {lang === "hi" ? department.name_hi : department.name_en}
+                </span>
+                <span className="dv-card-title-underline" />
+                {!isOpen && description && <p className="dv-card-desc">{description}</p>}
 
                 {isOpen && (
                   <div className="dv-timeline">
@@ -170,6 +170,11 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
                     })}
                   </div>
                 )}
+
+                <button type="button" className="dv-view-roles-btn" onClick={() => toggle(department.id)} aria-expanded={isOpen}>
+                  {t.dv_view_roles}
+                  <span className={`dv-chevron${isOpen ? " open" : ""}`} dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
+                </button>
               </div>
             );
           })}
