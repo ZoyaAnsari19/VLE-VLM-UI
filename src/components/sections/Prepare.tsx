@@ -4,6 +4,7 @@ import { PREP_BENEFITS } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Prepare() {
   const { t, lang } = useLang();
@@ -67,7 +68,7 @@ export function Prepare() {
               {PREP_BENEFITS.map((b) => (
                 <span className="prep-benefit" key={b.icon}>
                   <Icon name={b.icon} className="prep-benefit-ico" />
-                  {lang === "hi" ? b.label_hi : b.label_en}
+                  {tr(b, "label", lang)}
                 </span>
               ))}
             </div>

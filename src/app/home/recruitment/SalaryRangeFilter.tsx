@@ -3,6 +3,7 @@
 import { SALARY_BANDS } from "@/lib/kisan-mitra/recruitment/data";
 import { I18N } from "@/lib/kisan-mitra/i18n";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface SalaryRangeFilterProps {
   lang: Lang;
@@ -22,7 +23,7 @@ export function SalaryRangeFilter({ lang, activeBandId, onChange }: SalaryRangeF
           aria-pressed={activeBandId === band.id}
           onClick={() => onChange(band.id)}
         >
-          {lang === "hi" ? band.label_hi : band.label_en}
+          {tr(band, "label", lang)}
         </button>
       ))}
     </div>

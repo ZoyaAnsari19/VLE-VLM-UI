@@ -5,6 +5,7 @@ import { useLang } from "@/components/LangProvider";
 import { useCountUp, useInView } from "@/components/useCountUp";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /**
  * One hero stat. Stats with a `display` string (e.g. a salary range) are shown
@@ -22,8 +23,8 @@ function HeroStat({ stat }: { stat: (typeof STATS)[number] }) {
       <Icon name={stat.icon} className="hero-stat-ico" />
       <div className="hero-stat-body">
         <div className="num">{stat.display || counted.toLocaleString("en-IN")}</div>
-        <div className="lbl">{lang === "hi" ? stat.label_hi : stat.label_en}</div>
-        <div className="sublbl">{lang === "hi" ? stat.sublabel_hi : stat.sublabel_en}</div>
+        <div className="lbl">{tr(stat, "label", lang)}</div>
+        <div className="sublbl">{tr(stat, "sublabel", lang)}</div>
       </div>
     </div>
   );
@@ -63,8 +64,8 @@ export function Hero() {
             {HERO_VIKAS.map((v) => (
               <div className="hero-vikas-item" key={v.icon}>
                 <Icon name={v.icon} className="hero-vikas-ico" />
-                <div className="hero-vikas-title">{lang === "hi" ? v.title_hi : v.title_en}</div>
-                <div className="hero-vikas-sub">{lang === "hi" ? v.sub_hi : v.sub_en}</div>
+                <div className="hero-vikas-title">{tr(v, "title", lang)}</div>
+                <div className="hero-vikas-sub">{tr(v, "sub", lang)}</div>
               </div>
             ))}
           </Reveal>

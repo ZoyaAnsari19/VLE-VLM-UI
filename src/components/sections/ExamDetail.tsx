@@ -1,11 +1,12 @@
 "use client";
 
-import { getExam, type Exam } from "@/lib/kisan-mitra/data";
+import { getExam, type Exam, type ExamSample } from "@/lib/kisan-mitra/data";
 import { getDepartment, getPositionsByExam } from "@/lib/kisan-mitra/recruitment/data";
 import { routes } from "@/lib/kisan-mitra/routes";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /**
  * Section strings are authored as "Label — marks" (see EXAMS in data.ts), which
@@ -47,14 +48,13 @@ export function ExamDetail({ examId }: { examId: string }) {
     );
   }
 
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
   const positions = getPositionsByExam(exam.id);
   // The exam takes its colour from the department it recruits for, so an exam
   // page reads as part of the same ladder as the role pages it links to.
   const accent = positions[0]?.accent ?? "var(--green-forest)";
   const department = positions[0] ? getDepartment(positions[0].departmentId) : undefined;
 
-  const sections = exam.sections.map(splitSection);
+  const sections = tr(exam, "sections", lang).map(splitSection);
   const maxMarks = Math.max(...sections.map((s) => s.marks ?? 0), 1);
   // The section numbers are question counts for some papers and marks for
   // others, so they don't reliably sum to the paper total. The denominator of
@@ -70,7 +70,7 @@ export function ExamDetail({ examId }: { examId: string }) {
             <Icon name="chevronRight" />
             <a href={routes.exams()}>{t.nav_exams}</a>
             <Icon name="chevronRight" />
-            <span aria-current="page">{pick(exam.name_hi, exam.name_en)}</span>
+            <span aria-current="page">{tr(exam, "name", lang)}</span>
           </nav>
 
           <div className="role-hero-grid">
@@ -86,7 +86,7 @@ export function ExamDetail({ examId }: { examId: string }) {
                     style={{ background: `${accent}1F`, color: accent }}
                   >
                     <Icon name={department.icon} />
-                    {pick(department.name_hi, department.name_en)}
+                    {tr(department, "name", lang)}
                   </a>
                 )}
                 <span className="role-track-chip">
@@ -94,9 +94,9 @@ export function ExamDetail({ examId }: { examId: string }) {
                 </span>
               </div>
 
-              <h1 className="h1 role-title">{pick(exam.name_hi, exam.name_en)}</h1>
+              <h1 className="h1 role-title">{tr(exam, "name", lang)}</h1>
               <p className="role-summary">
-                {t.exam_for}: {pick(exam.for_hi, exam.for_en)}
+                {t.exam_for}: {tr(exam, "for", lang)}
               </p>
 
               <div className="role-hero-ctas">
@@ -117,7 +117,7 @@ export function ExamDetail({ examId }: { examId: string }) {
             <aside className="role-facts card">
               <h2 className="h3 role-facts-title">{t.role_quick_facts}</h2>
               <Fact icon="clock" label={t.exam_duration}>
-                {pick(exam.duration_hi, exam.duration_en)}
+                {tr(exam, "duration", lang)}
               </Fact>
               {totalMarks && (
                 <Fact icon="fileText" label={t.exam_fact_total_marks}>
@@ -144,15 +144,15 @@ export function ExamDetail({ examId }: { examId: string }) {
             <div className="exam-rows">
               <div className="exam-row">
                 <span className="k">{t.exam_duration}</span>
-                <span className="v">{pick(exam.duration_hi, exam.duration_en)}</span>
+                <span className="v">{tr(exam, "duration", lang)}</span>
               </div>
               <div className="exam-row">
                 <span className="k">{t.exam_questions}</span>
-                <span className="v">{pick(exam.questions_hi, exam.questions_en)}</span>
+                <span className="v">{tr(exam, "questions", lang)}</span>
               </div>
               <div className="exam-row">
                 <span className="k">{t.exam_negative}</span>
-                <span className="v">{pick(exam.negative_hi, exam.negative_en)}</span>
+                <span className="v">{tr(exam, "negative", lang)}</span>
               </div>
               <div className="exam-row">
                 <span className="k">{t.exam_qualifying}</span>
@@ -164,7 +164,7 @@ export function ExamDetail({ examId }: { examId: string }) {
               </div>
             </div>
             <p className="exam-note">
-              <Icon name="info" /> {pick(exam.note_hi, exam.note_en)}
+              <Icon name="info" /> {tr(exam, "note", lang)}
             </p>
           </Reveal>
 
@@ -208,10 +208,10 @@ export function ExamDetail({ examId }: { examId: string }) {
                     <span className="role-pill" style={{ background: p.accent }}>
                       {p.code}
                     </span>
-                    <h3 className="role-title">{pick(p.title_hi, p.title_en)}</h3>
-                    <p>{pick(p.summary_hi, p.summary_en)}</p>
+                    <h3 className="role-title">{tr(p, "title", lang)}</h3>
+                    <p>{tr(p, "summary", lang)}</p>
                     <span className="role-related-salary" style={{ color: p.accent }}>
-                      {p.salaryDisplay}/mo <Icon name="arrowRight" />
+                      {p.salaryDisplay}{t.unit_per_month} <Icon name="arrowRight" />
                     </span>
                   </a>
                 </Reveal>
@@ -228,7 +228,7 @@ export function ExamDetail({ examId }: { examId: string }) {
             <p>{t.exam_samples_sub}</p>
           </Reveal>
           <div className="exam-samples-grid">
-            {exam.samples.map((q, i) => (
+            {tr(exam, "samples", lang).map((q: ExamSample, i: number) => (
               <Reveal as="article" className="card sample-q-card" key={q.q}>
                 <div className="qt">
                   <span className="sample-q-num" style={{ background: accent }}>

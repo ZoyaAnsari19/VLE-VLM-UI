@@ -49,7 +49,7 @@ export function initApplySection(
   applyEl = container;
   withHeading = showHeading;
   const saved = localStorage.getItem('km_lang');
-  lang = saved === 'en' || saved === 'hi' ? saved : 'hi';
+  lang = saved !== null && saved in I18N ? (saved as Lang) : 'hi';
   render();
   // Deep link from a role card / role page: start on step 1 with the role chosen.
   if (preselectPositionId) applyToPosition(preselectPositionId);

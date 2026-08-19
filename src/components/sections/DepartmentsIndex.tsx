@@ -5,10 +5,10 @@ import { routes } from "@/lib/kisan-mitra/routes";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function DepartmentsIndex() {
   const { t, lang } = useLang();
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
 
   return (
     <>
@@ -50,8 +50,8 @@ export function DepartmentsIndex() {
                     <span className="dept-card-ico" style={{ background: d.accent }}>
                       <Icon name={d.icon} />
                     </span>
-                    <h2 className="h3 dept-card-title">{pick(d.name_hi, d.name_en)}</h2>
-                    <p className="dept-card-desc">{pick(d.description_hi, d.description_en)}</p>
+                    <h2 className="h3 dept-card-title">{tr(d, "name", lang)}</h2>
+                    <p className="dept-card-desc">{tr(d, "description", lang)}</p>
                     <div className="dept-card-meta">
                       <div>
                         <span className="k">{t.dept_fact_positions}</span>

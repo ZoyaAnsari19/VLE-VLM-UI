@@ -6,6 +6,7 @@ import { getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import { routes } from "@/lib/kisan-mitra/routes";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
 import { useReveal } from "@/components/useReveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface PositionCardProps {
   position: Position;
@@ -16,9 +17,9 @@ export function PositionCard({ position, lang }: PositionCardProps) {
   const t = I18N[lang];
   const { ref, className } = useReveal<HTMLElement>();
   const dept = getDepartment(position.departmentId);
-  const title = lang === "hi" ? position.title_hi : position.title_en;
-  const summary = lang === "hi" ? position.summary_hi : position.summary_en;
-  const deptName = dept ? (lang === "hi" ? dept.name_hi : dept.name_en) : "";
+  const title = tr(position, "title", lang);
+  const summary = tr(position, "summary", lang);
+  const deptName = dept ? (tr(dept, "name", lang)) : "";
 
   return (
     <article ref={ref} className={`card position-card ${className}`}>
@@ -35,7 +36,7 @@ export function PositionCard({ position, lang }: PositionCardProps) {
         <p className="role-card-summary">{summary}</p>
         <div className="position-card-salary">
           <span className="k">{t.label_salary}</span>
-          <span className="v">{position.salaryDisplay}/mo</span>
+          <span className="v">{position.salaryDisplay}{t.unit_per_month}</span>
         </div>
         <div className="position-card-actions">
           {/* A real link, not a modal: each role has its own indexable, shareable URL. */}

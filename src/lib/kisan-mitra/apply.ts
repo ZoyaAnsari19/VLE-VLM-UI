@@ -10,6 +10,7 @@ import { ICON } from './icons';
 import { DIVISIONS, EXAMS, type ExamId } from './data';
 import { POSITIONS, DEPARTMENTS, getPosition } from './recruitment/data';
 import type { Lang } from './recruitment/types';
+import { tr } from './localized';
 
 const esc = (s: unknown) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -152,6 +153,34 @@ const STR = {
     select: 'Select', upload_hint: 'Click to upload',
     docs: { photo: 'Passport Photo', signature: 'Signature', aadhaarCard: 'Aadhaar Card', education: 'Education Certificate', category_cert: 'Category Certificate (if applicable)', domicile: 'Domicile Certificate (if available)', resume: 'Resume / CV', idProof: 'ID Proof' },
     review_groups: { position: 'Position', contact: 'Contact & KYC', personal: 'Personal & Address', edu: 'Education', pref: 'Posting Preference' }
+  },
+  mr: {
+    step: 'टप्पा', of: '/', back: 'मागे', next: 'पुढे', required: '(आवश्यक)',
+    s0_title: 'पद निवडा', s0_sub: 'आपले इच्छित पद निवडा.', s0_label: 'पद',
+    s1_title: 'मोबाइल पडताळणी', s1_sub: 'आपला मोबाइल क्रमांक पडताळा.',
+    s1_mobile: 'मोबाइल क्रमांक', s1_send: 'OTP पाठवा', s1_otp: 'OTP (6 अंकी)', s1_verify: 'पडताळा', s1_resend: 'पुन्हा पाठवा', s1_verified: 'मोबाइल पडताळला',
+    s2_title: 'KYC (आधार आधारित)', s2_sub: 'ओळख पडताळणी — शुल्क भरण्यापूर्वी.',
+    s2_aadhaar: 'आधार क्रमांक', s2_consent: 'माझी आधार माहिती पडताळणीसाठी वापरण्यास मी संमती देतो/देते.',
+    s2_name: 'पूर्ण नाव', s2_dob: 'जन्मतारीख', s2_gender: 'लिंग', s2_verify: 'आधार पडताळा', s2_verified: 'KYC पडताळले',
+    s3_title: 'वैयक्तिक आणि पत्ता माहिती', s3_sub: 'आपली माहिती भरा.',
+    s3_parent: 'वडील / आई यांचे नाव', s3_cat: 'प्रवर्ग', s3_pwd: 'दिव्यांग आहात का?', s3_email: 'ईमेल (ऐच्छिक)',
+    s3_state: 'राज्य', s3_div: 'विभाग', s3_dist: 'जिल्हा', s3_teh: 'तालुका', s3_vil: 'गाव', s3_pin: 'पिन कोड', s3_addr: 'संपूर्ण पत्ता',
+    s4_title: 'शैक्षणिक पात्रता', s4_sub: 'आपल्या शिक्षणाची माहिती.',
+    s4_qual: 'सर्वोच्च शिक्षण', s4_stream: 'शाखा / विषय', s4_year: 'उत्तीर्ण वर्ष', s4_pct: 'टक्केवारी / CGPA', s4_agri: 'कृषी पार्श्वभूमी आहे का?', s4_exp: 'व्यवस्थापन / कामाचा अनुभव (वर्षे, ऐच्छिक)',
+    s5_title: 'पद आणि नियुक्ती पसंती', s5_sub: 'आपली नियुक्ती पसंती सांगा.',
+    s5_pref: 'पसंतीचा विभाग', s5_willing: 'स्वतःच्या/जवळच्या समूहात सेवा देण्यास तयार आहात का?', s5_note: 'सर्वाधिक गुण मिळवणाऱ्यांना VLM, इतरांना VLE दिले जाते — दोन्ही एकाच परीक्षेतून.',
+    s6_title: 'कागदपत्रे अपलोड', s6_sub: 'आपली कागदपत्रे अपलोड करा (इमेज/PDF).',
+    s7_title: 'घोषणा आणि पुनरावलोकन', s7_sub: 'आपली माहिती तपासा आणि घोषणा करा.',
+    s7_edit: 'बदला', s7_d1: 'सर्व माहिती बरोबर आहे. चुकीच्या माहितीमुळे माझा अर्ज नाकारला जाऊ शकतो.', s7_d2: 'मी खरी माहिती दिल्याची घोषणा करतो/करते.', s7_d3: 'अटी व शर्ती + गोपनीयता (DPDP) संमती — डेटा एन्क्रिप्टेड, निवड न झाल्यास 6 महिन्यांनंतर हटवला जाईल.',
+    s8_title: 'शुल्क भरणा', s8_sub: 'KYC पूर्ण झाले — आता शुल्क भरा.', s8_fee: 'परीक्षा शुल्क', s8_discount: 'शिष्यवृत्ती / सवलत', s8_total: 'भरायचे आहे', s8_pay: 'भरणा करा', s8_trust: 'तुमचे शुल्क एस्क्रो खात्यात सुरक्षितपणे जमा होते.',
+    s9_title: 'अर्ज सादर झाला!', s9_sub: 'तुमचा अर्ज यशस्वीरित्या सादर झाला.', s9_id: 'तुमचा अर्ज क्रमांक', s9_dl: 'अर्जाची PDF डाउनलोड करा', s9_info: 'अद्यतने तुमच्या मोबाइल/WhatsApp वर मिळतील.', s9_info_exam: 'प्रवेशपत्र परीक्षेच्या सुमारे 1 आठवडा आधी दिले जाईल. अद्यतने तुमच्या मोबाइल/WhatsApp वर.', s9_again: 'नवीन अर्ज',
+    err_required: 'हे क्षेत्र आवश्यक आहे', err_mobile: '10 अंकी मोबाइल क्रमांक टाका', err_otp: 'बरोबर 6 अंकी OTP टाका', err_aadhaar: '12 अंकी आधार क्रमांक टाका', err_consent: 'संमती देणे आवश्यक आहे', err_pin: '6 अंकी पिन कोड टाका', err_decl: 'सर्व घोषणा स्वीकारा', err_otp_first: 'आधी OTP पडताळा', err_kyc_first: 'आधी आधार पडताळा', err_pay: 'भरणा पद्धत निवडा', err_position: 'आधी पद निवडा',
+    sending: 'पाठवत आहोत...', verifying: 'पडताळत आहोत...', paying: 'प्रक्रिया सुरू आहे...', submitting: 'सादर करत आहोत...',
+    cat_options: ['खुला', 'ओबीसी', 'अनुसूचित जाती', 'अनुसूचित जमाती', 'ईडब्ल्यूएस'], yesno: ['होय', 'नाही'],
+    gender_opts: ['पुरुष', 'स्त्री', 'इतर'], qual_opts: ['10वी', '12वी', 'पदवीधर', 'पदव्युत्तर'],
+    select: 'निवडा', upload_hint: 'अपलोड करण्यासाठी क्लिक करा',
+    docs: { photo: 'पासपोर्ट फोटो', signature: 'स्वाक्षरी', aadhaarCard: 'आधार कार्ड', education: 'शैक्षणिक प्रमाणपत्र', category_cert: 'प्रवर्ग प्रमाणपत्र (लागू असल्यास)', domicile: 'रहिवासी प्रमाणपत्र (उपलब्ध असल्यास)', resume: 'बायोडेटा / CV', idProof: 'ओळखपत्र' },
+    review_groups: { position: 'पद', contact: 'संपर्क आणि KYC', personal: 'वैयक्तिक आणि पत्ता', edu: 'शिक्षण', pref: 'नियुक्ती पसंती' }
   }
 };
 
@@ -170,7 +199,7 @@ function discountFor() {
 interface FieldOpts {
   required?: boolean;
   type?: string;
-  options?: string[];
+  options?: (string | { value: string; label: string })[];
   placeholder?: string;
   inputmode?: string;
   maxlength?: number;
@@ -186,7 +215,11 @@ function field(id: string, labelKey: string, value: string, opts: FieldOpts = {}
   const req = opts.required ? ` <span class="req">*</span>` : '';
   let input;
   if (opts.type === 'select') {
-    const options = (opts.options || []).map(o => `<option value="${esc(o)}" ${value === o ? 'selected' : ''}>${esc(o)}</option>`).join('');
+    const options = (opts.options || []).map(o => {
+      const v = typeof o === 'string' ? o : o.value;
+      const l = typeof o === 'string' ? o : o.label;
+      return `<option value="${esc(v)}" ${value === v ? 'selected' : ''}>${esc(l)}</option>`;
+    }).join('');
     input = `<select id="f_${id}" data-field="${id}"><option value="">${L.select}</option>${options}</select>`;
   } else if (opts.type === 'textarea') {
     input = `<textarea id="f_${id}" data-field="${id}" placeholder="${esc(opts.placeholder || '')}">${esc(value)}</textarea>`;
@@ -220,8 +253,8 @@ function stepHTML() {
   if (name === 'position') {
     const groups = DEPARTMENTS.map(d => {
       const opts = POSITIONS.filter(p => p.departmentId === d.id).map(p => `
-        <option value="${p.id}" ${formState.positionId === p.id ? 'selected' : ''}>${esc(lang === 'hi' ? p.title_hi : p.title_en)} — ${p.salaryDisplay}</option>`).join('');
-      return `<optgroup label="${esc(lang === 'hi' ? d.name_hi : d.name_en)}">${opts}</optgroup>`;
+        <option value="${p.id}" ${formState.positionId === p.id ? 'selected' : ''}>${esc(tr(p, 'title', lang))} — ${p.salaryDisplay}</option>`).join('');
+      return `<optgroup label="${esc(tr(d, 'name', lang))}">${opts}</optgroup>`;
     }).join('');
     return `<h3 class="h3">${L.s0_title}</h3><p class="step-sub">${L.s0_sub}</p>
       <div class="field" id="field_positionId">
@@ -263,7 +296,7 @@ function stepHTML() {
   }
 
   if (name === 'personal') {
-    const divs = DIVISIONS;
+    const divs = DIVISIONS.map(d => ({ value: d.id, label: tr(d, 'name', lang) }));
     return `<h3 class="h3">${L.s3_title}</h3><p class="step-sub">${L.s3_sub}</p>
       ${field('fullName', 's2_name', formState.fullName, { required: true })}
       <div class="field-row">
@@ -307,7 +340,7 @@ function stepHTML() {
   if (name === 'posting') {
     const isGram = formState.exam === 'gram-sevak';
     return `<h3 class="h3">${L.s5_title}</h3><p class="step-sub">${L.s5_sub}</p>
-      ${field('prefDivision', 's5_pref', formState.prefDivision || formState.division, { type: 'select', options: DIVISIONS, required: true })}
+      ${field('prefDivision', 's5_pref', formState.prefDivision || formState.division, { type: 'select', options: DIVISIONS.map(d => ({ value: d.id, label: tr(d, 'name', lang) })), required: true })}
       ${radioField('willingLocal', 's5_willing', formState.willingLocal, L.yesno)}
       ${isGram ? `<div class="identity-box" style="margin-top:6px">${L.s5_note}</div>` : ''}`;
   }

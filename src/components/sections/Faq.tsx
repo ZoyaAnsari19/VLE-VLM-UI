@@ -6,6 +6,7 @@ import { useLang } from "@/components/LangProvider";
 import { useReveal } from "@/components/useReveal";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 function FaqItem({ question, answer, index }: { question: string; answer: string; index: number }) {
   const { ref: revealRef, className: revealClass } = useReveal<HTMLDivElement>();
@@ -52,8 +53,8 @@ export function Faq() {
             <FaqItem
               key={f.q_en}
               index={i}
-              question={lang === "hi" ? f.q_hi : f.q_en}
-              answer={lang === "hi" ? f.a_hi : f.a_en}
+              question={tr(f, "q", lang)}
+              answer={tr(f, "a", lang)}
             />
           ))}
         </div>

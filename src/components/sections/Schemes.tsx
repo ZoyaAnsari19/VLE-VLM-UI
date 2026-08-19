@@ -4,6 +4,7 @@ import { SCHEMES, SCHEME_TRUST } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Schemes() {
   const { t, lang } = useLang();
@@ -27,11 +28,11 @@ export function Schemes() {
 
         <div className="schemes-grid">
           {SCHEMES.map((s) => (
-            <Reveal as="article" className="card scheme-card" key={s.name}>
+            <Reveal as="article" className="card scheme-card" key={s.name_en}>
               <Icon name="chevronRight" className="scheme-card-chevron" />
               <Icon name={s.icon || "seedling"} as="div" className="ico" />
-              <h4>{s.name}</h4>
-              {s.sub ? <div className="ssub">{s.sub}</div> : null}
+              <h4>{tr(s, "name", lang)}</h4>
+              {s.sub_en ? <div className="ssub">{tr(s, "sub", lang)}</div> : null}
               <div className="scheme-card-divider">
                 <Icon name="leaf" />
               </div>
@@ -40,14 +41,14 @@ export function Schemes() {
                   <Icon name="users" />
                   {t.scheme_benefit}
                 </span>
-                <div className="sval">{lang === "hi" ? s.benefit_hi : s.benefit_en}</div>
+                <div className="sval">{tr(s, "benefit", lang)}</div>
               </div>
               <div className="sline">
                 <span className="lbl">
                   <Icon name="shield" />
                   {t.scheme_role}
                 </span>
-                <div className="sval">{lang === "hi" ? s.role_hi : s.role_en}</div>
+                <div className="sval">{tr(s, "role", lang)}</div>
               </div>
             </Reveal>
           ))}
@@ -58,8 +59,8 @@ export function Schemes() {
             <Reveal className="scheme-trust-item" key={x.icon}>
               <Icon name={x.icon} className="scheme-trust-ico" />
               <div>
-                <div className="scheme-trust-title">{lang === "hi" ? x.title_hi : x.title_en}</div>
-                <div className="scheme-trust-sub">{lang === "hi" ? x.sub_hi : x.sub_en}</div>
+                <div className="scheme-trust-title">{tr(x, "title", lang)}</div>
+                <div className="scheme-trust-sub">{tr(x, "sub", lang)}</div>
               </div>
             </Reveal>
           ))}

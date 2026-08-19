@@ -6,6 +6,7 @@ import { getPosition } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
 import { useReveal } from "@/components/useReveal";
 import { DepartmentVerticals } from "./DepartmentVerticals";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface OrgHierarchyProps {
   lang: Lang;
@@ -13,7 +14,7 @@ interface OrgHierarchyProps {
 
 function titleFor(position: Position | undefined, lang: Lang) {
   if (!position) return "";
-  return lang === "hi" ? position.title_hi : position.title_en;
+  return tr(position, "title", lang);
 }
 
 export function OrgHierarchy({ lang }: OrgHierarchyProps) {

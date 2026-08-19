@@ -6,6 +6,7 @@ import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartmentVerticals } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 import { useReveal } from "@/components/useReveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface DepartmentVerticalsProps {
   lang: Lang;
@@ -60,7 +61,7 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
     .map(({ department, positions }) => {
       // getDepartmentVerticals() returns positions ascending by seniorityRank (junior first);
       // reverse so index 0 is the most senior role — index 0 drives the "head" tier and peek.
-      const titled = [...positions].reverse().map((position) => ({ position, title: lang === "hi" ? position.title_hi : position.title_en }));
+      const titled = [...positions].reverse().map((position) => ({ position, title: tr(position, "title", lang) }));
       const matches = q ? titled.filter((x) => x.title.toLowerCase().includes(q)) : titled;
       return { department, all: titled, matches };
     })
@@ -94,7 +95,7 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
               style={activeDept === department.id ? { background: department.accent, borderColor: department.accent } : undefined}
               onClick={() => setActiveDept(department.id)}
             >
-              {lang === "hi" ? department.name_hi : department.name_en}
+              {tr(department, "name", lang)}
             </button>
           ))}
         </div>
@@ -121,7 +122,7 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
           {cards.map(({ department, all, matches }) => {
             const list = q ? matches : all;
             const isOpen = expanded.has(department.id) || !!q || activeDept === department.id;
-            const description = lang === "hi" ? department.description_hi : department.description_en;
+            const description = tr(department, "description", lang);
 
             return (
               <div
@@ -144,7 +145,7 @@ export function DepartmentVerticals({ lang }: DepartmentVerticalsProps) {
                   </span>
                 </button>
                 <span className="dv-card-title" style={{ color: department.accent }}>
-                  {lang === "hi" ? department.name_hi : department.name_en}
+                  {tr(department, "name", lang)}
                 </span>
                 <span className="dv-card-title-underline" />
                 {!isOpen && description && <p className="dv-card-desc">{description}</p>}

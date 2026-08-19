@@ -11,6 +11,7 @@ import { useLang } from "@/components/LangProvider";
 import { useCarousel } from "@/components/useCarousel";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 function PanelStats({ composition, duration, examWeight, intWeight }: {
   composition: string; duration: string; examWeight: string; intWeight: string;
@@ -19,7 +20,7 @@ function PanelStats({ composition, duration, examWeight, intWeight }: {
   const rows = [
     { icon: "users", k: t.int_th_panel, v: composition },
     { icon: "clock", k: t.int_th_duration, v: duration },
-    { icon: "pieChart", k: t.int_th_weightage, v: `Exam ${examWeight}` },
+    { icon: "pieChart", k: t.int_th_weightage, v: `${t.int_exam_weight} ${examWeight}` },
     { icon: "users", k: t.int_th_interview, v: intWeight },
   ];
   return (
@@ -67,7 +68,7 @@ export function Interview() {
                 {INTERVIEW_MEDIA_BADGES.map((b) => (
                   <span className="int-media-badge" key={b.icon}>
                     <Icon name={b.icon} />
-                    {lang === "hi" ? b.label_hi : b.label_en}
+                    {tr(b, "label", lang)}
                   </span>
                 ))}
               </div>
@@ -80,8 +81,8 @@ export function Interview() {
                   <div className="int-point" key={p.icon}>
                     <Icon name={p.icon} className="int-point-ico" />
                     <div>
-                      <div className="int-point-title">{lang === "hi" ? p.title_hi : p.title_en}</div>
-                      <p className="int-point-desc">{lang === "hi" ? p.desc_hi : p.desc_en}</p>
+                      <div className="int-point-title">{tr(p, "title", lang)}</div>
+                      <p className="int-point-desc">{tr(p, "desc", lang)}</p>
                     </div>
                   </div>
                 ))}
@@ -118,7 +119,7 @@ export function Interview() {
                         <div>
                           <div className="int-tag">
                             <span className="int-pill" style={{ background: `${accent}1F`, color: accent }}>
-                              {lang === "hi" ? p.badge_hi : p.badge_en}
+                              {tr(p, "badge", lang)}
                             </span>
                           </div>
                           <h3 className="h3" style={{ color: accent }}>
@@ -127,8 +128,8 @@ export function Interview() {
                         </div>
                       </div>
                       <PanelStats
-                        composition={lang === "hi" ? p.composition_hi : p.composition_en}
-                        duration={lang === "hi" ? p.duration_hi : p.duration_en}
+                        composition={tr(p, "composition", lang)}
+                        duration={tr(p, "duration", lang)}
                         examWeight={p.examWeight}
                         intWeight={p.intWeight}
                       />

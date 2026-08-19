@@ -2,52 +2,38 @@
 // RECRUITMENT DATA MODEL — types
 // ============================================================
 
-export type Lang = "hi" | "en";
+export type Lang = "hi" | "en" | "mr";
 
 export type ApplicationTrack = "exam" | "direct";
 
-export interface Department {
+/**
+ * A field that exists once per language, e.g. `Loc<"title">` gives
+ * `title_hi` / `title_en` (required) plus `title_mr` (optional).
+ *
+ * Only Hindi and English are required because `tr()` falls back to English, so
+ * a language may be rolled out field by field. Adding a language to `Lang`
+ * therefore needs no change here — the new key is simply allowed everywhere.
+ */
+export type Loc<B extends string, V = string> = Record<`${B}_hi` | `${B}_en`, V> &
+  Partial<Record<`${B}_${Lang}`, V>>;
+
+/** Same, for fields that may be absent on an entity entirely. */
+export type LocOpt<B extends string, V = string> = Partial<Record<`${B}_${Lang}`, V>>;
+
+export type Department = {
   id: string;
-  name_hi: string;
-  name_en: string;
-  description_hi: string;
-  description_en: string;
   icon: string; // key into ICON map
   accent: string;
-}
+} & Loc<"name"> &
+  Loc<"description">;
 
-export interface Position {
+export type Position = {
   id: string;
   code: string;
   departmentId: string;
 
-  title_hi: string;
-  title_en: string;
-
-  summary_hi: string;
-  summary_en: string;
-
   salary: number;
   salaryDisplay: string;
-
-  eligibility_hi: string;
-  eligibility_en: string;
-
-  responsibilities_hi: string[];
-  responsibilities_en: string[];
-
-  reportingOfficer_hi: string;
-  reportingOfficer_en: string;
-
-  careerPath_hi: string[];
-  careerPath_en: string[];
-
-  uniform_hi: string;
-  uniform_en: string;
-
-  /** Concrete monthly/recurring targets called out in the official JD, e.g. "100 farmers/month". Optional — not every role has one. */
-  monthlyTargets_hi?: string[];
-  monthlyTargets_en?: string[];
 
   /** Orders each department's vertical ladder — lower is more junior. */
   seniorityRank: number;
@@ -67,7 +53,15 @@ export interface Position {
     | "prakriya-prabandhak"
     | "samuday-vikas"
     | "netritva";
-}
+} & Loc<"title"> &
+  Loc<"summary"> &
+  Loc<"eligibility"> &
+  Loc<"responsibilities", string[]> &
+  Loc<"reportingOfficer"> &
+  Loc<"careerPath", string[]> &
+  Loc<"uniform"> &
+  /** Concrete monthly/recurring targets from the official JD, e.g. "100 farmers/month". Not every role has one. */
+  LocOpt<"monthlyTargets", string[]>;
 
 export interface RecruitmentStats {
   totalPositions: number;

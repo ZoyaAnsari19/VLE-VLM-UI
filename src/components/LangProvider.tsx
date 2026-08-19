@@ -5,6 +5,9 @@ import { I18N, type Dict } from "@/lib/kisan-mitra/i18n";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 
 const STORAGE_KEY = "km_lang";
+/** Derived from the dictionaries, so a new language needs no change here. */
+const LANGS = Object.keys(I18N) as Lang[];
+const isLang = (v: unknown): v is Lang => typeof v === "string" && (LANGS as string[]).includes(v);
 /**
  * Single sync channel for the language. Both this provider and the (being
  * retired) vanilla engine emit and listen on it, so whichever one the user
@@ -29,7 +32,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === "en" || saved === "hi") {
+    if (isLang(saved)) {
       document.documentElement.lang = saved;
       // eslint-disable-next-line react-hooks/set-state-in-effect -- post-hydration correction, see comment above
       setLangState(saved);
@@ -37,7 +40,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
     const onExternalChange = (e: Event) => {
       const next = (e as CustomEvent<Lang>).detail;
-      if (next === "en" || next === "hi") setLangState(next);
+      if (isLang(next)) setLangState(next);
     };
     window.addEventListener(LANG_EVENT, onExternalChange);
     return () => window.removeEventListener(LANG_EVENT, onExternalChange);

@@ -6,6 +6,13 @@ import { Icon } from "@/components/Icon";
 import { homeAnchors, routes } from "@/lib/kisan-mitra/routes";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 
+/** Toggle buttons, in display order. Each label is written in its own script. */
+const LANG_OPTIONS: { code: Lang; label: string }[] = [
+  { code: "hi", label: "हिंदी" },
+  { code: "mr", label: "मराठी" },
+  { code: "en", label: "EN" },
+];
+
 export function Nav() {
   const { t, lang, setLang } = useLang();
   const [scrolled, setScrolled] = useState(false);
@@ -38,7 +45,7 @@ export function Nav() {
 
   const langToggle = (extraClass = "", id?: string) => (
     <div className={`lang-toggle${extraClass}`} id={id}>
-      {(["hi", "en"] as Lang[]).map((code) => (
+      {LANG_OPTIONS.map(({ code, label }) => (
         <button
           key={code}
           type="button"
@@ -46,7 +53,7 @@ export function Nav() {
           className={lang === code ? "active" : undefined}
           onClick={() => setLang(code)}
         >
-          {code === "hi" ? "हिंदी" : "EN"}
+          {label}
         </button>
       ))}
     </div>

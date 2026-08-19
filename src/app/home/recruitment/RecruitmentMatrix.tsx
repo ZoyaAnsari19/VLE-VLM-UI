@@ -6,6 +6,7 @@ import { ICON } from "@/lib/kisan-mitra/icons";
 import { POSITIONS, getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 import { useReveal } from "@/components/useReveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 type SortKey = "position" | "department" | "salary" | "reporting";
 type SortDir = "asc" | "desc";
@@ -28,9 +29,9 @@ export function RecruitmentMatrix({ lang }: RecruitmentMatrixProps) {
       const d = getDepartment(p.departmentId);
       return {
         position: p,
-        title: lang === "hi" ? p.title_hi : p.title_en,
-        deptName: d ? (lang === "hi" ? d.name_hi : d.name_en) : "",
-        reportingOfficer: lang === "hi" ? p.reportingOfficer_hi : p.reportingOfficer_en,
+        title: tr(p, "title", lang),
+        deptName: d ? (tr(d, "name", lang)) : "",
+        reportingOfficer: tr(p, "reportingOfficer", lang),
       };
     });
     const sorted = [...withDept].sort((a, b) => {
@@ -108,7 +109,7 @@ export function RecruitmentMatrix({ lang }: RecruitmentMatrixProps) {
                   <div className="matrix-bar-fill" style={{ width: `${pct}%`, background: row.position.accent }} />
                 </div>
                 <div className="matrix-row-bottom">
-                  <span className="matrix-row-salary">{row.position.salaryDisplay}/mo</span>
+                  <span className="matrix-row-salary">{row.position.salaryDisplay}{t.unit_per_month}</span>
                   <span className="matrix-row-reporting">
                     <span dangerouslySetInnerHTML={{ __html: ICON.arrowRight }} />
                     {row.reportingOfficer}

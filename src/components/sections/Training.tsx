@@ -4,6 +4,7 @@ import { TRAINING } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /** Icon per training week, positionally matched to TRAINING. */
 const WEEK_ICONS = ["badge", "seedling", "shield", "credit", "scan", "check", "pin", "cap"];
@@ -12,8 +13,8 @@ export function Training() {
   const { t, lang } = useLang();
 
   const photos = [
-    { src: "/images/training-class.webp", icon: "home", caption: "Residential · hostel + khana" },
-    { src: "/images/training-field.webp", icon: "seedling", caption: "Field practicum" },
+    { src: "/images/training-class.webp", icon: "home", caption: t.train_cap_residential },
+    { src: "/images/training-field.webp", icon: "seedling", caption: t.train_cap_field },
   ];
 
   return (
@@ -43,9 +44,9 @@ export function Training() {
           {TRAINING.map((w, i) => (
             <Reveal className="train-card" key={w.wk}>
               <Icon name={WEEK_ICONS[i] || "badge"} as="div" className="train-ico" />
-              <div className="wk">{w.wk}</div>
-              <h4>{lang === "hi" ? w.title_hi : w.title_en}</h4>
-              <p>{w.desc}</p>
+              <div className="wk">{t.train_week} {w.wk}</div>
+              <h4>{tr(w, "title", lang)}</h4>
+              <p>{tr(w, "desc", lang)}</p>
             </Reveal>
           ))}
         </div>

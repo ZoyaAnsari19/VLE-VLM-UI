@@ -5,6 +5,7 @@ import { I18N } from "@/lib/kisan-mitra/i18n";
 import { getDepartment } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang, Position } from "@/lib/kisan-mitra/recruitment/types";
 import { Modal } from "@/components/Modal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface PositionDetailModalProps {
   position: Position | null;
@@ -18,15 +19,15 @@ export function PositionDetailModal({ position, lang, onClose, onApply }: Positi
   if (!position) return null;
 
   const dept = getDepartment(position.departmentId);
-  const title = lang === "hi" ? position.title_hi : position.title_en;
-  const summary = lang === "hi" ? position.summary_hi : position.summary_en;
-  const eligibility = lang === "hi" ? position.eligibility_hi : position.eligibility_en;
-  const responsibilities = lang === "hi" ? position.responsibilities_hi : position.responsibilities_en;
-  const reportingOfficer = lang === "hi" ? position.reportingOfficer_hi : position.reportingOfficer_en;
-  const careerPath = lang === "hi" ? position.careerPath_hi : position.careerPath_en;
-  const uniform = lang === "hi" ? position.uniform_hi : position.uniform_en;
-  const monthlyTargets = lang === "hi" ? position.monthlyTargets_hi : position.monthlyTargets_en;
-  const deptName = dept ? (lang === "hi" ? dept.name_hi : dept.name_en) : "";
+  const title = tr(position, "title", lang);
+  const summary = tr(position, "summary", lang);
+  const eligibility = tr(position, "eligibility", lang);
+  const responsibilities = tr(position, "responsibilities", lang);
+  const reportingOfficer = tr(position, "reportingOfficer", lang);
+  const careerPath = tr(position, "careerPath", lang);
+  const uniform = tr(position, "uniform", lang);
+  const monthlyTargets = tr(position, "monthlyTargets", lang);
+  const deptName = dept ? (tr(dept, "name", lang)) : "";
 
   return (
     <Modal open onClose={onClose} ariaLabel={title} closeLabel={t.card_close}>
@@ -37,7 +38,7 @@ export function PositionDetailModal({ position, lang, onClose, onApply }: Positi
         <div>
           <h3 className="km-modal-title">{title}</h3>
           <div className="km-modal-sub">
-            {deptName} · {position.salaryDisplay}/mo
+            {deptName} · {position.salaryDisplay}{t.unit_per_month}
           </div>
         </div>
       </div>
@@ -65,7 +66,7 @@ export function PositionDetailModal({ position, lang, onClose, onApply }: Positi
           </div>
           <div className="rec-modal-section">
             <span className="k">{t.label_salary}</span>
-            <p className="rec-modal-text rec-modal-salary">{position.salaryDisplay}/mo</p>
+            <p className="rec-modal-text rec-modal-salary">{position.salaryDisplay}{t.unit_per_month}</p>
           </div>
         </div>
 
