@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { EXAMS } from "@/lib/kisan-mitra/data";
+import { EXAMS, type ExamSample } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { Modal } from "@/components/Modal";
 import { routes } from "@/lib/kisan-mitra/routes";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 type Exam = (typeof EXAMS)[number];
 
@@ -14,10 +15,10 @@ type Exam = (typeof EXAMS)[number];
 export const EXAMS_VISIBLE_COUNT = 4;
 
 function SampleQuestions({ exam }: { exam: Exam }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   return (
     <>
-      {exam.samples.map((q, i) => (
+      {tr(exam, "samples", lang).map((q: ExamSample, i: number) => (
         <div className="sample-q" key={q.q}>
           <div className="qt">
             Q{i + 1}. {q.q}
@@ -51,7 +52,7 @@ export function Exams({ showAll = false, heading = true }: ExamsProps) {
   const [selected, setSelected] = useState<Exam | null>(null);
   const visible = showAll ? EXAMS : EXAMS.slice(0, EXAMS_VISIBLE_COUNT);
 
-  const forText = (e: Exam) => (lang === "hi" ? e.for_hi : e.for_en);
+  const forText = (e: Exam) => (tr(e, "for", lang));
 
   return (
     <section id="exams" className="bg-paper">
@@ -75,24 +76,24 @@ export function Exams({ showAll = false, heading = true }: ExamsProps) {
                 </div>
                 <span className="exam-fee">₹{e.fee}</span>
               </div>
-              <h3 className="h3">{lang === "hi" ? e.name_hi : e.name_en}</h3>
+              <h3 className="h3">{tr(e, "name", lang)}</h3>
               <p className="exam-for">
                 {t.exam_for}: {forText(e)}
               </p>
               <div className="exam-rows">
                 <div className="exam-row">
                   <span className="k">{t.exam_duration}</span>
-                  <span className="v">{lang === "hi" ? e.duration_hi : e.duration_en}</span>
+                  <span className="v">{tr(e, "duration", lang)}</span>
                 </div>
                 <div className="exam-row">
                   <span className="k">{t.exam_questions}</span>
-                  <span className="v">{lang === "hi" ? e.questions_hi : e.questions_en}</span>
+                  <span className="v">{tr(e, "questions", lang)}</span>
                 </div>
                 <div className="exam-row">
                   <span className="k">{t.exam_sections}</span>
                   <span className="v">
                     <ul className="exam-sections">
-                      {e.sections.map((s) => (
+                      {tr(e, "sections", lang).map((s: string) => (
                         <li key={s}>{s}</li>
                       ))}
                     </ul>
@@ -100,7 +101,7 @@ export function Exams({ showAll = false, heading = true }: ExamsProps) {
                 </div>
                 <div className="exam-row">
                   <span className="k">{t.exam_negative}</span>
-                  <span className="v">{lang === "hi" ? e.negative_hi : e.negative_en}</span>
+                  <span className="v">{tr(e, "negative", lang)}</span>
                 </div>
                 <div className="exam-row">
                   <span className="k">{t.exam_qualifying}</span>
@@ -150,7 +151,7 @@ export function Exams({ showAll = false, heading = true }: ExamsProps) {
             <div className="km-modal-head">
               <span className="eyebrow">{forText(selected)}</span>
               <div>
-                <h3 className="km-modal-title">{lang === "hi" ? selected.name_hi : selected.name_en}</h3>
+                <h3 className="km-modal-title">{tr(selected, "name", lang)}</h3>
                 <div className="km-modal-sub">
                   {t.exam_for}: {forText(selected)}
                 </div>

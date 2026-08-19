@@ -11,6 +11,7 @@ import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { BoldMarks } from "@/components/BoldMarks";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /**
  * The conversion page: what a candidate actually gets if they clear the exam.
@@ -23,7 +24,6 @@ export function Benefits() {
   const { t, lang } = useLang();
   const [deptId, setDeptId] = useState(DEPARTMENTS[0].id);
 
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
   const stats = getRecruitmentStats();
   const salaryRange = `₹${(stats.salaryMin / 1000).toFixed(0)}K – ₹${(stats.salaryMax / 100000).toFixed(1)}L`;
   const ladder = getPositionsByDepartment(deptId);
@@ -38,7 +38,7 @@ export function Benefits() {
     { icon: "home", title: t.ben_p3_t, desc: t.ben_p3_d },
     { icon: "cap", title: t.ben_p4_t, desc: t.ben_p4_d },
     { icon: "award", title: t.ben_p5_t, desc: t.ben_p5_d },
-    { icon: "trendingUp", title: t.ben_p6_t, desc: t.ben_p6_d, tag: `${stats.totalPositions} positions` },
+    { icon: "trendingUp", title: t.ben_p6_t, desc: t.ben_p6_d, tag: `${stats.totalPositions} ${t.ben_positions_tag}` },
   ];
 
   const who = [t.ben_who_1, t.ben_who_2, t.ben_who_3, t.ben_who_4];
@@ -139,7 +139,7 @@ export function Benefits() {
                 onClick={() => setDeptId(d.id)}
               >
                 <Icon name={d.icon} />
-                {pick(d.name_hi, d.name_en)}
+                {tr(d, "name", lang)}
               </button>
             ))}
           </div>
@@ -149,7 +149,7 @@ export function Benefits() {
               <div className="ben-growth-endpoint">
                 <span className="k">{t.ben_growth_entry}</span>
                 <b>{entry?.salaryDisplay}</b>
-                <a href={routes.role(entry.id)}>{pick(entry.title_hi, entry.title_en)}</a>
+                <a href={routes.role(entry.id)}>{tr(entry, "title", lang)}</a>
               </div>
               <div className="ben-growth-arrow" aria-hidden="true">
                 <span className="ben-growth-mult" style={{ color: dept.accent }}>
@@ -163,7 +163,7 @@ export function Benefits() {
               <div className="ben-growth-endpoint ben-growth-endpoint-top">
                 <span className="k">{t.ben_growth_top}</span>
                 <b style={{ color: dept.accent }}>{top?.salaryDisplay}</b>
-                <a href={routes.role(top.id)}>{pick(top.title_hi, top.title_en)}</a>
+                <a href={routes.role(top.id)}>{tr(top, "title", lang)}</a>
               </div>
             </div>
 
@@ -181,7 +181,7 @@ export function Benefits() {
                       }}
                     />
                     <span className="ben-growth-step-salary">{p.salaryDisplay}</span>
-                    <span className="ben-growth-step-title">{pick(p.title_hi, p.title_en)}</span>
+                    <span className="ben-growth-step-title">{tr(p, "title", lang)}</span>
                   </a>
                 </li>
               ))}

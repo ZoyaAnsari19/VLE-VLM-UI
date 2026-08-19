@@ -6,6 +6,7 @@ import { routes } from "@/lib/kisan-mitra/routes";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 function Fact({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
   return (
@@ -36,7 +37,6 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
     );
   }
 
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
   const positions = getPositionsByDepartment(department.id);
   const entry = positions[0];
   const top = positions[positions.length - 1];
@@ -56,7 +56,7 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
             <Icon name="chevronRight" />
             <a href={routes.departments()}>{t.nav_departments}</a>
             <Icon name="chevronRight" />
-            <span aria-current="page">{pick(department.name_hi, department.name_en)}</span>
+            <span aria-current="page">{tr(department, "name", lang)}</span>
           </nav>
 
           <div className="role-hero-grid">
@@ -72,8 +72,8 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
                 </span>
               </div>
 
-              <h1 className="h1 role-title">{pick(department.name_hi, department.name_en)}</h1>
-              <p className="role-summary">{pick(department.description_hi, department.description_en)}</p>
+              <h1 className="h1 role-title">{tr(department, "name", lang)}</h1>
+              <p className="role-summary">{tr(department, "description", lang)}</p>
 
               <div className="role-hero-ctas">
                 {entry && (
@@ -99,10 +99,10 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
                 </b>
               </Fact>
               <Fact icon="seedling" label={t.dept_fact_entry}>
-                {entry && <a href={routes.role(entry.id)}>{pick(entry.title_hi, entry.title_en)}</a>}
+                {entry && <a href={routes.role(entry.id)}>{tr(entry, "title", lang)}</a>}
               </Fact>
               <Fact icon="award" label={t.dept_fact_top}>
-                {top && <a href={routes.role(top.id)}>{pick(top.title_hi, top.title_en)}</a>}
+                {top && <a href={routes.role(top.id)}>{tr(top, "title", lang)}</a>}
               </Fact>
             </aside>
           </div>
@@ -127,12 +127,12 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
                     <span className="role-pill" style={{ background: p.accent }}>
                       {p.code}
                     </span>
-                    <h3 className="h3 dept-rung-title">{pick(p.title_hi, p.title_en)}</h3>
+                    <h3 className="h3 dept-rung-title">{tr(p, "title", lang)}</h3>
                     <span className="dept-rung-salary" style={{ color: p.accent }}>
-                      {p.salaryDisplay}/mo
+                      {p.salaryDisplay}{t.unit_per_month}
                     </span>
                   </div>
-                  <p className="dept-rung-desc">{pick(p.summary_hi, p.summary_en)}</p>
+                  <p className="dept-rung-desc">{tr(p, "summary", lang)}</p>
                   <span className="dept-rung-bar" aria-hidden="true">
                     <span style={{ width: `${(p.salary / maxSalary) * 100}%`, background: p.accent }} />
                   </span>
@@ -159,9 +159,9 @@ export function DepartmentDetail({ departmentId }: { departmentId: string }) {
                     <span className="role-pill" style={{ background: accent }}>
                       ₹{e!.fee}
                     </span>
-                    <h3 className="role-title">{pick(e!.name_hi, e!.name_en)}</h3>
+                    <h3 className="role-title">{tr(e!, "name", lang)}</h3>
                     <p>
-                      {pick(e!.duration_hi, e!.duration_en)} · {pick(e!.questions_hi, e!.questions_en)}
+                      {tr(e!, "duration", lang)} · {tr(e!, "questions", lang)}
                     </p>
                     <span className="role-related-salary" style={{ color: accent }}>
                       {t.role_view_exam} <Icon name="arrowRight" />

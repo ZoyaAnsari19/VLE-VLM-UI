@@ -4,6 +4,7 @@ import { DEPARTMENTS } from "@/lib/kisan-mitra/recruitment/data";
 import type { Lang } from "@/lib/kisan-mitra/recruitment/types";
 import { ICON } from "@/lib/kisan-mitra/icons";
 import { I18N } from "@/lib/kisan-mitra/i18n";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 interface DepartmentTabsProps {
   lang: Lang;
@@ -36,7 +37,7 @@ export function DepartmentTabs({ lang, activeId, onChange }: DepartmentTabsProps
           onClick={() => onChange(dept.id)}
         >
           <span className="dept-tab-ico" dangerouslySetInnerHTML={{ __html: ICON[dept.icon as keyof typeof ICON] }} />
-          {lang === "hi" ? dept.name_hi : dept.name_en}
+          {tr(dept, "name", lang)}
         </button>
       ))}
     </div>

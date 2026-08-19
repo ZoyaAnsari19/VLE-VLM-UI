@@ -4,6 +4,7 @@ import { FARMER_GOVT_CHIPS, FARMER_IMPACT, MEMBER_BENEFITS } from "@/lib/kisan-m
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function ForFarmers() {
   const { t, lang } = useLang();
@@ -14,14 +15,14 @@ export function ForFarmers() {
       icon: "building",
       title: t.farmers_govt,
       sub: t.farmers_govt_sub,
-      chips: FARMER_GOVT_CHIPS.map((s) => ({ key: s.name, icon: s.icon, label: s.name })),
+      chips: FARMER_GOVT_CHIPS.map((s) => ({ key: s.name_en, icon: s.icon, label: tr(s, "name", lang) })),
     },
     {
       modifier: "farmer-col-member",
       icon: "shield",
       title: t.farmers_member,
       sub: t.farmers_member_sub,
-      chips: MEMBER_BENEFITS.map((m) => ({ key: m.en, icon: m.icon, label: lang === "hi" ? m.hi : m.en })),
+      chips: MEMBER_BENEFITS.map((m) => ({ key: m.icon, icon: m.icon, label: tr(m, "label", lang) })),
     },
   ];
 
@@ -74,8 +75,8 @@ export function ForFarmers() {
             {FARMER_IMPACT.map((x) => (
               <div className="farmer-impact-item" key={x.icon}>
                 <Icon name={x.icon} className="farmer-impact-ico" />
-                <div className="farmer-impact-title">{lang === "hi" ? x.title_hi : x.title_en}</div>
-                <div className="farmer-impact-sub">{lang === "hi" ? x.sub_hi : x.sub_en}</div>
+                <div className="farmer-impact-title">{tr(x, "title", lang)}</div>
+                <div className="farmer-impact-sub">{tr(x, "sub", lang)}</div>
               </div>
             ))}
           </div>

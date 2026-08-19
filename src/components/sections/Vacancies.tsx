@@ -5,6 +5,7 @@ import { PHASE1_VACANCIES, getPosition } from "@/lib/kisan-mitra/recruitment/dat
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /** Maps the Phase-1 vacancy rows onto positions, so each row can borrow that role's accent colour. */
 const ROLE_POSITION_ID: Record<string, string> = {
@@ -92,7 +93,7 @@ export function Vacancies() {
                         <b>{r.role}</b>
                       </span>
                     </td>
-                    <td>{lang === "hi" ? r.exam_hi : r.exam_en}</td>
+                    <td>{tr(r, "exam", lang)}</td>
                     <td className="vac-count">
                       <b>{r.count}</b>
                     </td>
@@ -125,9 +126,9 @@ export function Vacancies() {
         </h3>
         <Reveal className="vac-divisions">
           {DIVISIONS.map((d) => (
-            <span className="vac-pill" key={d}>
+            <span className="vac-pill" key={d.id}>
               <Icon name="building" />
-              {d}
+              {tr(d, "name", lang)}
             </span>
           ))}
         </Reveal>

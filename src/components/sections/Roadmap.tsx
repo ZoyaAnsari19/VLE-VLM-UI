@@ -5,6 +5,7 @@ import { useLang } from "@/components/LangProvider";
 import { useCarousel } from "@/components/useCarousel";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Roadmap() {
   const { t, lang } = useLang();
@@ -42,8 +43,8 @@ export function Roadmap() {
                     <Icon name={s.icon || "badge"} as="div" className="step-ico" />
                   </div>
                   <div className="step-body">
-                    <h4>{lang === "hi" ? s.title_hi : s.title_en}</h4>
-                    <p>{lang === "hi" ? s.desc_hi : s.desc_en}</p>
+                    <h4>{tr(s, "title", lang)}</h4>
+                    <p>{tr(s, "desc", lang)}</p>
                   </div>
                 </Reveal>
               ))}

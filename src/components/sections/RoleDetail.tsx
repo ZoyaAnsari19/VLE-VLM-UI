@@ -11,6 +11,7 @@ import { routes } from "@/lib/kisan-mitra/routes";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 function Fact({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
   return (
@@ -47,9 +48,8 @@ export function RoleDetail({ positionId }: { positionId: string }) {
   const siblings = getSiblingPositions(positionId);
   const accent = position.accent;
 
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
-  const deptName = department ? pick(department.name_hi, department.name_en) : "";
-  const targets = pick(position.monthlyTargets_hi, position.monthlyTargets_en);
+  const deptName = department ? tr(department, "name", lang) : "";
+  const targets = tr(position, "monthlyTargets", lang);
 
   return (
     <>
@@ -60,7 +60,7 @@ export function RoleDetail({ positionId }: { positionId: string }) {
             <Icon name="chevronRight" />
             <a href={routes.roles()}>{t.nav_roles}</a>
             <Icon name="chevronRight" />
-            <span aria-current="page">{pick(position.title_hi, position.title_en)}</span>
+            <span aria-current="page">{tr(position, "title", lang)}</span>
           </nav>
 
           <div className="role-hero-grid">
@@ -83,8 +83,8 @@ export function RoleDetail({ positionId }: { positionId: string }) {
                 </span>
               </div>
 
-              <h1 className="h1 role-title">{pick(position.title_hi, position.title_en)}</h1>
-              <p className="role-summary">{pick(position.summary_hi, position.summary_en)}</p>
+              <h1 className="h1 role-title">{tr(position, "title", lang)}</h1>
+              <p className="role-summary">{tr(position, "summary", lang)}</p>
 
               <div className="role-hero-ctas">
                 <a href={routes.applyTo(position.id)} className="btn btn-primary" style={{ background: accent }}>
@@ -102,20 +102,20 @@ export function RoleDetail({ positionId }: { positionId: string }) {
             <aside className="role-facts card">
               <h2 className="h3 role-facts-title">{t.role_quick_facts}</h2>
               <Fact icon="rupee" label={t.role_fact_salary}>
-                <b style={{ color: accent }}>{position.salaryDisplay}/mo</b>
+                <b style={{ color: accent }}>{position.salaryDisplay}{t.unit_per_month}</b>
               </Fact>
               <Fact icon="cap" label={t.role_fact_exam}>
                 {exam ? (
-                  <a href={routes.exam(exam.id)}>{pick(exam.name_hi, exam.name_en)}</a>
+                  <a href={routes.exam(exam.id)}>{tr(exam, "name", lang)}</a>
                 ) : (
                   t.role_track_direct
                 )}
               </Fact>
               <Fact icon="users" label={t.role_fact_reporting}>
-                {pick(position.reportingOfficer_hi, position.reportingOfficer_en)}
+                {tr(position, "reportingOfficer", lang)}
               </Fact>
               <Fact icon="badge" label={t.label_uniform}>
-                {pick(position.uniform_hi, position.uniform_en)}
+                {tr(position, "uniform", lang)}
               </Fact>
             </aside>
           </div>
@@ -128,7 +128,7 @@ export function RoleDetail({ positionId }: { positionId: string }) {
             <h2 className="h3">
               <Icon name="check" /> {t.label_eligibility}
             </h2>
-            <p>{pick(position.eligibility_hi, position.eligibility_en)}</p>
+            <p>{tr(position, "eligibility", lang)}</p>
           </Reveal>
 
           <Reveal as="article" className="card role-block">
@@ -136,7 +136,7 @@ export function RoleDetail({ positionId }: { positionId: string }) {
               <Icon name="briefcase" /> {t.label_responsibilities}
             </h2>
             <ul className="role-duties">
-              {pick(position.responsibilities_hi, position.responsibilities_en).map((r) => (
+              {tr(position, "responsibilities", lang).map((r) => (
                 <li key={r}>{r}</li>
               ))}
             </ul>
@@ -160,7 +160,7 @@ export function RoleDetail({ positionId }: { positionId: string }) {
               <Icon name="compass" /> {t.label_career_path}
             </h2>
             <div className="career-path">
-              {pick(position.careerPath_hi, position.careerPath_en).map((step, i, arr) => (
+              {tr(position, "careerPath", lang).map((step, i, arr) => (
                 <span className="career-path-step" key={step}>
                   {step}
                   {i < arr.length - 1 && <Icon name="arrowRight" className="career-path-arrow" />}
@@ -171,7 +171,7 @@ export function RoleDetail({ positionId }: { positionId: string }) {
               <a className="role-next" href={routes.role(next.id)}>
                 <span className="role-next-k">{t.role_next_step}</span>
                 <span className="role-next-v">
-                  {pick(next.title_hi, next.title_en)} · {next.salaryDisplay}/mo
+                  {tr(next, "title", lang)} · {next.salaryDisplay}{t.unit_per_month}
                 </span>
                 <Icon name="arrowRight" />
               </a>
@@ -193,10 +193,10 @@ export function RoleDetail({ positionId }: { positionId: string }) {
                     <span className="role-pill" style={{ background: s.accent }}>
                       {s.code}
                     </span>
-                    <h3 className="role-title">{pick(s.title_hi, s.title_en)}</h3>
-                    <p>{pick(s.summary_hi, s.summary_en)}</p>
+                    <h3 className="role-title">{tr(s, "title", lang)}</h3>
+                    <p>{tr(s, "summary", lang)}</p>
                     <span className="role-related-salary" style={{ color: s.accent }}>
-                      {s.salaryDisplay}/mo <Icon name="arrowRight" />
+                      {s.salaryDisplay}{t.unit_per_month} <Icon name="arrowRight" />
                     </span>
                   </a>
                 </Reveal>

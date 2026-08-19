@@ -4,6 +4,7 @@ import { MISSION_HIGHLIGHTS } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Mission() {
   const { t, lang } = useLang();
@@ -46,7 +47,7 @@ export function Mission() {
               {MISSION_HIGHLIGHTS.map((h) => (
                 <Reveal className={`highlight-card highlight-${h.color}`} key={h.icon}>
                   <Icon name={h.icon} className="highlight-ico" />
-                  <div className="highlight-label">{lang === "hi" ? h.label_hi : h.label_en}</div>
+                  <div className="highlight-label">{tr(h, "label", lang)}</div>
                   <span className="highlight-underline" />
                 </Reveal>
               ))}

@@ -4,6 +4,7 @@ import { SECURITY } from "@/lib/kisan-mitra/data";
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Security() {
   const { t, lang } = useLang();
@@ -33,9 +34,9 @@ export function Security() {
               <div className="sec-ico-ring">
                 <Icon name={s.icon || "shield"} as="div" className="ico" />
               </div>
-              <h4>{lang === "hi" ? s.title_hi : s.title_en}</h4>
+              <h4>{tr(s, "title", lang)}</h4>
               <span className="sec-item-underline" />
-              <p>{lang === "hi" ? s.desc_hi : s.desc_en}</p>
+              <p>{tr(s, "desc", lang)}</p>
             </Reveal>
           ))}
         </div>

@@ -10,6 +10,7 @@ import {
 import { useLang } from "@/components/LangProvider";
 import { Icon } from "@/components/Icon";
 import { homeAnchors } from "@/lib/kisan-mitra/routes";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 export function Footer() {
   const { t, lang } = useLang();
@@ -31,7 +32,7 @@ export function Footer() {
               {FOOTER_ABOUT_STATS.map((s) => (
                 <div className="footer-stat" key={s.icon}>
                   <Icon name={s.icon} />
-                  {lang === "hi" ? s.label_hi : s.label_en}
+                  {tr(s, "label", lang)}
                 </div>
               ))}
             </div>
@@ -48,7 +49,7 @@ export function Footer() {
                 <li key={l.href + l.label_en}>
                   <a href={l.href.startsWith("#") ? `/${l.href}` : l.href}>
                     <Icon name="chevronRight" />
-                    {lang === "hi" ? l.label_hi : l.label_en}
+                    {tr(l, "label", lang)}
                   </a>
                 </li>
               ))}
@@ -63,8 +64,8 @@ export function Footer() {
             <span className="footer-underline" />
             <div className="footer-districts">
               {MAHARASHTRA_DISTRICTS.map((d) => (
-                <span className="district-pill" key={d}>
-                  {d}
+                <span className="district-pill" key={d.name_en}>
+                  {tr(d, "name", lang)}
                 </span>
               ))}
             </div>

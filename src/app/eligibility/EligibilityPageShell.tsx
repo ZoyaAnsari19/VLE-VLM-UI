@@ -9,6 +9,7 @@ import { PageHead } from "@/components/PageHead";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { Eligibility } from "@/components/sections/Eligibility";
+import { tr } from "@/lib/kisan-mitra/localized";
 
 /**
  * Per-position eligibility, read straight from POSITIONS — a position added to
@@ -17,7 +18,6 @@ import { Eligibility } from "@/components/sections/Eligibility";
 function PerRoleEligibility() {
   const { t, lang } = useLang();
   const [deptId, setDeptId] = useState<string | null>(null);
-  const pick = <T,>(hi: T, en: T) => (lang === "hi" ? hi : en);
 
   const rows = deptId ? POSITIONS.filter((p) => p.departmentId === deptId) : POSITIONS;
 
@@ -47,7 +47,7 @@ function PerRoleEligibility() {
               onClick={() => setDeptId(d.id)}
             >
               <Icon name={d.icon} />
-              {pick(d.name_hi, d.name_en)}
+              {tr(d, "name", lang)}
             </button>
           ))}
         </div>
@@ -62,16 +62,16 @@ function PerRoleEligibility() {
                     {p.code}
                   </span>
                   <a className="elig-role-title" href={routes.role(p.id)}>
-                    {pick(p.title_hi, p.title_en)}
+                    {tr(p, "title", lang)}
                   </a>
                   <span className="elig-role-dept" style={{ color: p.accent }}>
-                    {dept && pick(dept.name_hi, dept.name_en)}
+                    {dept && tr(dept, "name", lang)}
                   </span>
-                  <span className="elig-role-salary">{p.salaryDisplay}/mo</span>
+                  <span className="elig-role-salary">{p.salaryDisplay}{t.unit_per_month}</span>
                 </div>
                 <p className="elig-role-req">
                   <Icon name="check" />
-                  {pick(p.eligibility_hi, p.eligibility_en)}
+                  {tr(p, "eligibility", lang)}
                 </p>
               </Reveal>
             );
