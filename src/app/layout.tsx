@@ -3,14 +3,16 @@ import "@/styles/kisan-mitra.css";
 import { SITE_URL } from "@/lib/kisan-mitra/site";
 
 const siteUrl = SITE_URL;
-const ogImagePath = "/images/og-share.jpg";
+// New filename on purpose: WhatsApp/Facebook cache a preview by URL, so
+// reusing the old path would keep serving the outdated poster.
+const ogImagePath = "/images/og-share-2026.jpg";
 const ogImageUrl = `${siteUrl}${ogImagePath}`;
 
 const ogImage = {
   url: ogImagePath,
   width: 1200,
-  height: 948,
-  alt: "किसान मित्र इकोसिस्टम — महाराष्ट्र में 21 अधिकारी पद",
+  height: 630,
+  alt: "किसान मित्र भरती परीक्षा 2026 — महाराष्ट्र के 6 राजस्व मंडलों में 452 अधिकारी पद",
   type: "image/jpeg",
 };
 
@@ -50,12 +52,9 @@ export default function RootLayout({
     <html lang="hi" translate="no" className="notranslate">
       <head>
         <meta name="google" content="notranslate" />
-        <meta property="og:image" content={ogImageUrl} />
+        {/* og:image is emitted by the metadata export above; only the
+            secure_url variant is added here, which that API does not cover. */}
         <meta property="og:image:secure_url" content={ogImageUrl} />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="948" />
-        <meta property="og:image:alt" content={ogImage.alt} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
